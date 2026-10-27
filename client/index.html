@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+    <meta name="theme-color" content="#101726" />
+    <meta name="description" content="像素校园：打开网页就能游玩的青海大学像素校园世界。" />
+    <link rel="icon" href="favicon.svg" type="image/svg+xml" />
+    <title>像素校园 · 青海大学</title>
+  </head>
+  <body>
+    <div id="app">
+      <div id="game" aria-label="像素校园游戏画面"></div>
+      <div class="scanlines" aria-hidden="true"></div>
+
+      <section id="loading-screen" class="screen">
+        <div class="loading-inner">
+          <div class="loading-logo">PIXEL<br /><span>CAMPUS</span></div>
+          <div class="loading-bar"><i id="loading-fill"></i></div>
+          <p id="loading-text">正在加载校园...</p>
+          <p class="loading-tip">提示：E 键可以和所有带黄色标记的东西互动</p>
+        </div>
+      </section>
+
+      <section id="title-screen" class="screen hidden">
+        <div class="title-card">
+          <p class="eyebrow">A TINY CAMPUS LIFE</p>
+          <h1>像素校园</h1>
+          <p class="subtitle">PIXEL CAMPUS</p>
+          <p class="title-copy">逛青大校园、撸猫、上课、打饭，<br />顺便在西田径场打一场宠物对战。</p>
+          <div class="title-actions">
+            <button id="btn-new" class="pixel-btn primary">开始新的一天</button>
+            <button id="btn-continue" class="pixel-btn">继续存档</button>
+            <button id="btn-title-settings" class="pixel-btn ghost">设置</button>
+          </div>
+          <p class="title-hint">WASD / 方向键移动 · E 互动 · 手机横屏游玩</p>
+        </div>
+        <div class="title-badge">v0.1 可玩原型 · 青海大学非官方学生作品</div>
+      </section>
+
+      <div id="hud" class="hidden">
+        <div class="hud-bar">
+          <div class="hud-pill time-pill">
+            <span id="hud-day">DAY 1</span>
+            <b id="hud-time">08:00</b>
+            <em id="hud-phase">白天</em>
+          </div>
+          <div class="hud-pill stats-pill">
+            <span>学分 <b id="hud-credits">0</b></span>
+            <span class="divider"></span>
+            <span>心情 <b id="hud-mood">50</b></span>
+          </div>
+          <div class="hud-actions">
+            <button id="btn-album" class="pixel-btn tiny">猫图鉴</button>
+            <button id="btn-settings" class="pixel-btn tiny">设置</button>
+          </div>
+        </div>
+        <div id="quest-line"><span>今日</span><b id="quest-text">去主教学楼上课</b></div>
+        <div id="seek-hud" class="hidden">
+          <div class="seek-row"><span>躲猫猫</span><b id="seek-timer">01:30</b></div>
+          <div class="seek-hint" id="seek-hint">很冷</div>
+          <div class="seek-bar"><i id="seek-bar-fill"></i></div>
+        </div>
+        <div id="prompt" class="hidden"><kbd>E</kbd><span id="prompt-text"></span></div>
+        <div id="joystick" class="joystick"><div id="joystick-knob"></div></div>
+        <button id="btn-interact" class="interact-btn">互动</button>
+        <div id="controls-hint">WASD 移动 · E 互动 · ESC 设置</div>
+      </div>
+
+      <div id="dialogue" class="hidden">
+        <div class="dialogue-card">
+          <div id="dialogue-speaker">保安大爷</div>
+          <p id="dialogue-text"></p>
+          <div id="dialogue-choices"></div>
+          <div class="dialogue-next">点击 / E 继续 ▾</div>
+        </div>
+      </div>
+
+      <div id="modal-root" class="hidden">
+        <div class="modal-backdrop"></div>
+        <div class="modal-card" id="modal-card" role="dialog" aria-modal="true"></div>
+      </div>
+
+      <div id="toast-root"></div>
+      <div id="fade"></div>
+
+      <section id="rotate-hint" class="screen">
+        <div class="rotate-icon">▭</div>
+        <h2>请把手机横过来</h2>
+        <p>像素校园为横屏设计，旋转后体验更好。</p>
+      </section>
+    </div>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>
