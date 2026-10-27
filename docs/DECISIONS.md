@@ -2,12 +2,13 @@
 
 ## 1. 采用 Phaser 2D，而不是 Three.js 3D
 
-仓库里有两份互相冲突的方案：
+仓库里有三份不同阶段的方案，技术路线和周期互相冲突：
 
-- `docs/plans/2026-10-27-pixel-campus-full-execution-plan.md`：Phaser 3 + 2D 俯视 3/4，15 周。
-- `docs/plans/2026-10-27-pixel-campus-3d-alternative.md`：Blender + Three.js + 等距 3D，8 周。
+- `docs/plans/2026-10-27-pixel-campus-full-execution-plan.md`：Phaser 3 + 2D 俯视 3/4，15 周（**执行基线**）。
+- `docs/plans/2026-10-27-pixel-campus-3d-alternative.md`：Blender + Three.js + 等距 3D，8 周（归档备选）。
+- `docs/plans/archive/2026-10-27-pixel-campus-10week-draft.md`：Phaser 2D，10 周（早期草稿，已被 15 周方案取代）。
 
-两者不是同一套技术路线。**执行以最新的 15 周 Phaser 2D 方案为准**；3D 方案归档为备选。原因：
+**执行以最新的 15 周 Phaser 2D 方案为准**；3D 方案和 10 周草稿都归档为备选/历史。原因：
 
 - 1 人 + AI 辅助，纯文本工程更可控；
 - 首屏包体小，移动端启动快；
