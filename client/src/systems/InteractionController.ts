@@ -2,16 +2,14 @@ import { gameState } from '../core/GameState';
 import { audio } from './AudioManager';
 import { isCanteenOpen, isLibraryOpen, type TimeSystem } from './TimeSystem';
 import type { DialogueSystem } from './DialogueSystem';
-import type { TriggerDef } from '../types';
+import type { CatDef, TriggerDef } from '../types';
 import type { UIManager } from '../ui/UIManager';
 import type { PetBattleUI } from '../minigames/PetBattleUI';
 import type { HideSeekGame } from '../minigames/HideSeekGame';
 import catsData from '../data/cats.json';
-import type { CatDef } from '../types';
 import { MEALS, QUIZZES, grandstandBody, noticeBody, seatBody, timetableBody } from '../data/content';
 
 const cats = catsData as CatDef[];
-
 export interface InteractionHost {
   time: TimeSystem;
   dialogue: DialogueSystem;
