@@ -1,0 +1,11 @@
+node_modules/
+dist/
+dist-ssr/
+*.local
+.DS_Store
+Thumbs.db
+*.log
+.playwright-mcp/
+.mimosa/
+.vscode/
+.idea/
