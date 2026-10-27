@@ -66,6 +66,6 @@
 
 ## 工程纪律
 
-- 单文件尽量 <300 行；当前 `CampusScene.ts` 305 行、`InteractionController.ts` 302 行，已接近上限，下一轮功能前先拆。
+- 单文件尽量 <300 行；当前 `CampusScene.ts` 305 行、`InteractionController.ts` 300 行，已接近上限，下一轮功能前先拆。
 - 每次改动跑 `npx tsc --noEmit`、`npm test`、`npm run build`。
 - 素材来源和许可证写入 `ASSETS.md`。
