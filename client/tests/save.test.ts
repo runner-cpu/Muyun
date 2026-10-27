@@ -28,9 +28,9 @@ describe('save migration', () => {
     expect(migrated?.data.settings.music).toBeGreaterThan(0);
   });
 
-  it('keeps a v2 position and clamps invalid values', () => {
+  it('keeps a v3 position and clamps invalid values', () => {
     const migrated = migrateSave({
-      version: 2,
+      version: 3,
       data: { day: -8, timeMinutes: 9999, mood: 900, credits: -4, player: { x: 333, y: 444 } },
     });
     expect(migrated?.data.day).toBe(1);

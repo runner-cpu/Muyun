@@ -15,7 +15,7 @@
 
 `tools/gen-map.mjs` 生成 `maps/campus.tmj` 与 `client/public/assets/maps/campus.tmj`：
 
-- 120×90 格，16×16 瓦片。
+- 160×120 格，16×16 瓦片。
 - 基于青海大学公开地图的点位相对位置（见 `docs/QHU_MAP_REFERENCE.md`）。
 - **未使用**学校 3D 模型、贴图或倾斜摄影数据；仅参考公开地图的建筑名称、相对坐标与道路拓扑。
 - 地图源文件可用 Tiled 1.11+ 打开继续编辑。

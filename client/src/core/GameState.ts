@@ -142,7 +142,7 @@ export class GameState {
 
   questText(): string {
     const day = this.data.day;
-    if (!this.hasFlag(`class_${day}`)) return '去睿智楼上课，拿今天的第一笔学分';
+    if (!this.hasFlag(`class_${day}`)) return '去任一院系教学楼上课，拿今天的第一笔学分';
     if (!this.hasFlag(`meal_${day}`)) return '去学生食堂打饭，顺便和阿姨聊两句';
     if (this.hasCat('orange') === false && this.cats.length === 0) return '在校园里找一只猫，猫是这所学校的隐藏主角';
     if (!this.achievements.includes('battle_first')) return '去西田径场找神秘训练师，试试宠物对战';

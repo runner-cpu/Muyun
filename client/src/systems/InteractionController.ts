@@ -29,7 +29,7 @@ export class InteractionController {
       case 'dialogue': void this.host.dialogue.start(trigger.payload); break;
       case 'signin': this.signIn(); break;
       case 'notice': this.notice(); break;
-      case 'class': this.attendClass(); break;
+      case 'class': this.attendClass(trigger.payload); break;
       case 'timetable': this.timetable(); break;
       case 'library_quiz': this.libraryQuiz(); break;
       case 'seat_hint': this.seatHint(); break;
@@ -59,7 +59,7 @@ export class InteractionController {
     this.host.persist();
   }
 
-  private attendClass(): void {
+  private attendClass(building: string): void {
     if (gameState.hasFlag(`class_${gameState.day}`)) {
       this.ui.toast('今天的课已经上完了，去学生食堂或西田径场看看吧', 'bad');
       return;
@@ -69,7 +69,7 @@ export class InteractionController {
       return;
     }
     const body = this.ui.openModal({
-      title: '睿智楼 · 今日课程',
+      title: `${building || '院系教学楼'} · 今日课程`,
       subtitle: '《像素渲染与校园漫游》· 302 教室',
       body: `<p>老师正在讲“为什么 16×16 的瓦片能装下一整座校园”。</p>
         <p class="modal-note">认真听讲：学分 +5，心情 -2。也可以直接溜走。</p>

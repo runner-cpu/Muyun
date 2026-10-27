@@ -5,8 +5,8 @@ import { fileURLToPath } from 'node:url';
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 const OUT = join(ROOT, 'client', 'public', 'assets', 'maps');
 const SRC = join(ROOT, 'maps');
-const W = 120;
-const H = 90;
+const W = 160;
+const H = 120;
 
 const G = {
   GRASS: 1, FLOWER: 2, PATH: 3, PLAZA: 4, ROAD: 5, ROADLINE: 6,
@@ -26,41 +26,45 @@ const solidRect = (x, y, w, h) => rect('collision', x, y, w, h, G.SOLID);
 
 rect('ground', 0, 0, W, H, G.GRASS);
 
-// --- perimeter fence and north gate ---
+// --- outer fence / north gate opening ---
 for (let x = 0; x < W; x++) {
-  if (x >= 50 && x <= 58) continue;
+  if (x >= 68 && x <= 74) continue;
   set('props', x, 1, G.FENCE);
   set('collision', x, 1, G.SOLID);
 }
 
-// --- roads: perimeter loop, central axes, gate links ---
-groundRect(6, 5, 109, 5, G.ROAD);
-groundRect(6, 82, 109, 5, G.ROAD);
-groundRect(4, 5, 5, 82, G.ROAD);
-groundRect(112, 5, 5, 82, G.ROAD);
-groundRect(54, 9, 5, 74, G.ROAD);
-groundRect(8, 47, 105, 5, G.ROAD);
-groundRect(68, 79, 5, 7, G.ROAD);
-groundRect(6, 51, 5, 7, G.ROAD);
+// --- perimeter roads + main internal roads ---
+groundRect(6, 6, 145, 5, G.ROAD);
+groundRect(6, 110, 145, 5, G.ROAD);
+groundRect(4, 6, 5, 109, G.ROAD);
+groundRect(150, 6, 5, 109, G.ROAD);
+groundRect(70, 10, 5, 56, G.ROAD);
+groundRect(8, 62, 142, 5, G.ROAD);
+groundRect(90, 66, 5, 44, G.ROAD);
+groundRect(100, 10, 5, 52, G.PATH);
 
-// --- plazas / forecourts ---
-groundRect(46, 2, 19, 10, G.PLAZA);      // north gate plaza
-groundRect(0, 51, 10, 10, G.PLAZA);      // west gate
-groundRect(110, 45, 9, 10, G.PLAZA);     // east gate
-groundRect(64, 84, 13, 5, G.PLAZA);      // south gate
-groundRect(72, 10, 34, 3, G.PATH);       // dorm north path
-groundRect(72, 30, 39, 3, G.PATH);       // dorm / canteen south path
-groundRect(103, 30, 4, 18, G.PATH);      // canteen to central
-groundRect(84, 45, 22, 2, G.PATH);       // main building forecourt
-groundRect(36, 45, 4, 4, G.PATH);        // west track to central
-groundRect(35, 28, 5, 19, G.PATH);       // around west track
-groundRect(14, 45, 25, 2, G.PATH);       // west track south
-groundRect(24, 64, 4, 9, G.PATH);        // library south
-groundRect(36, 56, 4, 24, G.PATH);       // library east spine
-groundRect(36, 56, 64, 2, G.PATH);       // academic north path
-groundRect(13, 70, 52, 2, G.PATH);       // academic middle path
-groundRect(24, 16, 3, 10, G.PATH);       // student activity link
-groundRect(6, 14, 8, 2, G.PATH);         // park link
+// --- gate plazas ---
+groundRect(64, 2, 15, 11, G.PLAZA);
+groundRect(0, 72, 10, 9, G.PLAZA);
+groundRect(150, 62, 9, 10, G.PLAZA);
+groundRect(88, 110, 13, 9, G.PLAZA);
+
+// --- secondary paths / forecourts ---
+groundRect(70, 38, 77, 4, G.PATH);
+groundRect(18, 10, 4, 52, G.PATH);
+groundRect(104, 34, 4, 28, G.PATH);
+groundRect(26, 66, 5, 13, G.PATH);
+groundRect(33, 66, 4, 2, G.PATH);
+groundRect(8, 96, 4, 3, G.PATH);
+groundRect(12, 95, 30, 3, G.PATH);
+groundRect(44, 78, 12, 2, G.PATH);
+groundRect(54, 89, 4, 12, G.PATH);
+groundRect(76, 94, 4, 15, G.PATH);
+groundRect(96, 94, 4, 16, G.PATH);
+groundRect(108, 58, 4, 10, G.PATH);
+groundRect(112, 76, 4, 4, G.PATH);
+groundRect(128, 34, 4, 28, G.PATH);
+groundRect(6, 62, 4, 14, G.PATH);
 
 // --- tracks ---
 function track(x, y, w, h) {
@@ -73,16 +77,16 @@ function track(x, y, w, h) {
   rect('detail', x + 3, y + 3, w - 6, 1, G.COURTLINE);
   rect('detail', x + 3, y + h - 4, w - 6, 1, G.COURTLINE);
 }
-track(14, 30, 21, 15);   // 西田径场
-track(62, 30, 21, 15);   // 东田径场
+track(26, 44, 21, 15);
+track(76, 44, 21, 15);
 
-// --- pond / park (near student centre) ---
-groundRect(6, 16, 8, 8, G.WATERDARK);
-groundRect(7, 17, 6, 6, G.WATER);
-groundRect(5, 15, 10, 1, G.PATH);
-groundRect(5, 24, 10, 1, G.PATH);
-groundRect(5, 16, 1, 8, G.PATH);
-groundRect(14, 16, 1, 8, G.PATH);
+// --- park and pond ---
+groundRect(8, 20, 9, 9, G.WATERDARK);
+groundRect(9, 21, 7, 7, G.WATER);
+groundRect(7, 19, 11, 1, G.PATH);
+groundRect(7, 29, 11, 1, G.PATH);
+groundRect(7, 20, 1, 9, G.PATH);
+groundRect(17, 20, 1, 9, G.PATH);
 
 // --- buildings ---
 function building(x, y, w, h, opts = {}) {
@@ -120,42 +124,46 @@ function building(x, y, w, h, opts = {}) {
 }
 
 // gates
-building(43, 2, 6, 4, { wall: G.WALL_BRICK, roofH: 2, doorW: 1 });
-building(60, 2, 6, 4, { wall: G.WALL_BRICK, roofH: 2, doorW: 1 });
-// dorms (north-east cluster)
-const dormA = building(74, 12, 11, 8, { wall: G.WALL, roofH: 4 });
-const dormB = building(88, 12, 11, 8, { wall: G.WALL, roofH: 4 });
-const dormC = building(74, 22, 11, 8, { wall: G.WALL, roofH: 4 });
-const dormD = building(88, 22, 11, 8, { wall: G.WALL_BRICK, roofH: 4 });
-// canteen and student activity centre
-const canteen = building(100, 20, 12, 10, { wall: G.WALL_BRICK, roofH: 4 });
-const activity = building(16, 16, 13, 9, { wall: G.WALL, roofH: 4 });
-// library
-const library = building(18, 52, 17, 11, { wall: G.WALL, roofH: 5 });
-// sports centre
-const sports = building(5, 38, 8, 7, { wall: G.WALL_BRICK, roofH: 3 });
-// main teaching / 睿智楼
-const main = building(84, 34, 19, 11, { wall: G.WALL, roofH: 5 });
-// academic south
-building(37, 58, 16, 10, { wall: G.WALL, roofH: 4 });
-building(60, 62, 15, 10, { wall: G.WALL_BRICK, roofH: 4 });
-building(84, 58, 17, 10, { wall: G.WALL, roofH: 4 });
-building(36, 72, 15, 9, { wall: G.WALL_BRICK, roofH: 4 });
-building(58, 73, 15, 9, { wall: G.WALL, roofH: 4 });
-building(76, 72, 15, 9, { wall: G.WALL_BRICK, roofH: 4 });
-building(14, 68, 15, 9, { wall: G.WALL, roofH: 4 });
-building(8, 58, 15, 9, { wall: G.WALL_BRICK, roofH: 4 });
+building(63, 2, 6, 4, { wall: G.WALL_BRICK, roofH: 2, doorW: 1 });
+building(75, 2, 6, 4, { wall: G.WALL_BRICK, roofH: 2, doorW: 1 });
+// north-east: 藏医学院明博楼 + student apartments + canteen
+building(96, 10, 13, 8, { wall: G.WALL, roofH: 4 });
+building(112, 14, 11, 8, { wall: G.WALL, roofH: 4 });
+building(126, 14, 11, 8, { wall: G.WALL_BRICK, roofH: 4 });
+building(112, 26, 11, 8, { wall: G.WALL, roofH: 4 });
+building(126, 26, 11, 8, { wall: G.WALL_BRICK, roofH: 4 });
+building(138, 24, 12, 10, { wall: G.WALL_BRICK, roofH: 4 });
+// activity centre + sports centre + library
+building(22, 24, 14, 9, { wall: G.WALL, roofH: 4 });
+building(8, 54, 12, 8, { wall: G.WALL_BRICK, roofH: 3 });
+building(26, 68, 18, 10, { wall: G.WALL, roofH: 5 });
+// east academic cluster
+building(108, 48, 18, 10, { wall: G.WALL, roofH: 5 });
+building(112, 68, 16, 8, { wall: G.WALL, roofH: 4 });
+building(112, 80, 16, 9, { wall: G.WALL_BRICK, roofH: 4 });
+// south academic cluster
+building(56, 78, 18, 10, { wall: G.WALL, roofH: 4 });
+building(76, 84, 13, 10, { wall: G.WALL_BRICK, roofH: 4 });
+building(96, 84, 14, 10, { wall: G.WALL, roofH: 4 });
+building(76, 70, 12, 7, { wall: G.WALL, roofH: 3 });
+building(54, 100, 15, 9, { wall: G.WALL_BRICK, roofH: 4 });
+building(26, 100, 14, 9, { wall: G.WALL, roofH: 4 });
+building(12, 86, 14, 9, { wall: G.WALL_BRICK, roofH: 4 });
+building(8, 98, 14, 9, { wall: G.WALL, roofH: 4 });
 
 // --- trees ---
 const trees = [
-  [12, 12], [20, 12], [34, 12], [40, 12], [70, 12], [72, 38], [70, 48],
-  [10, 30], [10, 34], [10, 44], [40, 30], [40, 34], [40, 40], [40, 44],
-  [12, 50], [16, 50], [38, 50], [42, 52], [42, 54], [42, 66], [42, 70],
-  [8, 72], [8, 78], [30, 60], [32, 66], [34, 74], [54, 60], [56, 70],
-  [72, 62], [74, 70], [102, 62], [104, 70], [106, 74], [108, 80],
-  [24, 78], [52, 78], [64, 80], [86, 82], [100, 82], [112, 30], [112, 70],
-  [6, 10], [10, 10], [26, 10], [36, 10], [44, 10], [66, 10], [102, 10],
-  [108, 12], [108, 22], [108, 34], [8, 84], [20, 84], [46, 84], [96, 84],
+  [14, 12], [22, 12], [44, 12], [52, 12], [82, 12], [90, 12], [110, 8],
+  [40, 20], [46, 20], [74, 20], [80, 20], [88, 20], [140, 12], [146, 16],
+  [14, 36], [20, 40], [48, 38], [54, 42], [60, 46], [68, 50], [98, 40],
+  [104, 62], [108, 64], [132, 50], [138, 52], [144, 58], [148, 62],
+  [8, 34], [8, 44], [8, 66], [8, 78], [8, 82], [8, 108], [20, 110],
+  [24, 62], [46, 62], [50, 66], [52, 74], [46, 76], [44, 98], [50, 110],
+  [132, 66], [138, 72], [144, 80], [148, 88], [140, 96], [132, 100],
+  [128, 92], [120, 94], [106, 100], [92, 100], [86, 106], [74, 108],
+  [66, 112], [54, 114], [38, 114], [28, 114], [18, 114], [6, 118],
+  [148, 118], [154, 108], [154, 96], [154, 84], [154, 30], [154, 18],
+  [148, 6], [136, 6], [118, 6], [86, 6], [58, 6], [40, 6], [28, 6],
 ];
 for (const [x, y] of trees) {
   set('props', x, y - 1, G.TREE);
@@ -164,42 +172,43 @@ for (const [x, y] of trees) {
   set('shadows', x, y, G.SHADOW);
 }
 
-// --- hedges ---
-for (const [x, y, w] of [[17, 51, 19], [83, 33, 21], [73, 11, 27], [73, 21, 27], [36, 57, 18], [83, 57, 19], [15, 67, 16]]) {
+// hedges around key buildings
+for (const [x, y, w] of [[25, 67, 20], [107, 47, 20], [111, 67, 18], [55, 77, 20], [75, 83, 15], [95, 83, 16], [53, 99, 17], [25, 99, 16]]) {
   for (let i = 0; i < w; i++) { set('props', x + i, y, G.HEDGE); set('collision', x + i, y, G.SOLID); }
 }
 
-// --- benches, lamps, flowerbeds ---
+// benches, lamps, flowerbeds
 const benches = [
-  [12, 46], [20, 46], [28, 46], [36, 46], [52, 44], [60, 44],
-  [26, 65], [34, 65], [46, 67], [70, 67], [92, 67], [104, 32],
-  [76, 32], [86, 32], [100, 46], [108, 46], [12, 14], [22, 26],
+  [24, 61], [32, 61], [40, 61], [48, 61], [52, 58], [60, 58],
+  [28, 80], [38, 80], [50, 82], [72, 82], [90, 96], [108, 96],
+  [104, 40], [130, 40], [116, 42], [142, 42], [16, 32], [30, 34],
 ];
 for (const [x, y] of benches) { set('props', x, y, G.BENCH); set('collision', x, y, G.SOLID); }
 const lamps = [
-  [52, 12], [60, 12], [52, 24], [60, 24], [52, 36], [60, 36],
-  [52, 48], [60, 48], [52, 60], [60, 60], [52, 72], [60, 72],
-  [10, 47], [24, 47], [38, 47], [76, 47], [90, 47], [104, 47],
-  [14, 29], [35, 29], [62, 29], [83, 29], [14, 45], [35, 45],
-  [62, 45], [83, 45], [72, 31], [100, 31], [6, 52], [112, 52],
+  [68, 12], [76, 12], [68, 30], [76, 30], [68, 48], [76, 48], [68, 60], [76, 60],
+  [68, 76], [76, 76], [68, 94], [76, 94], [68, 108], [76, 108],
+  [10, 62], [24, 62], [42, 62], [58, 62], [82, 62], [102, 62], [118, 62], [136, 62],
+  [24, 43], [48, 43], [74, 43], [98, 43], [124, 43], [146, 43],
+  [24, 59], [48, 59], [74, 59], [98, 59], [124, 59], [146, 59],
+  [100, 38], [146, 38], [6, 74], [152, 66],
 ];
 for (const [x, y] of lamps) { set('props', x, y, G.LAMP); set('collision', x, y, G.SOLID); }
 const flowers = [
-  [45, 11], [65, 11], [72, 9], [106, 9], [38, 46], [42, 46],
-  [16, 50], [36, 50], [36, 64], [40, 64], [70, 56], [82, 56],
-  [104, 56], [12, 66], [30, 66], [52, 70], [72, 70], [92, 70],
+  [44, 10], [56, 10], [88, 10], [104, 10], [140, 40], [146, 46],
+  [22, 66], [48, 66], [44, 82], [64, 74], [80, 78], [96, 80],
+  [104, 74], [128, 56], [136, 58], [12, 84], [38, 94], [70, 96],
 ];
 for (const [x, y] of flowers) { set('props', x, y, G.FLOWERBED); set('collision', x, y, G.SOLID); }
 
 // signs
-for (const [x, y] of [[44, 5], [66, 5], [17, 25], [35, 63], [97, 30], [73, 30], [83, 45], [103, 45], [64, 84], [8, 52], [112, 46]]) {
+for (const [x, y] of [[62, 5], [78, 5], [23, 33], [35, 78], [143, 34], [111, 34], [125, 34], [117, 58], [65, 88], [82, 94], [103, 94], [61, 109], [6, 72], [152, 62], [90, 110]]) {
   set('props', x, y, G.SIGN);
 }
 
-// flowers on free grass
-let seed = 17;
+// scatter flowers on free grass
+let seed = 29;
 const rnd = () => ((seed = (seed * 1664525 + 1013904223) >>> 0) / 4294967296);
-for (let i = 0; i < 300; i++) {
+for (let i = 0; i < 420; i++) {
   const x = Math.floor(rnd() * W);
   const y = Math.floor(rnd() * H);
   if (layers.ground[at(x, y)] === G.GRASS && layers.buildings[at(x, y)] === 0) set('detail', x, y, G.FLOWER);
@@ -221,30 +230,34 @@ function trigger(id, kind, tx, ty, label, radius = 30, payload = '') {
   });
 }
 
-trigger('signin', 'signin', 54, 7, '北门 · 每日签到');
-trigger('notice', 'notice', 60, 7, '公告板');
-trigger('guard', 'dialogue', 48, 9, '和保安大爷聊聊', 30, 'guard_first');
-trigger('main_class', 'class', 93, 45, '睿智楼 · 主教学楼', 30);
-trigger('timetable', 'timetable', 98, 45, '课程表', 24);
-trigger('library_quiz', 'library_quiz', 26, 64, '图书馆 · 知识问答');
-trigger('seat_hint', 'seat_hint', 31, 64, '查看座位', 24);
-trigger('librarian', 'dialogue', 31, 63, '和图书管理员聊聊', 26, 'librarian_first');
-trigger('meal', 'meal', 105, 30, '学生食堂 · 打饭', 30);
-trigger('auntie', 'dialogue', 108, 31, '和食堂阿姨聊聊', 26, 'auntie_first');
-trigger('sleep', 'sleep', 79, 30, '回宿舍睡觉', 30);
-trigger('dorm_door', 'door', 95, 30, '学生公寓（室内待开放）', 24);
-trigger('cat_orange', 'cat', 86, 31, '大橘（学生公寓楼下）', 24, 'orange');
-trigger('cat_black', 'cat', 60, 46, '煤球（东田径场）', 24, 'black');
-trigger('cat_white', 'cat', 84, 46, '雪球（主楼台阶）', 24, 'white');
-trigger('cat_calico', 'cat', 108, 32, '花花（学生食堂后门）', 24, 'calico');
-trigger('cat_scholar', 'cat', 36, 62, '学霸（图书馆）', 24, 'scholar');
-trigger('trainer', 'dialogue', 36, 43, '和神秘训练师聊聊', 30, 'trainer_first');
-trigger('battle', 'battle', 38, 42, '宠物对战', 28);
-trigger('catclub', 'dialogue', 18, 45, '和猫协同学聊聊', 28, 'catclub_first');
-trigger('hideseek', 'hideseek', 22, 45, '躲猫猫', 28);
-trigger('grandstand', 'grandstand', 27, 47, '西田径场看台', 26);
-trigger('vending', 'vending', 70, 32, '自动售货机', 22);
-trigger('streetlight', 'streetlight', 56, 52, '路灯开关', 22);
+trigger('signin', 'signin', 71, 8, '北门 · 每日签到');
+trigger('notice', 'notice', 77, 8, '公告板');
+trigger('guard', 'dialogue', 66, 10, '和保安大爷聊聊', 30, 'guard_first');
+trigger('class_ruizhi', 'class', 117, 58, '睿智楼（数理/外语）· 上课', 30, '睿智楼');
+trigger('timetable', 'timetable', 122, 58, '课程表', 24);
+trigger('class_finance', 'class', 65, 88, '尚真楼（财经/人文）· 上课', 28, '尚真楼');
+trigger('class_computer', 'class', 82, 94, '融馨楼（计算机学院）· 上课', 28, '融馨楼');
+trigger('class_agri', 'class', 103, 94, '逸夫楼（农牧学院）· 上课', 28, '逸夫楼');
+trigger('class_medicine', 'class', 61, 109, '圣汇楼（基础医学）· 上课', 28, '圣汇楼');
+trigger('library_quiz', 'library_quiz', 35, 78, '图书馆 · 知识问答');
+trigger('seat_hint', 'seat_hint', 40, 78, '查看座位', 24);
+trigger('librarian', 'dialogue', 44, 79, '和图书管理员聊聊', 26, 'librarian_first');
+trigger('meal', 'meal', 144, 34, '学生食堂 · 打饭', 30);
+trigger('auntie', 'dialogue', 148, 35, '和食堂阿姨聊聊', 26, 'auntie_first');
+trigger('sleep', 'sleep', 117, 34, '回学生公寓睡觉', 30);
+trigger('dorm_door', 'door', 131, 34, '学生公寓（室内待开放）', 24);
+trigger('cat_orange', 'cat', 113, 35, '大橘（学生公寓楼下）', 24, 'orange');
+trigger('cat_black', 'cat', 86, 60, '煤球（东田径场）', 24, 'black');
+trigger('cat_white', 'cat', 106, 58, '雪球（睿智楼台阶）', 24, 'white');
+trigger('cat_calico', 'cat', 146, 34, '花花（学生食堂后门）', 24, 'calico');
+trigger('cat_scholar', 'cat', 44, 78, '学霸（图书馆）', 24, 'scholar');
+trigger('trainer', 'dialogue', 49, 60, '和神秘训练师聊聊', 30, 'trainer_first');
+trigger('battle', 'battle', 50, 58, '宠物对战', 28);
+trigger('catclub', 'dialogue', 28, 60, '和猫协同学聊聊', 28, 'catclub_first');
+trigger('hideseek', 'hideseek', 32, 60, '躲猫猫', 28);
+trigger('grandstand', 'grandstand', 36, 60, '西田径场看台', 26);
+trigger('vending', 'vending', 100, 40, '自动售货机', 22);
+trigger('streetlight', 'streetlight', 72, 64, '路灯开关', 22);
 
 const map = {
   compressionlevel: -1,
@@ -279,4 +292,4 @@ mkdirSync(OUT, { recursive: true });
 mkdirSync(SRC, { recursive: true });
 writeFileSync(join(OUT, 'campus.tmj'), json);
 writeFileSync(join(SRC, 'campus.tmj'), json);
-console.log('QHU-inspired map written', W, H, 'triggers', triggers.length, { main, library, canteen, dormA, dormB, dormC, dormD, sports, activity });
+console.log('full QHU map written', W, H, 'triggers', triggers.length);

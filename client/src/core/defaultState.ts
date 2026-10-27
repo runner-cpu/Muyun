@@ -1,7 +1,7 @@
 import { DAY_START_MINUTES } from '../config';
 import type { GameStateData, Settings } from '../types';
 
-export const SPAWN = { x: 54 * 16, y: 10 * 16 };
+export const SPAWN = { x: 71 * 16, y: 11 * 16 };
 
 export function createDefaultState(): GameStateData {
   const settings: Settings = { music: 0.28, sfx: 0.45, muted: false };

@@ -1,7 +1,7 @@
 export interface QuizQuestion { q: string; options: string[]; answer: number; note: string; }
 
 export const QUIZZES: QuizQuestion[] = [
-  { q: '北门到睿智楼的这条路，在游戏里最接近哪种形状？', options: ['一条直线', '一条绕行的环线', '一个圆圈'], answer: 1, note: '主楼挡住了直路，得从两侧绕过去。' },
+  { q: '北门到睿智楼的这条路，在游戏里最接近哪种形状？', options: ['一条直线', '一条绕行的环线', '一个圆圈'], answer: 1, note: '睿智楼挡住了直路，得从两侧绕过去。' },
   { q: '橘猫、黑猫、白猫的克制关系是？', options: ['橘 → 黑 → 白 → 橘', '橘 → 白 → 黑 → 橘', '三系互不相克'], answer: 0, note: '记住这条链，宠物对战就不会打得太难看。' },
   { q: '图书馆的开放时间是？', options: ['08:00 — 22:00', '09:00 — 21:00', '全天开放'], answer: 0, note: '闭馆前五分钟，馆内灯光会变暖。' },
   { q: '游戏里一天等于现实多长时间？', options: ['6 分钟', '30 分钟', '1 小时'], answer: 0, note: '一天 6 分钟，所以别在学生食堂门口发太久呆。' },

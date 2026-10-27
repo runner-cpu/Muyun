@@ -94,7 +94,7 @@ export class CampusScene extends Phaser.Scene {
     this.time.delayedCall(650, () => {
       ui.toast('WASD / 摇杆移动 · 靠近黄色标记按 E 互动', 'gold', 3600);
     });
-    this.time.delayedCall(1600, () => ui.toast('先去主教学楼上课，拿今天的第一笔学分', '', 2600));
+    this.time.delayedCall(1600, () => ui.toast('先找一栋院系教学楼上课，拿今天的第一笔学分', '', 2600));
     this.events.once(Phaser.Scenes.Events.SHUTDOWN, () => {
       this.inputManager?.destroy();
     });
@@ -174,11 +174,16 @@ export class CampusScene extends Phaser.Scene {
 
   private createBuildingLabels(): void {
     const labels: Array<[string, number, number]> = [
-      ['北门', 54, 4], ['综合体育中心', 9, 47], ['西田径场', 24, 28],
-      ['图书馆', 26, 51], ['学生活动中心', 22, 15], ['学生公寓', 84, 11],
-      ['学生食堂', 104, 18], ['睿智楼 · 主教学楼', 93, 32], ['财经学院', 45, 57],
-      ['计算机学院', 67, 61], ['雨化楼', 92, 57], ['东田径场', 72, 29],
-      ['东门', 114, 44], ['南门', 70, 89], ['西门', 4, 50], ['公园', 10, 15],
+      ['北门', 71, 4], ['明博楼（藏医学院）', 102, 9], ['学生公寓', 122, 12],
+      ['学生食堂', 144, 23], ['学生活动中心', 28, 23], ['公园', 12, 19],
+      ['综合体育中心', 14, 53], ['西田径场', 36, 43], ['东田径场', 86, 43],
+      ['图书馆', 34, 67], ['睿智楼（数理/外语）', 117, 47],
+      ['雨化楼（生态）', 120, 67], ['镂金楼（土木）', 120, 79],
+      ['尚真楼（财经/人文）', 64, 77], ['鼎新馆（马克思）', 82, 69],
+      ['融馨楼（计算机）', 82, 83], ['逸夫楼（农牧）', 103, 83],
+      ['静远楼（化工）', 19, 85], ['求实楼（地质/能源）', 14, 97],
+      ['机械工程学院', 32, 99], ['圣汇楼（基础医学）', 61, 99],
+      ['东门', 152, 61], ['南门', 94, 117], ['西门', 4, 71],
     ];
     for (const [text, tx, ty] of labels) {
       this.add.text(tx * TILE + 8, ty * TILE + 8, text, {
@@ -287,8 +292,8 @@ export class CampusScene extends Phaser.Scene {
     ui.fadeThrough(() => {
       this.timeSystem.sleep();
       const bed = this.mapData.triggers.find((t) => t.id === 'sleep');
-      const x = bed ? bed.x : 79 * TILE + 8;
-      const y = bed ? bed.y + TILE : 31 * TILE;
+      const x = bed ? bed.x : 117 * TILE + 8;
+      const y = bed ? bed.y + TILE : 35 * TILE;
       this.player.setPosition(x, y);
       gameState.setPlayer(x, y);
       this.persist();

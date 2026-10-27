@@ -27,7 +27,7 @@ for (const obj of triggers) {
 }
 
 // Reachability sanity: flood fill from spawn over walkable tiles.
-const spawn = { x: 54, y: 10 };
+const spawn = { x: 71, y: 11 };
 const seen = new Set();
 const queue = [[spawn.x, spawn.y]];
 while (queue.length) {

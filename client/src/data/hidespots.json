@@ -1,10 +1,10 @@
 [
-  { "id": "bench_a", "name": "西田径场南侧长椅", "tx": 16, "ty": 44 },
-  { "id": "bench_b", "name": "跑道边的长椅", "tx": 28, "ty": 46 },
-  { "id": "tree_a", "name": "操场角落的大树", "tx": 33, "ty": 36 },
-  { "id": "stand", "name": "看台下方", "tx": 28, "ty": 45 },
-  { "id": "hedge_a", "name": "东侧灌木丛", "tx": 35, "ty": 42 },
-  { "id": "hedge_b", "name": "北侧灌木丛", "tx": 24, "ty": 29 },
-  { "id": "lamp", "name": "球场灯柱后面", "tx": 35, "ty": 29 },
-  { "id": "bench_c", "name": "学生活动中心旁长椅", "tx": 22, "ty": 26 }
+  { "id": "bench_a", "name": "西田径场南侧长椅", "tx": 28, "ty": 59 },
+  { "id": "bench_b", "name": "跑道边的长椅", "tx": 40, "ty": 59 },
+  { "id": "tree_a", "name": "操场角落的大树", "tx": 45, "ty": 51 },
+  { "id": "stand", "name": "看台下方", "tx": 36, "ty": 60 },
+  { "id": "hedge_a", "name": "东侧灌木丛", "tx": 46, "ty": 49 },
+  { "id": "hedge_b", "name": "北侧灌木丛", "tx": 34, "ty": 43 },
+  { "id": "lamp", "name": "球场灯柱后面", "tx": 48, "ty": 43 },
+  { "id": "bench_c", "name": "学生活动中心旁长椅", "tx": 30, "ty": 34 }
 ]

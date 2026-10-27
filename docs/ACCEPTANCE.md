@@ -9,7 +9,7 @@
 | TypeScript | `npx tsc --noEmit` | 通过 |
 | 单元测试 | `npm test` | 13/13 通过 |
 | 生产构建 | `npm run build` | 通过，JS gzip ≈ 354KB |
-| 地图校验 | `npm run validate:map` | 24 个触发器，0 issue，0 warning |
+| 地图校验 | `npm run validate:map` | 28 个触发器，0 issue，0 warning |
 
 ## 手工冒烟（生产预览）
 
@@ -24,7 +24,7 @@
 | 猫收集 | 5 只全部收集，`first_cat` / `all_cats` 解锁，图鉴 5/5 |
 | 宠物对战 | 选猫 → 回合 → 胜利结算 → 返回校园，学分 +6、心情 +8、`battle_first` |
 | 躲猫猫 | 8 个 ? 标记、90 秒计时、冷热提示、找到目标、心情 +10、`hide_first` |
-| 存档迁移 | v1 → v2，保留猫/成就/设置，位置重置到北门 |
+| 存档迁移 | v1/v2 → v3，保留猫/成就/设置，位置重置到北门 |
 | 窗口缩放 | ResizeObserver 触发 Phaser `scale.refresh()`，画布适配 |
 | 手机横屏布局 | 800×400 下摇杆 + 互动按钮显示；390×844 竖屏显示旋转提示（构建后） |
 

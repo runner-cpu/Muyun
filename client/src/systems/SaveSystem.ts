@@ -61,8 +61,8 @@ export function migrateSave(raw: unknown): SaveFile | null {
     hideDay: Math.round(safeNumber(candidate.hideDay, 0, 0)),
     lastSaved: Math.round(safeNumber(candidate.lastSaved, 0, 0)),
   };
-  // v2 moved from the placeholder campus to the Qinghai University layout.
-  if (version < 2) data.player = { ...defaults.player };
+  // v2 moved to the Qinghai University layout; v3 expanded the map to the full campus.
+  if (version < 3) data.player = { ...defaults.player };
   return { version: SAVE_VERSION, data };
 }
 
