@@ -86,14 +86,24 @@ for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) {
 // campus roads: a rotated-ish grid, cut into the green
 const ROAD_SPACING_X = 20;
 const ROAD_SPACING_Y = 16;
+const ROAD_ANGLE = (15 * Math.PI) / 180;
+const cosA = Math.cos(ROAD_ANGLE); const sinA = Math.sin(ROAD_ANGLE);
 for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) {
-  const rx = x % ROAD_SPACING_X;
-  const ry = y % ROAD_SPACING_Y;
+  const u = x * cosA + y * sinA;
+  const v = -x * sinA + y * cosA;
+  const rx = ((u % ROAD_SPACING_X) + ROAD_SPACING_X) % ROAD_SPACING_X;
+  const ry = ((v % ROAD_SPACING_Y) + ROAD_SPACING_Y) % ROAD_SPACING_Y;
   if (rx < 2 || ry < 2) set('ground', x, y, G.ROAD);
   else if (rx < 3 || ry < 3) set('ground', x, y, G.PATH);
 }
-for (let y = 3; y < H; y += ROAD_SPACING_Y) for (let x = 3; x < W; x += 4) set('detail', x, y, G.ROADLINE);
-for (let x = 3; x < W; x += ROAD_SPACING_X) for (let y = 3; y < H; y += 4) set('detail', x, y, G.ROADLINE_V);
+// subtle dashed lane detail along the rotated roads
+for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) {
+  if (layers.ground[at(x, y)] !== G.ROAD) continue;
+  const u = x * cosA + y * sinA;
+  const v = -x * sinA + y * cosA;
+  if (Math.abs((((u % 20) + 20) % 20) - 1) < 0.35 && Math.abs((((v % 16) + 16) % 16) - 8) < 3) set('detail', x, y, G.ROADLINE_V);
+  if (Math.abs((((v % 16) + 16) % 16) - 1) < 0.35 && Math.abs((((u % 20) + 20) % 20) - 10) < 3) set('detail', x, y, G.ROADLINE);
+}
 
 // gates / plazas
 const gateFeatures = GEO.features.filter((f) => ['北门', '南门', '东门'].includes(f.properties?.name));
@@ -183,7 +193,7 @@ for (const name of nameToBBox.keys()) {
 
 // nature: trees on free grass, flowerbeds on grass
 const trees = [];
-for (let i = 0; i < 520 && trees.length < 240; i++) {
+for (let i = 0; i < 900 && trees.length < 420; i++) {
   const x = 3 + Math.floor(rand() * (W - 6));
   const y = 3 + Math.floor(rand() * (H - 6));
   if (!walkable(x, y)) continue;
