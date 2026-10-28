@@ -35,6 +35,17 @@
 
 学生公寓、学生食堂在公开点位接口中没有独立坐标，位置按 3D 地图标签与卫星底图相对关系估算。
 
+## 建筑 footprint
+
+平台的前端还加载了公开的建筑 footprint GeoJSON：
+
+- 接口：`https://gis.qhu.edu.cn/cmgis-server/map/v1/mapdata/threeDimensionSource/2`
+- 本地快照：`maps/qhu-buildings.geojson`（128 个 feature，只用于读取建筑轮廓、层数和高度）
+- 生成结果：`client/src/data/footprints.json`，19 个核心建筑的真实多边形轮廓被归一化后用于 2.5D 精灵
+- 没有使用平台的 3D 模型、贴图或倾斜摄影数据
+
+游戏内这些轮廓会缩放到当前校园区块的 bbox 内，因此是“真实轮廓 + 游戏化比例”，不是测绘级 GIS 坐标。
+
 ## 映射规则
 
 - 校园经度范围约 `101.7418 – 101.7532`，纬度范围约 `36.7226 – 36.7338`。

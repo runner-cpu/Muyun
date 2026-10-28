@@ -6,6 +6,7 @@ import { fileURLToPath } from 'node:url';
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 const OUT = join(ROOT, 'client', 'public', 'assets', 'buildings');
 const DEFS = JSON.parse(readFileSync(join(ROOT, 'client', 'src', 'data', 'buildings.json'), 'utf8'));
+const FOOTPRINTS = JSON.parse(readFileSync(join(ROOT, 'client', 'src', 'data', 'footprints.json'), 'utf8'));
 
 const CRC_TABLE = (() => {
   const table = new Uint32Array(256);
@@ -33,6 +34,49 @@ class Canvas {
   circle(cx, cy, r, c) { for (let y = -r; y <= r; y++) for (let x = -r; x <= r; x++) if (x * x + y * y <= r * r) this.px(cx + x, cy + y, c); }
   ellipse(cx, cy, rx, ry, c) { for (let y = -ry; y <= ry; y++) for (let x = -rx; x <= rx; x++) if ((x * x) / (rx * rx) + (y * y) / (ry * ry) <= 1) this.px(cx + x, cy + y, c); }
   save(path) { mkdirSync(dirname(path), { recursive: true }); writeFileSync(path, encodePng(this.w, this.h, this.data)); }
+}
+function fillPolygon(c, points, color) {
+  let minY = Infinity; let maxY = -Infinity;
+  for (const [, y] of points) { minY = Math.min(minY, y); maxY = Math.max(maxY, y); }
+  for (let y = Math.floor(minY); y <= Math.ceil(maxY); y++) {
+    const xs = [];
+    for (let i = 0; i < points.length; i++) {
+      const [x1, y1] = points[i];
+      const [x2, y2] = points[(i + 1) % points.length];
+      if ((y1 <= y && y2 > y) || (y2 <= y && y1 > y)) {
+        const t = (y - y1) / (y2 - y1);
+        xs.push(x1 + t * (x2 - x1));
+      }
+    }
+    xs.sort((a, b) => a - b);
+    for (let i = 0; i + 1 < xs.length; i += 2) {
+      c.rect(Math.floor(xs[i]), y, Math.max(1, Math.ceil(xs[i + 1]) - Math.floor(xs[i])), 1, color);
+    }
+  }
+}
+function outlinePolygon(c, points, color) {
+  const line = (fx0, fy0, fx1, fy1) => {
+    const x0 = Math.round(fx0); const y0 = Math.round(fy0);
+    const x1 = Math.round(fx1); const y1 = Math.round(fy1);
+    const dx = Math.abs(x1 - x0); const dy = Math.abs(y1 - y0);
+    const sx = x0 < x1 ? 1 : -1; const sy = y0 < y1 ? 1 : -1;
+    let err = dx - dy; let x = x0; let y = y0;
+    for (let guard = 0; guard < 500; guard++) {
+      c.px(x, y, color); if (x === x1 && y === y1) break;
+      const e2 = 2 * err;
+      if (e2 > -dy) { err -= dy; x += sx; }
+      if (e2 < dx) { err += dx; y += sy; }
+    }
+  };
+  for (let i = 0; i < points.length; i++) line(points[i][0], points[i][1], points[(i + 1) % points.length][0], points[(i + 1) % points.length][1]);
+}
+function pointInPolygon(points, x, y) {
+  let inside = false;
+  for (let i = 0, j = points.length - 1; i < points.length; j = i++) {
+    const [xi, yi] = points[i]; const [xj, yj] = points[j];
+    if (((yi > y) !== (yj > y)) && (x < (xj - xi) * (y - yi) / (yj - yi) + xi)) inside = !inside;
+  }
+  return inside;
 }
 function hash(str) { let h = 2166136261; for (let i = 0; i < str.length; i++) { h ^= str.charCodeAt(i); h = Math.imul(h, 16777619); } return h >>> 0; }
 function rng(seed) { let a = seed >>> 0; return () => { a = (a + 0x6d2b79f5) | 0; let t = Math.imul(a ^ (a >>> 15), 1 | a); t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t; return ((t ^ (t >>> 14)) >>> 0) / 4294967296; }; }
@@ -209,13 +253,137 @@ function drawEntrance(c, x, y, w, facadeH, type, accent) {
   }
 }
 
+function drawPolygonRoof(c, x, y, w, h, points, type, r) {
+  const pts = points.map(([px, py]) => [x + px * w, y + py * h]);
+  let minX = Infinity; let maxX = -Infinity; let minY = Infinity; let maxY = -Infinity;
+  for (const [px, py] of pts) { minX = Math.min(minX, px); maxX = Math.max(maxX, px); minY = Math.min(minY, py); maxY = Math.max(maxY, py); }
+  fillPolygon(c, pts.map(([px, py]) => [px + 3, py + 4]), [0, 0, 0, 55]);
+  fillPolygon(c, pts, ROOF.top);
+  outlinePolygon(c, pts, ROOF.dark);
+  // subtle roof texture clipped to the real footprint
+  for (let i = 0; i < Math.max(40, (maxX - minX) * (maxY - minY) / 55); i++) {
+    const px = minX + 3 + r() * Math.max(1, maxX - minX - 6);
+    const py = minY + 3 + r() * Math.max(1, maxY - minY - 6);
+    if (pointInPolygon(pts, px, py)) c.px(px, py, r() > 0.55 ? '#5e646c' : '#4a5058');
+  }
+  // rooftop plant / vents
+  const count = 2 + Math.floor(r() * 3);
+  for (let i = 0; i < count; i++) {
+    const bw = 8 + Math.floor(r() * 14);
+    const bh = 5 + Math.floor(r() * 7);
+    const bx = minX + 8 + Math.floor(r() * Math.max(1, maxX - minX - bw - 16));
+    const by = minY + 6 + Math.floor(r() * Math.max(1, maxY - minY - bh - 10));
+    if (pointInPolygon(pts, bx + bw / 2, by + bh / 2)) {
+      c.rect(bx, by, bw, bh, '#71777f');
+      c.rect(bx, by, bw, 2, '#8b9198');
+      c.rect(bx + 2, by + 2, Math.max(2, bw - 4), Math.max(1, bh - 3), '#555b62');
+    }
+  }
+  if (type === 'library') {
+    const cx = (minX + maxX) / 2;
+    const cy = (minY + maxY) / 2;
+    c.rect(cx - 30, cy - 10, 60, 18, '#5d8da0');
+    c.rect(cx - 30, cy - 10, 60, 2, '#a8d0dc');
+  }
+}
+
+function drawExtrudedBuilding(def, footprint, palette, r) {
+  const bodyW = def.w * 16;
+  const bodyH = def.h * 16;
+  const extrude = footprint.extrude;
+  const c = new Canvas(bodyW + 8, bodyH + extrude + 8);
+  const ox = 4;
+  const oy = 4 + extrude;
+  const base = footprint.points.map(([px, py]) => [ox + px * bodyW, oy + py * bodyH]);
+  const roof = base.map(([x, y]) => [x, y - extrude]);
+  fillPolygon(c, base.map(([x, y]) => [x + 4, y + 5]), [0, 0, 0, 55]);
+
+  // wall faces: every footprint edge extruded from base to roof
+  for (let i = 0; i < base.length; i++) {
+    const p1 = base[i];
+    const p2 = base[(i + 1) % base.length];
+    const q1 = roof[i];
+    const q2 = roof[(i + 1) % roof.length];
+    const edgeLen = Math.hypot(p2[0] - p1[0], p2[1] - p1[1]);
+    if (edgeLen < 0.5) continue;
+    fillPolygon(c, [p1, p2, q2, q1], palette.wall);
+    // horizontal glazing bands follow the actual wall edge
+    if (edgeLen > 24) {
+      for (const [a, b] of [[0.24, 0.4], [0.52, 0.68]]) {
+        const band = [
+          [p1[0] + (q1[0] - p1[0]) * a, p1[1] + (q1[1] - p1[1]) * a],
+          [p2[0] + (q2[0] - p2[0]) * a, p2[1] + (q2[1] - p2[1]) * a],
+          [p2[0] + (q2[0] - p2[0]) * b, p2[1] + (q2[1] - p2[1]) * b],
+          [p1[0] + (q1[0] - p1[0]) * b, p1[1] + (q1[1] - p1[1]) * b],
+        ];
+        fillPolygon(c, band, WINDOW.frame);
+        const inner = band.map(([x, y]) => [x, y]);
+        // inset the glass two pixels inside the frame band
+        for (let i = 0; i < inner.length; i++) {
+          const [x, y] = inner[i];
+          const cx = (p1[0] + p2[0] + q1[0] + q2[0]) / 4;
+          const cy = (p1[1] + p2[1] + q1[1] + q2[1]) / 4;
+          inner[i] = [x + (cx - x) * 0.04, y + (cy - y) * 0.04];
+        }
+        fillPolygon(c, inner, WINDOW.glass);
+      }
+      // darker ground floor band
+      fillPolygon(c, [
+        p1, p2,
+        [p2[0] + (q2[0] - p2[0]) * 0.16, p2[1] + (q2[1] - p2[1]) * 0.16],
+        [p1[0] + (q1[0] - p1[0]) * 0.16, p1[1] + (q1[1] - p1[1]) * 0.16],
+      ], palette.base);
+    }
+  }
+  // roof
+  fillPolygon(c, roof, ROOF.top);
+  outlinePolygon(c, roof, ROOF.dark);
+  for (let i = 0; i < Math.max(30, (bodyW * bodyH) / 120); i++) {
+    const px = 4 + r() * bodyW;
+    const py = 4 + r() * extrude;
+    if (pointInPolygon(roof, px, py)) c.px(px, py, r() > 0.55 ? '#5e646c' : '#4a5058');
+  }
+  // rooftop units
+  for (let i = 0; i < 2 + Math.floor(r() * 3); i++) {
+    const bw = 8 + Math.floor(r() * 14);
+    const bh = 5 + Math.floor(r() * 7);
+    const bx = 8 + Math.floor(r() * Math.max(1, bodyW - bw - 16));
+    const by = 6 + Math.floor(r() * Math.max(1, extrude - bh - 8));
+    if (pointInPolygon(roof, bx + bw / 2, by + bh / 2)) {
+      c.rect(bx, by, bw, bh, '#71777f');
+      c.rect(bx, by, bw, 2, '#8b9198');
+      c.rect(bx + 2, by + 2, Math.max(2, bw - 4), Math.max(1, bh - 3), '#555b62');
+    }
+  }
+  // entrance on the southernmost edge
+  let bestEdge = null;
+  let bestY = -Infinity;
+  for (let i = 0; i < base.length; i++) {
+    const p1 = base[i]; const p2 = base[(i + 1) % base.length];
+    const len = Math.hypot(p2[0] - p1[0], p2[1] - p1[1]);
+    if (len > 24 && (p1[1] + p2[1]) / 2 > bestY) { bestY = (p1[1] + p2[1]) / 2; bestEdge = [p1, p2]; }
+  }
+  if (bestEdge) {
+    const [p1, p2] = bestEdge;
+    const mx = (p1[0] + p2[0]) / 2;
+    const my = (p1[1] + p2[1]) / 2;
+    c.rect(mx - 12, my - 20, 24, 20, '#263c4a');
+    c.rect(mx - 10, my - 18, 20, 16, '#31576a');
+    c.rect(mx - 16, my - 24, 32, 4, palette.accent);
+    c.rect(mx - 18, my - 1, 36, 2, '#d7cdbb');
+  }
+  return c;
+}
+
 function drawBuilding(def) {
   const pad = 4;
   const bodyW = def.w * 16;
   const bodyH = def.h * 16;
-  const c = new Canvas(bodyW + 8, bodyH + 8);
   const r = rng(hash(def.key));
   const palette = (PALETTES[def.type] ?? PALETTES.academic)[def.variant % (PALETTES[def.type] ?? PALETTES.academic).length];
+  const footprint = FOOTPRINTS[def.id];
+  if (footprint && def.type !== 'sports' && def.type !== 'gate') return drawExtrudedBuilding(def, footprint, palette, r);
+  const c = new Canvas(bodyW + 8, bodyH + 8);
   c.rect(pad + 5, pad + 6, bodyW, bodyH, [0, 0, 0, 55]);
   c.rect(pad, pad, bodyW, bodyH, palette.wall);
   c.rect(pad + bodyW - 5, pad, 5, bodyH, palette.base);

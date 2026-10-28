@@ -34,6 +34,8 @@
 
 树木也改为 3 种 32×44 精灵（`tools/gen-trees.mjs`），草地/人行道/蓝色西田径场重新调色。
 
+核心建筑的轮廓不是手画矩形，而是读取公开的 `threeDimensionSource/2` footprint 数据，归一化后做 2.5D 挤出（`tools/gen-footprints.mjs` + `footprints.json`）。这样图书馆、公寓、学院楼都有实际的多边形轮廓和层数，视觉上更接近 3D 地图。
+
 ## 3b. 第一版占位素材
 
 方案原本假设 Kenney/LimeZu 素材包，但：
