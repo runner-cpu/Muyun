@@ -32,6 +32,7 @@ npm run preview
 
 - Phaser 3 + TypeScript + Vite；逻辑分辨率 480×270，16×16 瓦片，整数缩放。
 - 160×120 的全校区 Tiled 地图（`client/public/assets/maps/campus.tmj`），含 ground / detail / shadows / buildings / props / collision / triggers 七层。
+- 22 栋 2.5D 建筑精灵（图书馆、综合体育中心、学生活动中心、学生食堂、4 栋学生公寓、各学院楼、门卫室）+ 3 种树精灵；不再使用方块楼贴图。
 - 28 个地图触发器：签到、公告、5 个院系上课点、课程表、知识问答、座位提示、打饭、睡觉、5 只猫、宠物对战、躲猫猫、看台、售货机、路灯开关、4 个 NPC 对话。
 - 5 个剧情 NPC：保安大爷、食堂阿姨、图书管理员、猫协同学、神秘训练师。
 - 时间系统：1 游戏日 = 现实 6 分钟；清晨/白天/黄昏/夜晚色罩；食堂与图书馆营业时间。
@@ -53,7 +54,7 @@ client/                 前端
   src/world/            Tiled 地图加载
   src/ui/               HTML/CSS 叠加 UI、对话、摇杆、设置
   src/data/             dialogues / pets / skills / cats / hidespots / content
-  public/assets/        tileset、角色、猫、Tiled 地图
+  public/assets/        tileset、角色、猫、2.5D 建筑、树、Tiled 地图
 maps/campus.tmj         Tiled 源文件副本
 tools/                  素材与地图生成脚本
 docs/                   方案、地图参考、决策记录

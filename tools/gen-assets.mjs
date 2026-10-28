@@ -114,12 +114,12 @@ function rng(seed) {
 
 /* ---------- tileset: 16 columns x 2 rows ---------- */
 const P = {
-  grass: '#5d9b4a',
-  grassDark: '#4e8540',
-  grassLight: '#73b25a',
-  path: '#c9a66b',
-  pathDark: '#b58e55',
-  pathLight: '#ddbd82',
+  grass: '#4f8b46',
+  grassDark: '#3f753a',
+  grassLight: '#67a95a',
+  path: '#c7c2b4',
+  pathDark: '#aaa494',
+  pathLight: '#ddd8c8',
   plaza: '#b8b8a8',
   plazaDark: '#a0a08f',
   plazaLight: '#c8c8b8',
@@ -155,7 +155,7 @@ const P = {
   roofLight: '#95504a',
 };
 
-const tiles = new Canvas(16 * 16, 16 * 2);
+const tiles = new Canvas(16 * 16, 16 * 3);
 const T = 16;
 
 function cell(index, draw) {
@@ -353,6 +353,33 @@ cell(28, (ox, oy) => {
 cell(29, (ox, oy) => tiles.rect(ox, oy, T, T, [0, 0, 0, 55]));
 // 30 = transparent collision-only tile
 cell(31, () => {});
+// 32-33: extra grass variants for large lawns
+cell(32, (ox, oy) => {
+  grassBase(ox, oy, rng(32));
+  tiles.rect(ox + 3, oy + 12, 5, 1, P.grassDark);
+  tiles.rect(ox + 11, oy + 5, 3, 1, P.grassLight);
+});
+cell(33, (ox, oy) => {
+  grassBase(ox, oy, rng(33));
+  tiles.rect(ox + 2, oy + 3, 4, 1, P.grassLight);
+  tiles.rect(ox + 9, oy + 13, 4, 1, P.grassDark);
+});
+// 34-35: blue track (the west stadium in the reference)
+cell(34, (ox, oy) => {
+  tiles.rect(ox, oy, T, T, '#3f7f9e');
+  const r = rng(34);
+  for (let i = 0; i < 24; i++) tiles.px(ox + (r() * 16 | 0), oy + (r() * 16 | 0), '#336c88');
+});
+cell(35, (ox, oy) => {
+  tiles.rect(ox, oy, T, T, '#3f7f9e');
+  tiles.rect(ox, oy + 7, T, 2, P.white);
+});
+// 36: vertical road center line
+cell(36, (ox, oy) => {
+  tiles.rect(ox, oy, T, T, P.road);
+  tiles.rect(ox + 7, oy + 1, 2, 6, P.line);
+  tiles.rect(ox + 7, oy + 10, 2, 5, P.line);
+});
 
 tiles.save(join(OUT, 'tilesets', 'campus-tiles.png'));
 

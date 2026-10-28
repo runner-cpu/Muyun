@@ -9,6 +9,8 @@
 | `client/public/assets/tilesets/campus-tiles.png` | 32 个 16×16 瓦片：草地、道路、广场、水面、墙体、窗户、门、屋顶、树、跑道、球场、长椅、路灯、喷泉、围栏等 |
 | `client/public/assets/sprites/player.png` | 16×24 四方向 × 4 帧角色 |
 | `client/public/assets/sprites/cats.png` | 16×16 五种猫 × 2 帧 |
+| `client/public/assets/buildings/*.png` | 22 栋 2.5D 建筑精灵：图书馆、体育中心、活动中心、食堂、4 栋公寓、各学院楼、门卫室 |
+| `client/public/assets/trees/tree_*.png` | 3 种 32×44 树精灵，含阴影 |
 | `client/public/favicon.svg` | 像素猫 favicon |
 
 ## 地图

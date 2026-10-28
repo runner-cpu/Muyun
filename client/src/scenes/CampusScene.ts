@@ -9,18 +9,24 @@ import { InteractionSystem } from '../systems/InteractionSystem';
 import { DialogueSystem } from '../systems/DialogueSystem';
 import { InteractionController } from '../systems/InteractionController';
 import { buildCampusMap, type CampusMap } from '../world/CampusMap';
+import { createBuildings } from '../world/Buildings';
+import { createTrees, type TreeDef } from '../world/Trees';
 import { Player } from '../entities/Player';
 import { Npc } from '../entities/Npc';
 import { Cat, registerCatAnims } from '../entities/Cat';
 import { PetBattleUI } from '../minigames/PetBattleUI';
 import { HideSeekGame } from '../minigames/HideSeekGame';
 import { ui } from '../ui/instance';
-import type { CatDef, HideSpot, TriggerDef } from '../types';
+import type { BuildingDef, CatDef, HideSpot, TriggerDef } from '../types';
 import catsData from '../data/cats.json';
 import hidespotsData from '../data/hidespots.json';
+import buildingsData from '../data/buildings.json';
+import treesData from '../data/trees.json';
 
 const cats = catsData as CatDef[];
 const hideSpots = hidespotsData as HideSpot[];
+const buildings = buildingsData as BuildingDef[];
+const trees = treesData as TreeDef[];
 const TILE = 16;
 
 export class CampusScene extends Phaser.Scene {
@@ -35,6 +41,7 @@ export class CampusScene extends Phaser.Scene {
   private controller!: InteractionController;
   private nightOverlay!: Phaser.GameObjects.Rectangle;
   private markers = new Map<string, Phaser.GameObjects.Triangle>();
+  private buildingLabels: Phaser.GameObjects.Text[] = [];
   private hideMarkers: Phaser.GameObjects.Text[] = [];
   private hideTriggers: TriggerDef[] = [];
   private lampGlows: Phaser.GameObjects.Arc[] = [];
@@ -46,6 +53,8 @@ export class CampusScene extends Phaser.Scene {
   create(): void {
     this.mapData = buildCampusMap(this);
     registerCatAnims(this);
+    createBuildings(this, buildings);
+    createTrees(this, trees);
     this.physics.world.setBounds(0, 0, this.mapData.width, this.mapData.height);
     this.cameras.main.setBounds(0, 0, this.mapData.width, this.mapData.height).setRoundPixels(true);
 
@@ -120,6 +129,7 @@ export class CampusScene extends Phaser.Scene {
     this.timeSystem.update(delta);
     if (this.hideSeek.isActive()) this.hideSeek.update(delta, this.player.x, this.player.y);
     this.updateMarkers();
+    this.updateLabels();
     this.updateLighting();
     gameState.setPlayer(this.player.x, this.player.y);
 
@@ -174,22 +184,23 @@ export class CampusScene extends Phaser.Scene {
 
   private createBuildingLabels(): void {
     const labels: Array<[string, number, number]> = [
-      ['北门', 71, 4], ['明博楼（藏医学院）', 102, 9], ['学生公寓', 122, 12],
+      ['北门', 71, 4], ['明博楼', 102, 9], ['学生公寓', 122, 12],
       ['学生食堂', 144, 23], ['学生活动中心', 28, 23], ['公园', 12, 19],
       ['综合体育中心', 14, 53], ['西田径场', 36, 43], ['东田径场', 86, 43],
-      ['图书馆', 34, 67], ['睿智楼（数理/外语）', 117, 47],
-      ['雨化楼（生态）', 120, 67], ['镂金楼（土木）', 120, 79],
-      ['尚真楼（财经/人文）', 64, 77], ['鼎新馆（马克思）', 82, 69],
-      ['融馨楼（计算机）', 82, 83], ['逸夫楼（农牧）', 103, 83],
-      ['静远楼（化工）', 19, 85], ['求实楼（地质/能源）', 14, 97],
-      ['机械工程学院', 32, 99], ['圣汇楼（基础医学）', 61, 99],
+      ['图书馆', 34, 67], ['睿智楼', 117, 47], ['雨化楼', 120, 67],
+      ['镂金楼', 120, 79], ['尚真楼', 64, 77], ['鼎新馆', 82, 69],
+      ['融馨楼', 82, 83], ['逸夫楼', 103, 83], ['静远楼', 19, 85],
+      ['求实楼', 14, 97], ['机械学院', 32, 99], ['圣汇楼', 61, 99],
       ['东门', 152, 61], ['南门', 94, 117], ['西门', 4, 71],
     ];
     for (const [text, tx, ty] of labels) {
-      this.add.text(tx * TILE + 8, ty * TILE + 8, text, {
+      const label = this.add.text(tx * TILE + 8, ty * TILE + 8, text, {
         fontFamily: '"Microsoft YaHei", "PingFang SC", monospace',
         fontSize: '10px', color: '#f4ecd8', stroke: '#101726', strokeThickness: 3,
       }).setOrigin(0.5).setResolution(2).setDepth(20);
+      label.setData('tx', tx);
+      label.setData('ty', ty);
+      this.buildingLabels.push(label);
     }
   }
 
@@ -246,6 +257,16 @@ export class CampusScene extends Phaser.Scene {
       const dist = Phaser.Math.Distance.Between(trigger.x, trigger.y, this.player.x, this.player.y);
       marker.setVisible(!ui.isBlocking());
       marker.setAlpha(dist < 40 ? 1 : 0.7);
+    }
+  }
+
+  private updateLabels(): void {
+    for (const label of this.buildingLabels) {
+      const tx = label.getData('tx') as number;
+      const ty = label.getData('ty') as number;
+      const dist = Math.hypot(tx * TILE + 8 - this.player.x, ty * TILE + 8 - this.player.y);
+      label.setVisible(dist < 300 && !ui.isBlocking());
+      label.setAlpha(dist < 150 ? 1 : 0.65);
     }
   }
 

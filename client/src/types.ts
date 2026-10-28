@@ -90,6 +90,19 @@ export interface CatDef {
   description: string;
 }
 
+export interface BuildingDef {
+  id: string;
+  name: string;
+  type: 'gate' | 'lab' | 'dorm' | 'canteen' | 'activity' | 'sports' | 'library' | 'academic';
+  key: string;
+  x: number;
+  y: number;
+  w: number;
+  h: number;
+  floors: number;
+  variant: number;
+}
+
 export interface HideSpot {
   id: string;
   name: string;
