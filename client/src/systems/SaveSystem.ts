@@ -61,8 +61,8 @@ export function migrateSave(raw: unknown): SaveFile | null {
     hideDay: Math.round(safeNumber(candidate.hideDay, 0, 0)),
     lastSaved: Math.round(safeNumber(candidate.lastSaved, 0, 0)),
   };
-  // v2 moved to the Qinghai University layout; v3 expanded the map; v4 uses real footprint layout.
-  if (version < 4) data.player = { ...defaults.player };
+  // v5 returns to the readable core-campus map after the full-footprint experiment.
+  if (version < 5) data.player = { ...defaults.player };
   return { version: SAVE_VERSION, data };
 }
 

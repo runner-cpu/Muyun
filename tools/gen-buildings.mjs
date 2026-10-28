@@ -1,5 +1,5 @@
 import { deflateSync } from 'node:zlib';
-import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
+import { mkdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -451,6 +451,7 @@ function drawBuilding(def) {
   return c;
 }
 
+rmSync(OUT, { recursive: true, force: true });
 mkdirSync(OUT, { recursive: true });
 for (const def of DEFS) {
   const c = drawBuilding(def);

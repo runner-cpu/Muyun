@@ -8,7 +8,7 @@
 |---|---|---|
 | TypeScript | `npx tsc --noEmit` | 通过 |
 | 单元测试 | `npm test` | 13/13 通过 |
-| 生产构建 | `npm run build` | 通过，JS gzip ≈ 380KB，dist ≈ 2.1MB |
+| 生产构建 | `npm run build` | 通过，JS gzip ≈ 362KB，dist ≈ 1.4MB |
 | 地图校验 | `npm run validate:map` | 28 个触发器，0 issue，0 warning |
 
 ## 手工冒烟（生产预览）

@@ -31,12 +31,12 @@ npm run preview
 ## 已实现
 
 - Phaser 3 + TypeScript + Vite；逻辑分辨率 480×270，16×16 瓦片，整数缩放。
-- 180×110 的全校区 Tiled 地图（`client/public/assets/maps/campus.tmj`），含 ground / detail / shadows / buildings / props / collision / triggers 七层。
-- 104 栋 2.5D 建筑精灵（图书馆、体育中心、学生食堂、全部学生公寓、学院楼、行政楼、家属区等）+ 3 种树精灵；建筑使用学校公开 footprint 轮廓做挤出，不再使用方块楼贴图。
+- 160×120 的可玩核心校区 Tiled 地图（`client/public/assets/maps/campus.tmj`），含 ground / detail / shadows / buildings / props / collision / triggers 七层；完整 128 个建筑 footprint 数据保留在 `maps/qhu-buildings.geojson`，供后续全图模式使用。
+- 22 栋 2.5D 核心建筑精灵（图书馆、体育中心、学生食堂、4 栋学生公寓、各学院楼、门卫室）+ 3 种树精灵；建筑使用学校公开 footprint 轮廓做挤出，不再使用方块楼贴图。
 - 28 个地图触发器：签到、公告、5 个院系上课点、课程表、知识问答、座位提示、打饭、睡觉、5 只猫、宠物对战、躲猫猫、看台、售货机、路灯开关、4 个 NPC 对话。
 - 5 个剧情 NPC：保安大爷、食堂阿姨、图书管理员、猫协同学、神秘训练师。
 - 时间系统：1 游戏日 = 现实 6 分钟；清晨/白天/黄昏/夜晚色罩；食堂与图书馆营业时间。
-- localStorage 存档（schema v4），睡觉/收集猫/60 秒/页面隐藏时保存；旧 v0/v1/v2/v3 存档自动迁移并重置到全校区地图出生点。
+- localStorage 存档（schema v5），睡觉/收集猫/60 秒/页面隐藏时保存；旧 v0–v4 存档自动迁移并重置到核心校区出生点。
 - 宠物对战：三系克制（橘→黑→白→橘）、速度先手、技能、伤害浮动、胜负奖励。
 - 躲猫猫：8 个藏点、90 秒、冷热提示、每日 3 次。
 - 猫图鉴与成就：首只猫、对战首胜、躲猫猫首胜、7 天签到等。
