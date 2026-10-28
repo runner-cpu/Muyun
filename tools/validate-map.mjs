@@ -27,7 +27,8 @@ for (const obj of triggers) {
 }
 
 // Reachability sanity: flood fill from spawn over walkable tiles.
-const spawn = { x: 71, y: 11 };
+const meta = JSON.parse(readFileSync(join(ROOT, 'client', 'src', 'data', 'map-meta.json'), 'utf8'));
+const spawn = meta.spawn;
 const seen = new Set();
 const queue = [[spawn.x, spawn.y]];
 while (queue.length) {

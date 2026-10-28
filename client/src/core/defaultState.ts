@@ -1,7 +1,8 @@
 import { DAY_START_MINUTES } from '../config';
 import type { GameStateData, Settings } from '../types';
+import mapMeta from '../data/map-meta.json';
 
-export const SPAWN = { x: 71 * 16, y: 11 * 16 };
+export const SPAWN = { x: mapMeta.spawn.x * 16 + 8, y: mapMeta.spawn.y * 16 + 8 };
 
 export function createDefaultState(): GameStateData {
   const settings: Settings = { music: 0.28, sfx: 0.45, muted: false };

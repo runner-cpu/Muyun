@@ -9,7 +9,7 @@
 | `client/public/assets/tilesets/campus-tiles.png` | 32 个 16×16 瓦片：草地、道路、广场、水面、墙体、窗户、门、屋顶、树、跑道、球场、长椅、路灯、喷泉、围栏等 |
 | `client/public/assets/sprites/player.png` | 16×24 四方向 × 4 帧角色 |
 | `client/public/assets/sprites/cats.png` | 16×16 五种猫 × 2 帧 |
-| `client/public/assets/buildings/*.png` | 22 栋 2.5D 建筑精灵：图书馆、体育中心、活动中心、食堂、4 栋公寓、各学院楼、门卫室；核心楼由公开 footprint 轮廓挤出 |
+| `client/public/assets/buildings/*.png` | 104 栋 2.5D 建筑精灵：图书馆、体育中心、食堂、全部学生公寓、学院楼、行政楼、家属区等；全部由公开 footprint 轮廓挤出 |
 | `maps/qhu-buildings.geojson` | 青海大学公开地图的 128 个建筑 footprint 快照（只作为轮廓/层数/高度参考，不随游戏发布） |
 | `client/public/assets/trees/tree_*.png` | 3 种 32×44 树精灵，含阴影 |
 | `client/public/favicon.svg` | 像素猫 favicon |
@@ -18,7 +18,7 @@
 
 `tools/gen-map.mjs` 生成 `maps/campus.tmj` 与 `client/public/assets/maps/campus.tmj`：
 
-- 160×120 格，16×16 瓦片。
+- 180×110 格，16×16 瓦片。
 - 基于青海大学公开地图的点位相对位置（见 `docs/QHU_MAP_REFERENCE.md`）。
 - 建筑轮廓/层数/高度参考公开的 `threeDimensionSource/2` footprint 数据（保存为 `maps/qhu-buildings.geojson`），归一化后用于 `footprints.json`。
 - **未使用**学校 3D 模型、贴图或倾斜摄影数据；仅参考公开地图的建筑 footprint、名称、相对坐标与道路拓扑。

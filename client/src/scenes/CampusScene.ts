@@ -22,6 +22,7 @@ import catsData from '../data/cats.json';
 import hidespotsData from '../data/hidespots.json';
 import buildingsData from '../data/buildings.json';
 import treesData from '../data/trees.json';
+import mapMeta from '../data/map-meta.json';
 
 const cats = catsData as CatDef[];
 const hideSpots = hidespotsData as HideSpot[];
@@ -183,17 +184,8 @@ export class CampusScene extends Phaser.Scene {
   }
 
   private createBuildingLabels(): void {
-    const labels: Array<[string, number, number]> = [
-      ['北门', 71, 4], ['明博楼', 102, 9], ['学生公寓', 122, 12],
-      ['学生食堂', 144, 23], ['学生活动中心', 28, 23], ['公园', 12, 19],
-      ['综合体育中心', 14, 53], ['西田径场', 36, 43], ['东田径场', 86, 43],
-      ['图书馆', 34, 67], ['睿智楼', 117, 47], ['雨化楼', 120, 67],
-      ['镂金楼', 120, 79], ['尚真楼', 64, 77], ['鼎新馆', 82, 69],
-      ['融馨楼', 82, 83], ['逸夫楼', 103, 83], ['静远楼', 19, 85],
-      ['求实楼', 14, 97], ['机械学院', 32, 99], ['圣汇楼', 61, 99],
-      ['东门', 152, 61], ['南门', 94, 117], ['西门', 4, 71],
-    ];
-    for (const [text, tx, ty] of labels) {
+    const labels = mapMeta.labels as Array<{ text: string; x: number; y: number }>;
+    for (const { text, x: tx, y: ty } of labels) {
       const label = this.add.text(tx * TILE + 8, ty * TILE + 8, text, {
         fontFamily: '"Microsoft YaHei", "PingFang SC", monospace',
         fontSize: '10px', color: '#f4ecd8', stroke: '#101726', strokeThickness: 3,

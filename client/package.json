@@ -9,7 +9,9 @@
     "preview": "vite preview --host 0.0.0.0",
     "test": "vitest run",
     "gen:assets": "node ../tools/gen-assets.mjs",
-    "gen:map": "node ../tools/gen-map.mjs",
+    "gen:map": "node ../tools/gen-map-full.mjs",
+    "gen:buildings": "node ../tools/gen-buildings.mjs",
+    "gen:trees": "node ../tools/gen-trees.mjs",
     "validate:map": "node ../tools/validate-map.mjs"
   },
   "dependencies": {
