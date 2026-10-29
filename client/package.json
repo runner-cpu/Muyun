@@ -9,7 +9,7 @@
     "preview": "vite preview --host 0.0.0.0",
     "test": "vitest run",
     "sim:monte": "vite-node scripts/monte-carlo.ts",
-    "gen:ranch": "node ../tools/gen-terrain.mjs && node ../tools/gen-sprites.mjs"
+    "gen:ranch": "node ../tools/gen-terrain.mjs && node ../tools/gen-sprites.mjs && node ../tools/gen-structures.mjs"
   },
   "dependencies": {
     "phaser": "3.90.0"

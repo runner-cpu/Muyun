@@ -13,6 +13,8 @@ export class PreloadScene extends Phaser.Scene {
     this.load.spritesheet('player', 'assets/sprites/player.png', { frameWidth: 24, frameHeight: 32 });
     this.load.spritesheet('yak', 'assets/sprites/yak.png', { frameWidth: 32, frameHeight: 32 });
     this.load.spritesheet('sheep', 'assets/sprites/sheep.png', { frameWidth: 32, frameHeight: 32 });
+    this.load.image('barn', 'assets/structures/barn.png');
+    this.load.image('sign', 'assets/structures/sign.png');
     for (let i = 0; i < 3; i++) this.load.image(`tree_${i}`, `assets/trees/tree_${i}.png`);
 
     this.load.on('progress', (value: number) => {

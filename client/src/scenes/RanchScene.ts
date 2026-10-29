@@ -67,6 +67,7 @@ export class RanchScene extends Phaser.Scene {
     this.cameras.main.startFollow(this.player.sprite, true, 0.12, 0.12);
     this.physics.add.collider(this.player.sprite, ground);
     props.setDepth(1);
+    this.buildStructures();
 
     this.controller = new RanchInteractionController(this);
     this.interactions = new InteractionSystem(
@@ -192,10 +193,7 @@ export class RanchScene extends Phaser.Scene {
       ground[py + ph][px + pw] = POST;
     }
 
-    // winter shed, west of the track
-    for (let y = 1; y <= 4; y++) {
-      for (let x = 15; x <= 17; x++) ground[y][x] = y === 1 ? ROOF : WALL;
-    }
+    // winter shed footprint is covered by the barn sprite placed in buildStructures
 
     ground[6][22] = HAY;
     ground[7][22] = HAY;
@@ -234,6 +232,29 @@ export class RanchScene extends Phaser.Scene {
     props[10][17] = TROUGH;
     props[11][22] = BARREL;
     props[12][22] = CRATE;
+
+    // soften the hard dirt/grass seam with tufts on the grass side
+    const isDirt = (x: number, y: number): boolean => ground[y]?.[x] === DIRT;
+    for (let y = 0; y < ground.length; y++) {
+      for (let x = 0; x < ground[y].length; x++) {
+        if (props[y][x] !== -1) continue;
+        if (!isDirt(x - 1, y) && !isDirt(x + 1, y) && !isDirt(x, y - 1) && !isDirt(x, y + 1)) continue;
+        const hash = (x * 2654435761 + y * 40503) >>> 0;
+        if (hash % 2 === 0) props[y][x] = hash % 6 === 0 ? FLOWER : TUFT;
+      }
+    }
+  }
+
+  /** Barn, sign and their blockers. One clear landmark per screen. */
+  private buildStructures(): void {
+    const barn = this.add.image(264, 88, 'barn').setOrigin(0.5, 1);
+    barn.setDepth(10 + 88 / 10000);
+
+    const blocker = this.add.rectangle(264, 76, 40, 18).setVisible(false);
+    this.physics.add.existing(blocker, true);
+    this.physics.add.collider(this.player.sprite, blocker);
+
+    this.add.image(300, 116, 'sign').setOrigin(0.5, 1).setDepth(10 + 116 / 10000);
   }
 
   private buildTrees(): void {
