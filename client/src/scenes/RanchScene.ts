@@ -86,6 +86,7 @@ export class RanchScene extends Phaser.Scene {
       .setScrollFactor(0)
       .setDepth(900);
     this.buildSnow();
+    this.buildVignette();
 
     this.unsubscribes.push(bus.on('state:changed', () => this.applySeasonWash()));
     this.unsubscribes.push(bus.on('calendar:changed', () => {
@@ -157,8 +158,12 @@ export class RanchScene extends Phaser.Scene {
     const height = WORLD_TILES_H;
     const ground: number[][] = Array.from({ length: height }, (_, y) =>
       Array.from({ length: width }, (_, x) => {
-        const hash = (x * 73856093 ^ y * 19349663) >>> 0;
-        return GRASS[hash % 5 === 0 ? 1 : hash % 11 === 0 ? 2 : 0];
+        // smooth, deterministic meadow waves: dark hollows, tufted rises, flower patches
+        const wave = Math.sin(x * 0.17) * Math.cos(y * 0.13)
+          + Math.sin(x * 0.07 + y * 0.11) * 0.8
+          + Math.sin((x + y) * 0.31) * 0.25;
+        const pick = wave > 0.55 ? 3 : wave > 0.15 ? 1 : wave < -0.75 ? 2 : 0;
+        return GRASS[pick];
       }),
     );
     const props: number[][] = Array.from({ length: height }, () =>
@@ -191,6 +196,10 @@ export class RanchScene extends Phaser.Scene {
       ground[py][px + pw] = POST;
       ground[py + ph][px] = POST;
       ground[py + ph][px + pw] = POST;
+
+      // a couple of gaps so the paddock reads as a built fence, not a grid
+      ground[py][px + Math.floor(pw * 0.6)] = GRASS[0];
+      ground[py + ph][px + Math.floor(pw * 0.35)] = GRASS[1];
     }
 
     // winter shed footprint is covered by the barn sprite placed in buildStructures
@@ -247,6 +256,8 @@ export class RanchScene extends Phaser.Scene {
 
   /** Barn, sign and their blockers. One clear landmark per screen. */
   private buildStructures(): void {
+    if (!this.textures.exists('barn')) return;
+
     const barn = this.add.image(264, 88, 'barn').setOrigin(0.5, 1);
     barn.setDepth(10 + 88 / 10000);
 
@@ -255,6 +266,26 @@ export class RanchScene extends Phaser.Scene {
     this.physics.add.collider(this.player.sprite, blocker);
 
     this.add.image(300, 116, 'sign').setOrigin(0.5, 1).setDepth(10 + 116 / 10000);
+  }
+
+  /** Soft vignette: gives a flat top-down field some depth. */
+  private buildVignette(): void {
+    const key = 'vignette';
+    if (!this.textures.exists(key)) {
+      const canvas = this.textures.createCanvas(key, GAME_WIDTH, GAME_HEIGHT);
+      if (!canvas) return;
+      const ctx = canvas.getContext();
+      const gradient = ctx.createRadialGradient(
+        GAME_WIDTH / 2, GAME_HEIGHT / 2, 70,
+        GAME_WIDTH / 2, GAME_HEIGHT / 2, 300,
+      );
+      gradient.addColorStop(0, 'rgba(0,0,0,0)');
+      gradient.addColorStop(1, 'rgba(8,12,18,0.5)');
+      ctx.fillStyle = gradient;
+      ctx.fillRect(0, 0, GAME_WIDTH, GAME_HEIGHT);
+      canvas.refresh();
+    }
+    this.add.image(0, 0, key).setOrigin(0, 0).setScrollFactor(0).setDepth(860);
   }
 
   private buildTrees(): void {
@@ -274,10 +305,14 @@ export class RanchScene extends Phaser.Scene {
     ];
 
     for (const group of groups) {
+      const clusters = Math.max(1, Math.ceil(group.count / 3));
       for (let i = 0; i < group.count; i++) {
-        const tx = group.x0 + ((i * 5 + 3) % Math.max(1, group.x1 - group.x0));
-        const ty = group.y0 + ((i * 7 + 2) % Math.max(1, group.y1 - group.y0));
-        new HerdSprite(this, tx * TILE + 8, ty * TILE + 8, group.kind);
+        const cluster = i % clusters;
+        const cx = group.x0 + 2 + ((cluster * 7 + 3) % Math.max(1, group.x1 - group.x0 - 4));
+        const cy = group.y0 + 2 + ((cluster * 5 + 2) % Math.max(1, group.y1 - group.y0 - 4));
+        const jx = (i % 3) - 1;
+        const jy = Math.floor(i / 3) % 2 === 0 ? 0 : 1;
+        new HerdSprite(this, (cx + jx) * TILE + 8, (cy + jy) * TILE + 8, group.kind);
       }
     }
   }

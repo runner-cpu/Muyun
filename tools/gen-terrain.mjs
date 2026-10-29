@@ -7,27 +7,27 @@ import { ACCENT, RAMP } from './theme.mjs';
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 const TILE = 16;
 
-/** Grass: 70% flat base, 20% tufts, 10% flowers. Tufts are 2-4 px clusters. */
+/** Grass: 70% flat base, 20% tufts, 10% flowers. Variant 3 is a darker meadow patch. */
 function grassTile(seed, variant) {
   const tile = new Canvas(TILE, TILE);
   const r = rng(seed);
-  tile.rect(0, 0, TILE, TILE, RAMP.grass[3]);
+  const base = variant === 3 ? RAMP.grass[2] : RAMP.grass[3];
+  tile.rect(0, 0, TILE, TILE, base);
 
   // low-frequency patches, 2x2 or 3x2 blocks, never single pixels
   for (let i = 0; i < 3; i++) {
     const x = Math.floor(r() * 13);
     const y = Math.floor(r() * 13);
     const w = 2 + Math.floor(r() * 2);
-    tile.rect(x, y, w, 2, r() > 0.5 ? RAMP.grass[2] : RAMP.grass[4]);
+    tile.rect(x, y, w, 2, r() > 0.5 ? RAMP.grass[2] : (variant === 3 ? RAMP.grass[3] : RAMP.grass[4]));
   }
 
-  const tufts = variant === 0 ? 1 : variant === 1 ? 2 : 3;
+  const tufts = variant === 0 || variant === 3 ? 0 : variant === 1 ? 1 : 2;
   for (let i = 0; i < tufts; i++) {
-    const x = 1 + Math.floor(r() * 12);
-    const y = 1 + Math.floor(r() * 12);
-    tile.rect(x, y, 3, 2, RAMP.grass[1]);
+    const x = 2 + Math.floor(r() * 11);
+    const y = 3 + Math.floor(r() * 10);
+    tile.rect(x, y, 2, 1, RAMP.grass[1]);
     tile.px(x + 1, y - 1, RAMP.grass[5]);
-    tile.px(x + 2, y - 2, RAMP.grass[6]);
     tile.px(x - 1, y + 1, RAMP.grass[2]);
   }
 
@@ -245,7 +245,7 @@ const TILES = [
   () => grassTile(11, 0),
   () => grassTile(23, 1),
   () => grassTile(37, 2),
-  () => grassTile(41, 0),
+  () => grassTile(41, 3),
   () => dirtTile(53, false),
   () => dirtTile(61, true),
   () => snowTile(71),
