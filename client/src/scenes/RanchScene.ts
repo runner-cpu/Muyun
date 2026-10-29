@@ -46,6 +46,9 @@ export class RanchScene extends Phaser.Scene {
   private controller!: RanchInteractionController;
   private wash!: Phaser.GameObjects.Rectangle;
   private snow!: Phaser.GameObjects.Particles.ParticleEmitter;
+  private groundLayer!: Phaser.Tilemaps.TilemapLayer;
+  private propLayer!: Phaser.Tilemaps.TilemapLayer;
+  private trees: Phaser.GameObjects.Image[] = [];
   private unsubscribes: Array<() => void> = [];
 
   constructor() { super('RanchScene'); }
@@ -91,6 +94,7 @@ export class RanchScene extends Phaser.Scene {
     this.unsubscribes.push(bus.on('state:changed', () => this.applySeasonWash()));
     this.unsubscribes.push(bus.on('calendar:changed', () => {
       this.applySeasonWash();
+      this.applySeasonArt();
       this.updateSnow();
     }));
 
@@ -98,6 +102,7 @@ export class RanchScene extends Phaser.Scene {
     ui.onEndWeek = endWeekFlow;
     audio.setSeason(gameState.season);
     this.applySeasonWash();
+    this.applySeasonArt();
     this.updateSnow();
 
     this.events.once(Phaser.Scenes.Events.SHUTDOWN, () => this.teardown());
@@ -139,16 +144,19 @@ export class RanchScene extends Phaser.Scene {
     const { ground: groundGrid, props: propGrid } = this.buildGrid();
 
     const groundMap = this.make.tilemap({ data: groundGrid, tileWidth: TILE, tileHeight: TILE });
-    const groundTiles = groundMap.addTilesetImage('ranch', 'ranch-tiles', TILE, TILE, 0, 0);
+    const texture = `ranch-tiles-${gameState.season}`;
+    const groundTiles = groundMap.addTilesetImage('ranch', texture, TILE, TILE, 0, 0);
     if (!groundTiles) throw new Error('ranch tileset missing');
     const ground = groundMap.createLayer(0, groundTiles, 0, 0)!;
     ground.setDepth(0);
     ground.setCollision(COLLIDING);
+    this.groundLayer = ground;
 
     const propMap = this.make.tilemap({ data: propGrid, tileWidth: TILE, tileHeight: TILE });
-    const propTiles = propMap.addTilesetImage('ranch', 'ranch-tiles', TILE, TILE, 0, 0);
+    const propTiles = propMap.addTilesetImage('ranch', texture, TILE, TILE, 0, 0);
     const props = propMap.createLayer(0, propTiles!, 0, 0)!;
     props.setDepth(1);
+    this.propLayer = props;
 
     return { ground, props };
   }
@@ -290,10 +298,32 @@ export class RanchScene extends Phaser.Scene {
 
   private buildTrees(): void {
     for (const [x, y, variant] of TREE_SPOTS) {
-      this.add.image(x, y + 28, `tree_${variant}`)
-        .setOrigin(0.5, 1)
-        .setDepth(10 + y / 10000);
+      this.trees.push(
+        this.add.image(x, y + 28, `tree_${variant}`)
+          .setOrigin(0.5, 1)
+          .setDepth(10 + y / 10000),
+      );
     }
+  }
+
+  /** Swaps the ground tileset and tints the trees to match the season. */
+  private applySeasonArt(): void {
+    const season = gameState.season;
+    const texture = this.textures.get(`ranch-tiles-${season}`);
+    if (texture && texture.key !== '__MISSING') {
+      for (const layer of [this.groundLayer, this.propLayer]) {
+        const tileset = layer?.tileset?.[0];
+        if (tileset) tileset.setImage(texture);
+      }
+    }
+
+    const tint = {
+      spring: 0xffffff,
+      summer: 0xf2ffe8,
+      autumn: 0xe0a050,
+      winter: 0x9fb0c0,
+    }[season];
+    for (const tree of this.trees) tree.setTint(tint);
   }
 
   private spawnHerd(): void {

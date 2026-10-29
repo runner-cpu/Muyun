@@ -12,7 +12,9 @@ export class PreloadScene extends Phaser.Scene {
   preload(): void {
     ui.showLoading();
     ui.setLoading(0, '正在加载牧场...');
-    this.load.image('ranch-tiles', `assets/tilesets/ranch-tiles.png${V}`);
+    for (const season of ['spring', 'summer', 'autumn', 'winter']) {
+      this.load.image(`ranch-tiles-${season}`, `assets/tilesets/ranch-tiles-${season}.png${V}`);
+    }
     this.load.spritesheet('player', `assets/sprites/player.png${V}`, { frameWidth: 24, frameHeight: 32 });
     this.load.spritesheet('yak', `assets/sprites/yak.png${V}`, { frameWidth: 32, frameHeight: 32 });
     this.load.spritesheet('sheep', `assets/sprites/sheep.png${V}`, { frameWidth: 32, frameHeight: 32 });

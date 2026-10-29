@@ -7,6 +7,21 @@ import { ACCENT, RAMP } from './theme.mjs';
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 const TILE = 16;
 
+/** Per-season grass and dirt ramps. Same value structure, different temperature. */
+const GRASS_SEASON = {
+  spring: ['#3E4A22', '#4E5C29', '#5F6E32', '#71803B', '#849245', '#98A652', '#AEBB63'],
+  summer: ['#2F4418', '#3E561E', '#4E6925', '#5F7C2C', '#719035', '#84A43F', '#98B84B'],
+  autumn: ['#4A3A1C', '#5E4A22', '#73592A', '#8A6B33', '#A07E3D', '#B89349', '#CDA857'],
+  winter: ['#5E6B60', '#71806F', '#85947F', '#9AA991', '#B0BEA3', '#C6D2B7', '#DCE5CB'],
+};
+
+const DIRT_SEASON = {
+  spring: ['#2E2118', '#43301F', '#5A4128', '#715333', '#8A6840', '#A37F4E', '#BC9760'],
+  summer: ['#2E2118', '#43301F', '#5A4128', '#715333', '#8A6840', '#A37F4E', '#BC9760'],
+  autumn: ['#2E2118', '#43301F', '#5A4128', '#715333', '#8A6840', '#A37F4E', '#BC9760'],
+  winter: ['#3A3A38', '#4C4C48', '#5F5F59', '#72726B', '#86867D', '#9B9B90', '#B1B1A5'],
+};
+
 /** Grass: 70% flat base, 20% tufts, 10% flowers. Variant 3 is a darker meadow patch. */
 function grassTile(seed, variant) {
   const tile = new Canvas(TILE, TILE);
@@ -276,7 +291,10 @@ const TILES = [
   () => grassTile(151, 1),
 ];
 
-function writeSheet() {
+function writeSheet(season) {
+  RAMP.grass = GRASS_SEASON[season];
+  RAMP.dirt = DIRT_SEASON[season];
+
   const sheet = new Canvas(TILE * 16, TILE * 2);
   TILES.forEach((make, i) => {
     const tile = make();
@@ -292,10 +310,11 @@ function writeSheet() {
       }
     }
   });
-  const path = join(ROOT, 'client/public/assets/tilesets/ranch-tiles.png');
+  const path = join(ROOT, `client/public/assets/tilesets/ranch-tiles-${season}.png`);
   mkdirSync(dirname(path), { recursive: true });
   writeFileSync(path, sheet.toPng());
   return path;
 }
 
-console.log('tiles:', writeSheet().replace(ROOT, '.'));
+const outputs = ['spring', 'summer', 'autumn', 'winter'].map(writeSheet);
+console.log('tiles:', outputs.map((p) => p.replace(ROOT, '.')).join(', '));

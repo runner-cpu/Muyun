@@ -6,7 +6,7 @@
 
 | 文件 | 内容 | 生成脚本 |
 |---|---|---|
-| `client/public/assets/tilesets/ranch-tiles.png` | 512×32，32 个 16px 瓦片。第一行地形：4 种草地、2 种土路、2 种雪地、横/竖栅栏、木桩、干草、墙、屋顶、水面。第二行道具：大小石头、灌木×3、花×2、草簇×3、水槽、木桶、木箱 | `tools/gen-terrain.mjs` |
+| `client/public/assets/tilesets/ranch-tiles-{spring,summer,autumn,winter}.png` | 512×32，四季各一套，32 个 16px 瓦片。第一行地形：4 种草地、2 种土路、2 种雪地、横/竖栅栏、木桩、干草、墙、屋顶、水面。第二行道具：大小石头、灌木×3、花×2、草簇×3、水槽、木桶、木箱 | `tools/gen-terrain.mjs` |
 | `client/public/assets/sprites/yak.png` | 128×128，牦牛 4 方向 × 4 帧，单帧 32×32 | `tools/gen-sprites.mjs` |
 | `client/public/assets/sprites/sheep.png` | 128×128，藏羊 4 方向 × 4 帧，单帧 32×32 | `tools/gen-sprites.mjs` |
 | `client/public/assets/sprites/player.png` | 96×128，牧人 4 方向 × 4 帧，单帧 24×32 | `tools/gen-sprites.mjs` |
