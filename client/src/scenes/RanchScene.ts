@@ -3,6 +3,7 @@ import { GAME_HEIGHT, GAME_WIDTH, TILE, WORLD_TILES_H, WORLD_TILES_W } from '../
 import { gameState } from '../core/GameState';
 import { bus } from '../core/emitter';
 import { Player } from '../entities/Player';
+import { HerdSprite } from '../entities/Animal';
 import { InputManager } from '../systems/InputManager';
 import { InteractionSystem } from '../systems/InteractionSystem';
 import { RanchInteractionController } from '../systems/RanchInteractionController';
@@ -12,11 +13,22 @@ import { endWeekFlow } from '../systems/WeekFlow';
 import { ui } from '../ui/instance';
 import type { TriggerDef } from '../types';
 
+const GRASS = [0, 1, 2, 3];
+const DIRT = 4;
+const FENCE_H = 8;
+const FENCE_V = 9;
+const POST = 10;
+const HAY = 12;
+const WALL = 13;
+const ROOF = 14;
+const WATER = 15;
+const COLLIDING = [FENCE_H, FENCE_V, POST, WALL, ROOF, WATER];
+
 const TREE_SPOTS: Array<[number, number, number]> = [
-  [24, 40, 0], [70, 28, 1], [128, 52, 2], [196, 30, 0],
-  [420, 44, 2], [492, 28, 1], [560, 56, 0], [604, 92, 2],
-  [22, 300, 1], [64, 360, 0], [116, 420, 2], [520, 350, 1],
-  [576, 404, 0], [612, 300, 2],
+  [14, 62, 0], [92, 40, 1], [186, 70, 2], [300, 40, 0],
+  [336, 96, 2], [420, 52, 1], [520, 68, 0], [604, 120, 2],
+  [24, 236, 1], [40, 400, 0], [150, 444, 2], [520, 430, 1],
+  [590, 372, 0], [610, 268, 2],
 ];
 
 export class RanchScene extends Phaser.Scene {
@@ -25,6 +37,7 @@ export class RanchScene extends Phaser.Scene {
   private interactions!: InteractionSystem;
   private controller!: RanchInteractionController;
   private wash!: Phaser.GameObjects.Rectangle;
+  private snow!: Phaser.GameObjects.Particles.ParticleEmitter;
   private unsubscribes: Array<() => void> = [];
 
   constructor() { super('RanchScene'); }
@@ -37,12 +50,14 @@ export class RanchScene extends Phaser.Scene {
     this.cameras.main.setBounds(0, 0, worldW, worldH);
     this.cameras.main.setBackgroundColor('#1b3a5c');
 
-    this.buildGround(worldW, worldH);
+    const collision = this.buildTilemap();
     this.buildTrees();
+    this.spawnHerd();
 
     const spawn = gameState.getSpawn();
     this.player = new Player(this, spawn.x, spawn.y);
     this.cameras.main.startFollow(this.player.sprite, true, 0.12, 0.12);
+    this.physics.add.collider(this.player.sprite, collision);
 
     this.controller = new RanchInteractionController(this);
     this.interactions = new InteractionSystem(
@@ -60,14 +75,19 @@ export class RanchScene extends Phaser.Scene {
       .setOrigin(0, 0)
       .setScrollFactor(0)
       .setDepth(900);
-    this.applySeasonWash();
+    this.buildSnow();
 
     this.unsubscribes.push(bus.on('state:changed', () => this.applySeasonWash()));
-    this.unsubscribes.push(bus.on('calendar:changed', () => this.applySeasonWash()));
+    this.unsubscribes.push(bus.on('calendar:changed', () => {
+      this.applySeasonWash();
+      this.updateSnow();
+    }));
 
     ui.showHud();
     ui.onEndWeek = endWeekFlow;
     audio.setSeason(gameState.season);
+    this.applySeasonWash();
+    this.updateSnow();
 
     this.events.once(Phaser.Scenes.Events.SHUTDOWN, () => this.teardown());
   }
@@ -99,56 +119,73 @@ export class RanchScene extends Phaser.Scene {
     this.wash.setFillStyle(tint.color, tint.alpha);
   }
 
-  /** Placeholder art until the Tiled ranch map lands in Phase 2. */
-  private buildGround(worldW: number, worldH: number): void {
-    if (!this.textures.exists('ranch-grass')) {
-      const g = this.add.graphics();
-      g.fillStyle(0x77743a, 1).fillRect(0, 0, 16, 16);
-      g.fillStyle(0x827e40, 1);
-      for (const [x, y] of [[2, 3], [7, 2], [12, 5], [4, 10], [9, 12], [14, 13], [6, 6], [1, 14]]) {
-        g.fillRect(x, y, 1, 1);
-      }
-      g.fillStyle(0x8f8a46, 1);
-      for (const [x, y] of [[3, 4], [10, 3], [13, 9], [5, 13]]) g.fillRect(x, y, 1, 1);
-      g.generateTexture('ranch-grass', 16, 16);
-      g.destroy();
+  private updateSnow(): void {
+    if (this.snow) this.snow.emitting = gameState.season === 'winter';
+  }
+
+  /** Builds the 40×30 pasture from a code-generated tile grid. */
+  private buildTilemap(): Phaser.Tilemaps.TilemapLayer {
+    const grid = this.buildGrid();
+    const map = this.make.tilemap({ data: grid, tileWidth: TILE, tileHeight: TILE });
+    const tileset = map.addTilesetImage('ranch', 'ranch-tiles', TILE, TILE, 0, 0);
+    if (!tileset) throw new Error('ranch tileset missing');
+    const layer = map.createLayer(0, tileset, 0, 0)!;
+    layer.setDepth(0);
+    layer.setCollision(COLLIDING);
+    return layer;
+  }
+
+  private buildGrid(): number[][] {
+    const width = WORLD_TILES_W;
+    const height = WORLD_TILES_H;
+    const grid: number[][] = Array.from({ length: height }, (_, y) =>
+      Array.from({ length: width }, (_, x) => {
+        if ((x * 7 + y * 13) % 19 === 0) return GRASS[3];
+        if ((x * 3 + y * 5) % 11 === 0) return GRASS[1];
+        return GRASS[0];
+      }),
+    );
+
+    // main track north-south
+    for (let y = 0; y < height; y++) {
+      grid[y][19] = DIRT;
+      grid[y][20] = DIRT;
     }
-    this.add.tileSprite(0, 0, worldW, worldH, 'ranch-grass').setOrigin(0, 0).setDepth(0);
 
-    const art = this.add.graphics().setDepth(1);
-    // dirt track
-    art.fillStyle(0x6b5a3a, 1).fillRect(304, 0, 32, worldH);
-    art.fillStyle(0x7a6844, 1);
-    for (let y = 4; y < worldH; y += 11) art.fillRect(310 + ((y * 7) % 18), y, 4, 2);
-
-    // paddocks
     const paddocks: Array<[number, number, number, number]> = [
-      [32, 72, 240, 152], [352, 72, 240, 152],
-      [32, 256, 240, 152], [352, 256, 240, 152],
+      [2, 4, 15, 10], [24, 4, 14, 10], [2, 16, 15, 10], [24, 16, 14, 10],
     ];
-    art.lineStyle(2, 0x5b4526, 1);
-    for (const [x, y, w, h] of paddocks) {
-      art.strokeRect(x, y, w, h);
-      art.fillStyle(0x5b4526, 1);
-      for (let px = x; px <= x + w; px += 24) {
-        art.fillRect(px, y - 3, 3, 8);
-        art.fillRect(px, y + h - 5, 3, 8);
+    for (const [px, py, pw, ph] of paddocks) {
+      for (let x = px; x <= px + pw; x++) {
+        grid[py][x] = FENCE_H;
+        grid[py + ph][x] = FENCE_H;
       }
-      for (let py = y; py <= y + h; py += 24) {
-        art.fillRect(x - 3, py, 8, 3);
-        art.fillRect(x + w - 5, py, 8, 3);
+      for (let y = py; y <= py + ph; y++) {
+        grid[y][px] = FENCE_V;
+        grid[y][px + pw] = FENCE_V;
       }
+      grid[py][px] = POST;
+      grid[py][px + pw] = POST;
+      grid[py + ph][px] = POST;
+      grid[py + ph][px + pw] = POST;
     }
 
-    // winter shed / barn at the top of the track
-    art.fillStyle(0x3c2f1f, 1).fillRect(292, 12, 56, 48);
-    art.fillStyle(0x8a6a3a, 1).fillRect(286, 6, 68, 10);
-    art.fillStyle(0x241b10, 1).fillRect(310, 36, 20, 24);
-    art.fillStyle(0xc4703a, 1).fillRect(292, 58, 56, 3);
+    // winter shed west of the track
+    for (let y = 1; y <= 3; y++) {
+      for (let x = 16; x <= 18; x++) grid[y][x] = y === 1 ? ROOF : WALL;
+    }
 
-    // hay bales
-    art.fillStyle(0xb99b52, 1);
-    for (const [x, y] of [[368, 240], [392, 240], [380, 226]]) art.fillRect(x, y, 16, 12);
+    // hay bales beside the shed
+    grid[5][22] = HAY;
+    grid[6][22] = HAY;
+    grid[5][23] = HAY;
+
+    // pond in the south-west
+    for (let y = 27; y <= 29; y++) {
+      for (let x = 3; x <= 6; x++) grid[y][x] = WATER;
+    }
+
+    return grid;
   }
 
   private buildTrees(): void {
@@ -159,11 +196,52 @@ export class RanchScene extends Phaser.Scene {
     }
   }
 
+  private spawnHerd(): void {
+    const groups: Array<{ kind: 'yak' | 'sheep'; x0: number; y0: number; x1: number; y1: number; count: number }> = [
+      { kind: 'yak', x0: 4, y0: 6, x1: 16, y1: 13, count: 5 },
+      { kind: 'sheep', x0: 25, y0: 6, x1: 37, y1: 13, count: 7 },
+      { kind: 'yak', x0: 4, y0: 18, x1: 16, y1: 25, count: 4 },
+      { kind: 'sheep', x0: 25, y0: 18, x1: 37, y1: 25, count: 6 },
+    ];
+
+    for (const group of groups) {
+      for (let i = 0; i < group.count; i++) {
+        const tx = group.x0 + ((i * 5 + 3) % Math.max(1, group.x1 - group.x0));
+        const ty = group.y0 + ((i * 7 + 2) % Math.max(1, group.y1 - group.y0));
+        new HerdSprite(this, tx * TILE + 8, ty * TILE + 8, group.kind);
+      }
+    }
+  }
+
+  private buildSnow(): void {
+    if (!this.textures.exists('snowflake')) {
+      const g = this.add.graphics();
+      g.fillStyle(0xffffff, 0.9).fillRect(0, 0, 2, 2);
+      g.generateTexture('snowflake', 2, 2);
+      g.destroy();
+    }
+    this.snow = this.add.particles(0, 0, 'snowflake', {
+      x: { min: 0, max: GAME_WIDTH },
+      y: -8,
+      lifespan: 4200,
+      speedY: { min: 18, max: 46 },
+      speedX: { min: -12, max: 12 },
+      scale: { min: 0.5, max: 1.1 },
+      alpha: { start: 0.9, end: 0.2 },
+      frequency: 90,
+      quantity: 1,
+    });
+    this.snow.setScrollFactor(0).setDepth(800);
+    this.snow.emitting = false;
+  }
+
   private buildTriggers(): TriggerDef[] {
     return [
       { id: 'herd', kind: 'herd', payload: '', label: '查看畜群', radius: 40, x: 320, y: 120 },
-      { id: 'pasture-a', kind: 'pasture', payload: 'A', label: '草场 A 区', radius: 40, x: 152, y: 148 },
-      { id: 'pasture-b', kind: 'pasture', payload: 'B', label: '草场 B 区', radius: 40, x: 472, y: 148 },
+      { id: 'pasture-a', kind: 'pasture', payload: 'P1', label: '草场 P1 区', radius: 40, x: 152, y: 148 },
+      { id: 'pasture-b', kind: 'pasture', payload: 'P2', label: '草场 P2 区', radius: 40, x: 472, y: 148 },
+      { id: 'pasture-c', kind: 'pasture', payload: 'P3', label: '草场 P3 区', radius: 40, x: 152, y: 340 },
+      { id: 'pasture-d', kind: 'pasture', payload: 'P4', label: '草场 P4 区', radius: 40, x: 472, y: 340 },
       { id: 'market', kind: 'market', payload: '', label: '去集市', radius: 44, x: 320, y: 36 },
       { id: 'tech', kind: 'tech', payload: '', label: '科技服务', radius: 44, x: 320, y: 420 },
     ];

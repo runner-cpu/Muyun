@@ -6,11 +6,28 @@
 
 | 文件 | 内容 | 生成脚本 |
 |---|---|---|
+| `client/public/assets/tilesets/ranch-tiles.png` | 256×16，16 个 16px 瓦片：4 种草地、2 种土路、2 种雪地、横/竖栅栏、木桩、花、干草、墙、屋顶、水面 | `tools/gen-ranch-assets.mjs` |
+| `client/public/assets/sprites/yak.png` | 32×64，牦牛 4 方向 × 2 帧，单帧 16×16 | `tools/gen-ranch-assets.mjs` |
+| `client/public/assets/sprites/sheep.png` | 32×64，藏羊 4 方向 × 2 帧，单帧 16×16 | `tools/gen-ranch-assets.mjs` |
 | `client/public/assets/sprites/player.png` | 16×24 四方向 × 4 帧角色 | `tools/gen-assets.mjs` |
 | `client/public/assets/trees/tree_*.png` | 3 种 32×44 树精灵，含阴影 | `tools/gen-trees.mjs` |
 
-> Phase 0 的牧场地面、畜栏、暖棚由 `RanchScene` 运行时用 `Graphics` 绘制，
-> 不产生文件。Phase 3 会改为 `tools/gen-assets.mjs` 生成 `ranch-tiles.png`。
+生成器共用 `tools/lib/pixel.mjs`：自研 PNG 编码器（zlib deflate + CRC32）、
+Canvas 原语（px / rect / circle / ellipse）、mulberry32 确定性随机。
+所有输出可重复生成，无第三方依赖。
+
+**32 色板**（`tools/gen-ranch-assets.mjs` 内的 `P` 常量）：
+
+- 天空 / 水面 `#1B3A5C` `#3A5C7A` `#5A7C9A`
+- 草地 `#77743A` `#676432` `#8C8744` `#9B9550`
+- 土路 `#6B5A3A` `#7A6844`
+- 雪 `#DCE8EE` `#C4D6E0`
+- 木料 `#5B4526` `#8A6A3A` `#3D2F1D`
+- 牦牛 `#1A1612` `#322A22`
+- 暖色 `#C4703A` `#B99B52`
+
+> Phase 0 的牧场地面、畜栏、暖棚曾由 `RanchScene` 运行时用 `Graphics` 绘制；
+> Phase 3 起改为脚本生成的瓦片地图，运行时只负责组装。
 
 ## 已移除的校园素材
 
@@ -35,8 +52,8 @@ BGM 与音效，无版权风险。后续替换为 CC0 素材时，必须登记�
 
 ## 待补清单
 
-- [ ] `ranch-tiles.png`：草地 4 变体、裸土、雪地、木栅栏 16 件、水槽、干草堆
-- [ ] 牦牛、藏羊精灵（16×16，4 方向 × 2 帧）
-- [ ] 暖棚、谷仓、棚圈、土房立面
+- [ ] 暖棚、谷仓、棚圈、土房的立面精灵（当前用墙/屋顶瓦片拼）
+- [ ] 牦牛、藏羊的 3–4 帧行走动画（当前 2 帧 idle）
+- [ ] 季节草地变体（秋季枯黄、冬季覆雪）
 - [ ] CC0 风雪环境音与牛铃音效
 - [ ] 宣传截图、GIF、3 分钟演示视频
