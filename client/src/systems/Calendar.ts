@@ -1,18 +1,7 @@
-import { WEEKS_PER_RUN } from '../config';
+import { clampWeek, seasonForWeek, WEEKS_PER_RUN } from '../sim/calendar';
 import type { Season } from '../types';
 
-export function clampWeek(week: number): number {
-  return Math.max(1, Math.min(WEEKS_PER_RUN, Math.floor(week)));
-}
-
-/** Spring 1-3, summer 4-6, autumn 7-9, winter 10-13. */
-export function seasonForWeek(week: number): Season {
-  const w = clampWeek(week);
-  if (w <= 3) return 'spring';
-  if (w <= 6) return 'summer';
-  if (w <= 9) return 'autumn';
-  return 'winter';
-}
+export { clampWeek, seasonForWeek, WEEKS_PER_RUN };
 
 export function seasonLabel(season: Season): string {
   return { spring: '春季', summer: '夏季', autumn: '秋季', winter: '冬季' }[season];
