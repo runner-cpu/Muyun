@@ -6,28 +6,33 @@
 
 | 文件 | 内容 | 生成脚本 |
 |---|---|---|
-| `client/public/assets/tilesets/ranch-tiles.png` | 256×16，16 个 16px 瓦片：4 种草地、2 种土路、2 种雪地、横/竖栅栏、木桩、花、干草、墙、屋顶、水面 | `tools/gen-ranch-assets.mjs` |
-| `client/public/assets/sprites/yak.png` | 32×64，牦牛 4 方向 × 2 帧，单帧 16×16 | `tools/gen-ranch-assets.mjs` |
-| `client/public/assets/sprites/sheep.png` | 32×64，藏羊 4 方向 × 2 帧，单帧 16×16 | `tools/gen-ranch-assets.mjs` |
-| `client/public/assets/sprites/player.png` | 16×24 四方向 × 4 帧角色 | `tools/gen-assets.mjs` |
+| `client/public/assets/tilesets/ranch-tiles.png` | 512×32，32 个 16px 瓦片。第一行地形：4 种草地、2 种土路、2 种雪地、横/竖栅栏、木桩、干草、墙、屋顶、水面。第二行道具：大小石头、灌木×3、花×2、草簇×3、水槽、木桶、木箱 | `tools/gen-terrain.mjs` |
+| `client/public/assets/sprites/yak.png` | 128×128，牦牛 4 方向 × 4 帧，单帧 32×32 | `tools/gen-sprites.mjs` |
+| `client/public/assets/sprites/sheep.png` | 128×128，藏羊 4 方向 × 4 帧，单帧 32×32 | `tools/gen-sprites.mjs` |
+| `client/public/assets/sprites/player.png` | 96×128，牧人 4 方向 × 4 帧，单帧 24×32 | `tools/gen-sprites.mjs` |
 | `client/public/assets/trees/tree_*.png` | 3 种 32×44 树精灵，含阴影 | `tools/gen-trees.mjs` |
 
-生成器共用 `tools/lib/pixel.mjs`：自研 PNG 编码器（zlib deflate + CRC32）、
-Canvas 原语（px / rect / circle / ellipse）、mulberry32 确定性随机。
-所有输出可重复生成，无第三方依赖。
+生成器共用 `tools/lib/pixel.mjs`（PNG 编码器 + Canvas 原语 + mulberry32）与
+`tools/theme.mjs`（统一色板）。
 
-**32 色板**（`tools/gen-ranch-assets.mjs` 内的 `P` 常量）：
+**色板结构**：4 条 7 阶明度梯 + 4 个强调色，共 32 色。
 
-- 天空 / 水面 `#1B3A5C` `#3A5C7A` `#5A7C9A`
-- 草地 `#77743A` `#676432` `#8C8744` `#9B9550`
-- 土路 `#6B5A3A` `#7A6844`
-- 雪 `#DCE8EE` `#C4D6E0`
-- 木料 `#5B4526` `#8A6A3A` `#3D2F1D`
-- 牦牛 `#1A1612` `#322A22`
-- 暖色 `#C4703A` `#B99B52`
+| 色系 | 7 阶 |
+|---|---|
+| 草 | `#3E4A22` `#4E5C29` `#5F6E32` `#71803B` `#849245` `#98A652` `#AEBB63` |
+| 土/木 | `#2E2118` `#43301F` `#5A4128` `#715333` `#8A6840` `#A37F4E` `#BC9760` |
+| 石/雪 | `#2B3038` `#3B424C` `#4D5560` `#606A76` `#75808D` `#8B96A3` `#A2ADB9` |
+| 水 | `#18313F` `#204457` `#2A5870` `#356D89` `#4283A2` `#5299BA` `#66AFD0` |
+| 强调 | 奶油 `#E8D9B0` · 暖橙 `#C4703A` · 砖红 `#B23A2E` · 白 `#F4ECD8` |
 
-> Phase 0 的牧场地面、畜栏、暖棚曾由 `RanchScene` 运行时用 `Graphics` 绘制；
-> Phase 3 起改为脚本生成的瓦片地图，运行时只负责组装。
+明度步长控制在 8L 左右，保证"低噪声"；最深 3 档只用于轮廓和阴影，
+最亮 3 档只用于高光和眼睛。
+
+**实现规则**（来自 `docs/ART_RESEARCH.md`）：
+- 草地 70% 平涂 / 20% 草簇 / 10% 花，簇跨格，不做逐像素随机。
+- 栅栏每格 1 根 4px 立柱 + 2 根 2px 横杆 + 每根横杆下 1px 阴影。
+- 动物 32×32，1px 深色轮廓 + 2–3 阶明度 + 烘焙椭圆接地影。
+- 道具单独一层渲染，避免透明像素露出背景色。
 
 ## 已移除的校园素材
 

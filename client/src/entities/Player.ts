@@ -10,9 +10,9 @@ export class Player {
   private facing: Direction = 'down';
 
   constructor(scene: Phaser.Scene, x: number, y: number) {
-    this.shadow = scene.add.ellipse(x, y + 9, 11, 4, 0x000000, 0.3).setDepth(8);
+    this.shadow = scene.add.ellipse(x, y + 14, 14, 5, 0x000000, 0.3).setDepth(8);
     this.sprite = scene.physics.add.sprite(x, y, 'player', 0).setDepth(10);
-    this.sprite.setSize(10, 8).setOffset(3, 15);
+    this.sprite.setSize(12, 10).setOffset(6, 21);
     this.sprite.setCollideWorldBounds(true);
     this.sprite.setDrag(900, 900);
   }
@@ -22,7 +22,7 @@ export class Player {
 
   setPosition(x: number, y: number): void {
     this.sprite.setPosition(x, y);
-    this.shadow.setPosition(x, y + 9);
+    this.shadow.setPosition(x, y + 14);
   }
 
   update(vector: { x: number; y: number }): void {
@@ -38,7 +38,7 @@ export class Player {
       else this.facing = vector.y < 0 ? 'up' : 'down';
       this.sprite.play(`walk-${this.facing}`, true);
     }
-    this.shadow.setPosition(this.sprite.x, this.sprite.y + 9);
+    this.shadow.setPosition(this.sprite.x, this.sprite.y + 14);
     this.shadow.setDepth(8);
     this.sprite.setDepth(10 + this.sprite.y / 10000);
   }

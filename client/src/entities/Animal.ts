@@ -10,8 +10,8 @@ export function registerAnimalAnims(scene: Phaser.Scene): void {
       if (scene.anims.exists(key)) return;
       scene.anims.create({
         key,
-        frames: scene.anims.generateFrameNumbers(kind, { start: row * 2, end: row * 2 + 1 }),
-        frameRate: 3,
+        frames: scene.anims.generateFrameNumbers(kind, { start: row * 4, end: row * 4 + 3 }),
+        frameRate: 4,
         repeat: -1,
       });
     });

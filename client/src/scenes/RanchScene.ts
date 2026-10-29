@@ -22,13 +22,21 @@ const HAY = 12;
 const WALL = 13;
 const ROOF = 14;
 const WATER = 15;
-const COLLIDING = [FENCE_H, FENCE_V, POST, WALL, ROOF, WATER];
+const ROCK = 16;
+const ROCK_BIG = 17;
+const BUSH = 18;
+const FLOWER = 19;
+const TUFT = 20;
+const TROUGH = 21;
+const BARREL = 22;
+const CRATE = 23;
+const COLLIDING = [FENCE_H, FENCE_V, POST, WALL, ROOF, WATER, ROCK_BIG];
 
 const TREE_SPOTS: Array<[number, number, number]> = [
-  [14, 62, 0], [92, 40, 1], [186, 70, 2], [300, 40, 0],
-  [336, 96, 2], [420, 52, 1], [520, 68, 0], [604, 120, 2],
-  [24, 236, 1], [40, 400, 0], [150, 444, 2], [520, 430, 1],
-  [590, 372, 0], [610, 268, 2],
+  [30, 40, 0], [120, 36, 1], [240, 44, 2], [342, 38, 0],
+  [420, 36, 2], [520, 44, 1], [610, 40, 0], [40, 210, 1],
+  [600, 210, 2], [30, 470, 0], [140, 478, 1], [250, 470, 2],
+  [390, 478, 0], [520, 470, 1], [610, 458, 2],
 ];
 
 export class RanchScene extends Phaser.Scene {
@@ -50,14 +58,15 @@ export class RanchScene extends Phaser.Scene {
     this.cameras.main.setBounds(0, 0, worldW, worldH);
     this.cameras.main.setBackgroundColor('#1b3a5c');
 
-    const collision = this.buildTilemap();
+    const { ground, props } = this.buildTilemap();
     this.buildTrees();
     this.spawnHerd();
 
     const spawn = gameState.getSpawn();
     this.player = new Player(this, spawn.x, spawn.y);
     this.cameras.main.startFollow(this.player.sprite, true, 0.12, 0.12);
-    this.physics.add.collider(this.player.sprite, collision);
+    this.physics.add.collider(this.player.sprite, ground);
+    props.setDepth(1);
 
     this.controller = new RanchInteractionController(this);
     this.interactions = new InteractionSystem(
@@ -123,69 +132,108 @@ export class RanchScene extends Phaser.Scene {
     if (this.snow) this.snow.emitting = gameState.season === 'winter';
   }
 
-  /** Builds the 40×30 pasture from a code-generated tile grid. */
-  private buildTilemap(): Phaser.Tilemaps.TilemapLayer {
-    const grid = this.buildGrid();
-    const map = this.make.tilemap({ data: grid, tileWidth: TILE, tileHeight: TILE });
-    const tileset = map.addTilesetImage('ranch', 'ranch-tiles', TILE, TILE, 0, 0);
-    if (!tileset) throw new Error('ranch tileset missing');
-    const layer = map.createLayer(0, tileset, 0, 0)!;
-    layer.setDepth(0);
-    layer.setCollision(COLLIDING);
-    return layer;
+  /** Ground layer is fully opaque; props live on a second transparent layer. */
+  private buildTilemap(): { ground: Phaser.Tilemaps.TilemapLayer; props: Phaser.Tilemaps.TilemapLayer } {
+    const { ground: groundGrid, props: propGrid } = this.buildGrid();
+
+    const groundMap = this.make.tilemap({ data: groundGrid, tileWidth: TILE, tileHeight: TILE });
+    const groundTiles = groundMap.addTilesetImage('ranch', 'ranch-tiles', TILE, TILE, 0, 0);
+    if (!groundTiles) throw new Error('ranch tileset missing');
+    const ground = groundMap.createLayer(0, groundTiles, 0, 0)!;
+    ground.setDepth(0);
+    ground.setCollision(COLLIDING);
+
+    const propMap = this.make.tilemap({ data: propGrid, tileWidth: TILE, tileHeight: TILE });
+    const propTiles = propMap.addTilesetImage('ranch', 'ranch-tiles', TILE, TILE, 0, 0);
+    const props = propMap.createLayer(0, propTiles!, 0, 0)!;
+    props.setDepth(1);
+
+    return { ground, props };
   }
 
-  private buildGrid(): number[][] {
+  private buildGrid(): { ground: number[][]; props: number[][] } {
     const width = WORLD_TILES_W;
     const height = WORLD_TILES_H;
-    const grid: number[][] = Array.from({ length: height }, (_, y) =>
+    const ground: number[][] = Array.from({ length: height }, (_, y) =>
       Array.from({ length: width }, (_, x) => {
-        if ((x * 7 + y * 13) % 19 === 0) return GRASS[3];
-        if ((x * 3 + y * 5) % 11 === 0) return GRASS[1];
-        return GRASS[0];
+        const hash = (x * 73856093 ^ y * 19349663) >>> 0;
+        return GRASS[hash % 5 === 0 ? 1 : hash % 11 === 0 ? 2 : 0];
       }),
     );
+    const props: number[][] = Array.from({ length: height }, () =>
+      Array.from({ length: width }, () => -1),
+    );
 
-    // main track north-south
+    // crossroads: one north-south track, one east-west branch
     for (let y = 0; y < height; y++) {
-      grid[y][19] = DIRT;
-      grid[y][20] = DIRT;
+      ground[y][19] = DIRT;
+      ground[y][20] = DIRT;
+    }
+    for (let x = 0; x < width; x++) {
+      ground[14][x] = DIRT;
+      ground[15][x] = DIRT;
     }
 
     const paddocks: Array<[number, number, number, number]> = [
-      [2, 4, 15, 10], [24, 4, 14, 10], [2, 16, 15, 10], [24, 16, 14, 10],
+      [2, 3, 12, 8], [26, 3, 12, 8], [2, 18, 12, 8], [26, 18, 12, 8],
     ];
     for (const [px, py, pw, ph] of paddocks) {
       for (let x = px; x <= px + pw; x++) {
-        grid[py][x] = FENCE_H;
-        grid[py + ph][x] = FENCE_H;
+        ground[py][x] = FENCE_H;
+        ground[py + ph][x] = FENCE_H;
       }
       for (let y = py; y <= py + ph; y++) {
-        grid[y][px] = FENCE_V;
-        grid[y][px + pw] = FENCE_V;
+        ground[y][px] = FENCE_V;
+        ground[y][px + pw] = FENCE_V;
       }
-      grid[py][px] = POST;
-      grid[py][px + pw] = POST;
-      grid[py + ph][px] = POST;
-      grid[py + ph][px + pw] = POST;
+      ground[py][px] = POST;
+      ground[py][px + pw] = POST;
+      ground[py + ph][px] = POST;
+      ground[py + ph][px + pw] = POST;
     }
 
-    // winter shed west of the track
-    for (let y = 1; y <= 3; y++) {
-      for (let x = 16; x <= 18; x++) grid[y][x] = y === 1 ? ROOF : WALL;
+    // winter shed, west of the track
+    for (let y = 1; y <= 4; y++) {
+      for (let x = 15; x <= 17; x++) ground[y][x] = y === 1 ? ROOF : WALL;
     }
 
-    // hay bales beside the shed
-    grid[5][22] = HAY;
-    grid[6][22] = HAY;
-    grid[5][23] = HAY;
+    ground[6][22] = HAY;
+    ground[7][22] = HAY;
+    ground[6][23] = HAY;
 
     // pond in the south-west
     for (let y = 27; y <= 29; y++) {
-      for (let x = 3; x <= 6; x++) grid[y][x] = WATER;
+      for (let x = 3; x <= 6; x++) ground[y][x] = WATER;
     }
 
-    return grid;
+    this.scatterProps(ground, props);
+    return { ground, props };
+  }
+
+  /** Props clump instead of scattering evenly, so open pasture stays calm. */
+  private scatterProps(ground: number[][], props: number[][]): void {
+    for (let y = 0; y < ground.length; y++) {
+      for (let x = 0; x < ground[y].length; x++) {
+        const tile = ground[y][x];
+        if (tile !== GRASS[0] && tile !== GRASS[1] && tile !== GRASS[2]) continue;
+        const block = ((x >> 2) * 92837111 ^ (y >> 2) * 689287499) >>> 0;
+        if (block % 3 !== 0) continue;
+        const hash = (x * 374761393 + y * 668265263) >>> 0;
+        if (hash % 11 === 0) props[y][x] = ROCK;
+        else if (hash % 7 === 0) props[y][x] = BUSH;
+        else if (hash % 5 === 0) props[y][x] = FLOWER;
+        else if (hash % 3 === 0) props[y][x] = TUFT;
+      }
+    }
+
+    props[5][16] = BUSH;
+    props[9][24] = ROCK_BIG;
+    props[12][16] = BUSH;
+    props[20][24] = BUSH;
+    props[22][16] = CRATE;
+    props[10][17] = TROUGH;
+    props[11][22] = BARREL;
+    props[12][22] = CRATE;
   }
 
   private buildTrees(): void {
@@ -198,10 +246,10 @@ export class RanchScene extends Phaser.Scene {
 
   private spawnHerd(): void {
     const groups: Array<{ kind: 'yak' | 'sheep'; x0: number; y0: number; x1: number; y1: number; count: number }> = [
-      { kind: 'yak', x0: 4, y0: 6, x1: 16, y1: 13, count: 5 },
-      { kind: 'sheep', x0: 25, y0: 6, x1: 37, y1: 13, count: 7 },
-      { kind: 'yak', x0: 4, y0: 18, x1: 16, y1: 25, count: 4 },
-      { kind: 'sheep', x0: 25, y0: 18, x1: 37, y1: 25, count: 6 },
+      { kind: 'yak', x0: 4, y0: 5, x1: 14, y1: 11, count: 5 },
+      { kind: 'sheep', x0: 27, y0: 5, x1: 38, y1: 11, count: 7 },
+      { kind: 'yak', x0: 4, y0: 20, x1: 14, y1: 26, count: 4 },
+      { kind: 'sheep', x0: 27, y0: 20, x1: 38, y1: 26, count: 6 },
     ];
 
     for (const group of groups) {
@@ -237,13 +285,13 @@ export class RanchScene extends Phaser.Scene {
 
   private buildTriggers(): TriggerDef[] {
     return [
-      { id: 'herd', kind: 'herd', payload: '', label: '查看畜群', radius: 40, x: 320, y: 120 },
-      { id: 'pasture-a', kind: 'pasture', payload: 'P1', label: '草场 P1 区', radius: 40, x: 152, y: 148 },
-      { id: 'pasture-b', kind: 'pasture', payload: 'P2', label: '草场 P2 区', radius: 40, x: 472, y: 148 },
-      { id: 'pasture-c', kind: 'pasture', payload: 'P3', label: '草场 P3 区', radius: 40, x: 152, y: 340 },
-      { id: 'pasture-d', kind: 'pasture', payload: 'P4', label: '草场 P4 区', radius: 40, x: 472, y: 340 },
-      { id: 'market', kind: 'market', payload: '', label: '去集市', radius: 44, x: 320, y: 36 },
-      { id: 'tech', kind: 'tech', payload: '', label: '科技服务', radius: 44, x: 320, y: 420 },
+      { id: 'herd', kind: 'herd', payload: '', label: '查看畜群', radius: 40, x: 328, y: 152 },
+      { id: 'pasture-a', kind: 'pasture', payload: 'P1', label: '草场 P1 区', radius: 40, x: 136, y: 120 },
+      { id: 'pasture-b', kind: 'pasture', payload: 'P2', label: '草场 P2 区', radius: 40, x: 520, y: 120 },
+      { id: 'pasture-c', kind: 'pasture', payload: 'P3', label: '草场 P3 区', radius: 40, x: 136, y: 360 },
+      { id: 'pasture-d', kind: 'pasture', payload: 'P4', label: '草场 P4 区', radius: 40, x: 520, y: 360 },
+      { id: 'market', kind: 'market', payload: '', label: '去集市', radius: 44, x: 264, y: 104 },
+      { id: 'tech', kind: 'tech', payload: '', label: '科技服务', radius: 44, x: 328, y: 456 },
     ];
   }
 }
