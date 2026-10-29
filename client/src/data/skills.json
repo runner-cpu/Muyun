@@ -1,8 +1,0 @@
-[
-  { "id": "paw_smash", "name": "喵喵拳", "type": "orange", "power": 9, "description": "快速的两连爪击。" },
-  { "id": "orange_charge", "name": "橘猫冲撞", "type": "orange", "power": 13, "description": "用体重发起冲锋。" },
-  { "id": "shadow_claw", "name": "暗影爪", "type": "black", "power": 10, "description": "从阴影里伸出的爪子。" },
-  { "id": "night_dash", "name": "夜袭", "type": "black", "power": 14, "description": "夜里几乎无法闪避的一击。" },
-  { "id": "snow_puff", "name": "雪球弹", "type": "white", "power": 9, "description": "把毛团成球砸出去。" },
-  { "id": "ice_tail", "name": "冰霜尾", "type": "white", "power": 13, "description": "尾巴带着寒气横扫。" }
-]

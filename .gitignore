@@ -7,5 +7,7 @@ Thumbs.db
 *.log
 .playwright-mcp/
 .mimosa/
+.zcode/
 .vscode/
 .idea/
+reports/

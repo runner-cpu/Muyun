@@ -1,15 +1,21 @@
 import { gameState } from '../core/GameState';
 import type { DialogueScript } from '../types';
-import dialoguesData from '../data/dialogues.json';
 import type { DialogueBox } from '../ui/dialoguebox';
 import { audio } from './AudioManager';
 
-const scripts = dialoguesData as Record<string, DialogueScript>;
-
+/**
+ * Dialogue is data-driven: the ranch interaction controller injects the
+ * script table at boot, so content changes never touch this file.
+ */
 export class DialogueSystem {
   private active = false;
+  private scripts: Record<string, DialogueScript> = {};
 
   constructor(private box: DialogueBox) {}
+
+  setScripts(scripts: Record<string, DialogueScript>): void {
+    this.scripts = scripts;
+  }
 
   isActive(): boolean { return this.active; }
 
@@ -26,7 +32,7 @@ export class DialogueSystem {
 
   async start(id: string): Promise<void> {
     if (this.active) return;
-    const script = scripts[id];
+    const script = this.scripts[id];
     if (!script) {
       console.warn(`dialogue not found: ${id}`);
       return;

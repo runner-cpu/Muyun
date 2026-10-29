@@ -1,25 +1,20 @@
-import { DAY_START_MINUTES } from '../config';
 import type { GameStateData, Settings } from '../types';
-import mapMeta from '../data/map-meta.json';
 
-export const SPAWN = { x: mapMeta.spawn.x * 16 + 8, y: mapMeta.spawn.y * 16 + 8 };
+/** Spawn point for the placeholder ranch, in world pixels. */
+export const SPAWN = { x: 20 * 16, y: 17 * 16 };
 
 export function createDefaultState(): GameStateData {
   const settings: Settings = { music: 0.28, sfx: 0.45, muted: false };
   return {
-    day: 1,
-    timeMinutes: DAY_START_MINUTES,
-    credits: 0,
-    mood: 50,
+    week: 1,
+    money: 12000,
+    hayKg: 800,
+    labor: 2,
+    reputation: 50,
     flags: {},
-    cats: [],
     achievements: [],
     settings,
     player: { ...SPAWN },
-    lastSigninDay: 0,
-    signinStreak: 0,
-    hideAttempts: 0,
-    hideDay: 0,
     lastSaved: 0,
   };
 }

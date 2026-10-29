@@ -1,6 +1,6 @@
-import type { DayPhase, Settings } from '../types';
+import type { Season, Settings } from '../types';
 
-type SfxName = 'blip' | 'confirm' | 'cancel' | 'collect' | 'hit' | 'win' | 'lose' | 'step' | 'cat';
+type SfxName = 'blip' | 'confirm' | 'cancel' | 'collect' | 'hit' | 'win' | 'lose' | 'step' | 'bell';
 
 const NOTES = [523.25, 587.33, 659.25, 783.99, 880.0, 783.99, 659.25, 587.33];
 
@@ -12,7 +12,7 @@ export class AudioManager {
   private timer: number | null = null;
   private step = 0;
   private settings: Settings = { music: 0.28, sfx: 0.45, muted: false };
-  private phase: DayPhase = 'day';
+  private season: Season = 'spring';
   private started = false;
 
   unlock(): void {
@@ -40,18 +40,18 @@ export class AudioManager {
     this.applySettings();
   }
 
-  setPhase(phase: DayPhase): void { this.phase = phase; }
+  setSeason(season: Season): void { this.season = season; }
 
   playSfx(name: SfxName): void {
     if (!this.ctx || !this.sfxGain) return;
     const now = this.ctx.currentTime;
     const freq: Record<SfxName, number> = {
       blip: 660, confirm: 880, cancel: 220, collect: 1046, hit: 150,
-      win: 1318, lose: 180, step: 120, cat: 740,
+      win: 1318, lose: 180, step: 120, bell: 740,
     };
     const osc = this.ctx.createOscillator();
     const gain = this.ctx.createGain();
-    osc.type = name === 'hit' ? 'sawtooth' : name === 'cat' ? 'triangle' : 'square';
+    osc.type = name === 'hit' ? 'sawtooth' : name === 'bell' ? 'triangle' : 'square';
     osc.frequency.setValueAtTime(freq[name], now);
     if (name === 'collect' || name === 'win') {
       osc.frequency.exponentialRampToValueAtTime(freq[name] * 1.5, now + 0.16);
@@ -86,7 +86,7 @@ export class AudioManager {
       const now = this.ctx.currentTime;
       const osc = this.ctx.createOscillator();
       const gain = this.ctx.createGain();
-      osc.type = this.phase === 'night' ? 'sine' : 'triangle';
+      osc.type = this.season === 'winter' ? 'sine' : 'triangle';
       osc.frequency.setValueAtTime(note * octave, now);
       gain.gain.setValueAtTime(0.0001, now);
       gain.gain.exponentialRampToValueAtTime(0.35, now + 0.03);
@@ -98,7 +98,7 @@ export class AudioManager {
       this.step += 1;
     };
     schedule();
-    this.timer = window.setInterval(schedule, this.phase === 'night' ? 620 : 480);
+    this.timer = window.setInterval(schedule, this.season === 'winter' ? 620 : 480);
   }
 
   destroy(): void {

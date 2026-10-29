@@ -1,7 +1,0 @@
-[
-  { "id": "orange", "name": "大橘", "variant": 0, "type": "orange", "petId": "orange", "description": "学生公寓楼下常驻，饭点准时出现在食堂门口。可出战。" },
-  { "id": "black", "name": "煤球", "variant": 1, "type": "black", "petId": "black", "description": "东田径场神出鬼没的黑猫，速度极快。可出战。" },
-  { "id": "white", "name": "雪球", "variant": 2, "type": "white", "petId": "white", "description": "睿智楼前的白猫，喜欢趴在台阶上晒太阳。可出战。" },
-  { "id": "calico", "name": "花花", "variant": 3, "type": null, "petId": null, "description": "学生食堂后门的玳瑁猫，给吃的才让摸。" },
-  { "id": "scholar", "name": "学霸", "variant": 4, "type": null, "petId": null, "description": "总在图书馆附近巡逻的灰猫，眼神很有学问。" }
-]

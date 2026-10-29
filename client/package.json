@@ -1,5 +1,5 @@
 {
-  "name": "pixel-campus-client",
+  "name": "muyun-client",
   "private": true,
   "version": "0.1.0",
   "type": "module",
@@ -7,12 +7,7 @@
     "dev": "vite --host 0.0.0.0",
     "build": "tsc --noEmit && vite build",
     "preview": "vite preview --host 0.0.0.0",
-    "test": "vitest run",
-    "gen:assets": "node ../tools/gen-assets.mjs",
-    "gen:map": "node ../tools/gen-map.mjs",
-    "gen:buildings": "node ../tools/gen-buildings.mjs",
-    "gen:trees": "node ../tools/gen-trees.mjs",
-    "validate:map": "node ../tools/validate-map.mjs"
+    "test": "vitest run"
   },
   "dependencies": {
     "phaser": "3.90.0"

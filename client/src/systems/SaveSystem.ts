@@ -1,5 +1,6 @@
 import { SAVE_KEY, SAVE_VERSION } from '../config';
 import { createDefaultState } from '../core/defaultState';
+import { clampWeek } from './Calendar';
 import type { GameStateData, SaveFile } from '../types';
 
 function safeNumber(value: unknown, fallback: number, min: number, max?: number): number {
@@ -14,7 +15,7 @@ function stringArray(value: unknown): string[] {
 }
 
 /**
- * Migrates both the v1 envelope and a legacy "raw data" save (version 0).
+ * Accepts both the versioned envelope and a bare data object (version 0).
  * Unknown fields are dropped, missing fields fall back to defaults.
  */
 export function migrateSave(raw: unknown): SaveFile | null {
@@ -38,13 +39,12 @@ export function migrateSave(raw: unknown): SaveFile | null {
     : {};
 
   const data: GameStateData = {
-    ...defaults,
-    day: Math.round(safeNumber(candidate.day, defaults.day, 1)),
-    timeMinutes: Math.round(safeNumber(candidate.timeMinutes, defaults.timeMinutes, 0, 1439)),
-    credits: Math.round(safeNumber(candidate.credits, defaults.credits, 0)),
-    mood: Math.round(safeNumber(candidate.mood, defaults.mood, 0, 100)),
+    week: clampWeek(safeNumber(candidate.week, defaults.week, 1)),
+    money: Math.round(safeNumber(candidate.money, defaults.money, 0)),
+    hayKg: Math.round(safeNumber(candidate.hayKg, defaults.hayKg, 0)),
+    labor: Math.round(safeNumber(candidate.labor, defaults.labor, 0, 20)),
+    reputation: Math.round(safeNumber(candidate.reputation, defaults.reputation, 0, 100)),
     flags,
-    cats: stringArray(candidate.cats),
     achievements: stringArray(candidate.achievements),
     settings: {
       music: safeNumber(settings.music, defaults.settings.music, 0, 1),
@@ -55,14 +55,10 @@ export function migrateSave(raw: unknown): SaveFile | null {
       x: safeNumber(player.x, defaults.player.x, 0),
       y: safeNumber(player.y, defaults.player.y, 0),
     },
-    lastSigninDay: Math.round(safeNumber(candidate.lastSigninDay, 0, 0)),
-    signinStreak: Math.round(safeNumber(candidate.signinStreak, 0, 0)),
-    hideAttempts: Math.round(safeNumber(candidate.hideAttempts, 0, 0)),
-    hideDay: Math.round(safeNumber(candidate.hideDay, 0, 0)),
     lastSaved: Math.round(safeNumber(candidate.lastSaved, 0, 0)),
   };
-  // v5 returns to the readable core-campus map after the full-footprint experiment.
-  if (version < 5) data.player = { ...defaults.player };
+  // Version 0 saves came from a different world; reset the position.
+  if (version < 1) data.player = { ...defaults.player };
   return { version: SAVE_VERSION, data };
 }
 

@@ -231,54 +231,10 @@ button { font-family: inherit; }
 .stat-row div { background: #111a2c; border: 1px solid var(--line); padding: 8px 12px; min-width: 96px; }
 .stat-row b { display: block; font-size: 24px; color: var(--yellow); }
 .stat-row span { font-size: 11px; color: var(--muted); }
-.cat-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 10px; }
-.cat-card { padding: 12px; background: #111a2c; border: 2px solid var(--line); }
-.cat-card.locked { opacity: 0.45; filter: grayscale(1); }
-.cat-card h3 { margin: 0 0 4px; font-size: 15px; display: flex; align-items: center; gap: 8px; }
-.cat-card p { margin: 0; font-size: 12px; color: var(--muted); line-height: 1.6; }
-.cat-dot { width: 14px; height: 14px; border: 2px solid #0b1020; box-shadow: 0 0 0 1px #f4ecd8; }
-.tag { display: inline-block; margin-top: 6px; padding: 2px 7px; font-size: 10px; color: #1a1c2c; background: var(--yellow); }
 .setting-row { display: flex; align-items: center; gap: 12px; margin: 12px 0; }
 .setting-row label { width: 72px; font-size: 13px; color: var(--muted); }
 .setting-row input[type="range"] { flex: 1; accent-color: var(--yellow); }
 .setting-row output { width: 42px; text-align: right; font: 12px "Courier New", monospace; color: var(--cream); }
-
-/* ---------- battle ---------- */
-.battle-arena { display: grid; grid-template-columns: 1fr auto 1fr; gap: 14px; align-items: start; margin-top: 6px; }
-.pet-panel { background: #111a2c; border: 2px solid var(--line); padding: 12px; }
-.pet-panel.enemy { border-color: #6b3542; }
-.pet-name { display: flex; justify-content: space-between; font-weight: 800; margin-bottom: 6px; }
-.pet-name span { color: var(--yellow); font-size: 11px; }
-.hp-track { height: 12px; background: #0b1020; border: 2px solid var(--line); padding: 1px; }
-.hp-fill { height: 100%; background: var(--green); transition: width 0.25s; }
-.hp-fill.low { background: var(--red); }
-.battle-vs { align-self: center; color: var(--yellow); font: 900 18px "Courier New", monospace; padding-top: 26px; }
-.battle-log {
-  margin-top: 12px; padding: 10px; height: 104px; overflow: auto;
-  background: #0b1020; border: 1px solid var(--line); font-size: 12px; line-height: 1.7; color: #c7d4e6;
-}
-.battle-log p { margin: 0 0 3px; }
-.skills { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 12px; }
-.skill-btn { text-align: left; padding: 10px; background: #22304d; border: 2px solid var(--line); color: var(--cream); cursor: pointer; }
-.skill-btn:hover { border-color: var(--yellow); }
-.skill-btn b { display: block; color: var(--yellow); }
-.skill-btn span { font-size: 11px; color: var(--muted); }
-.battle-hint { margin-top: 10px; color: var(--muted); font-size: 12px; }
-.shake { animation: shake 0.2s linear; }
-.flash { animation: flash 0.28s linear; }
-
-/* ---------- seek ---------- */
-#seek-hud {
-  position: absolute; top: 76px; left: 50%; transform: translateX(-50%);
-  width: min(360px, 76vw); padding: 10px 12px;
-  background: rgba(16,23,38,0.9); border: 2px solid var(--yellow); box-shadow: var(--shadow);
-  text-align: center;
-}
-.seek-row { display: flex; justify-content: space-between; font-size: 12px; color: var(--muted); }
-.seek-row b { color: var(--cream); font: 700 16px "Courier New", monospace; }
-.seek-hint { margin: 4px 0 6px; font-size: 18px; font-weight: 800; color: var(--yellow); }
-.seek-bar { height: 6px; background: #0b1020; border: 1px solid var(--line); }
-.seek-bar i { display: block; height: 100%; width: 100%; background: var(--yellow); transition: width 0.2s linear; }
 
 /* ---------- toast / fade ---------- */
 #toast-root {
@@ -305,8 +261,6 @@ button { font-family: inherit; }
 @keyframes pulse { 0%, 100% { opacity: 0.45; } 50% { opacity: 1; } }
 @keyframes modal-in { from { transform: translateY(10px); opacity: 0; } to { transform: none; opacity: 1; } }
 @keyframes toast-in { from { transform: translateY(-8px); opacity: 0; } to { transform: none; opacity: 1; } }
-@keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-4px); } 75% { transform: translateX(4px); } }
-@keyframes flash { 0%, 100% { opacity: 1; } 50% { opacity: 0.35; } }
 @keyframes rotate { 0%, 100% { transform: rotate(0); } 50% { transform: rotate(90deg); } }
 
 @media (pointer: coarse), (max-width: 960px) {
@@ -322,8 +276,6 @@ button { font-family: inherit; }
   .hud-actions { gap: 4px; }
   .pixel-btn.tiny { padding: 6px 8px; min-height: 30px; font-size: 11px; }
   #quest-line { margin: 6px 8px 0; font-size: 11px; }
-  .battle-arena { grid-template-columns: 1fr; }
-  .battle-vs { padding: 0; text-align: center; }
 }
 
 @media (orientation: portrait) and (max-width: 900px) {

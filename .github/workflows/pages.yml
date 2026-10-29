@@ -1,4 +1,4 @@
-name: Deploy Pixel Campus to GitHub Pages
+name: Deploy Muyun to GitHub Pages
 
 on:
   push:

@@ -2,12 +2,8 @@ import { bus } from '../core/emitter';
 import { gameState } from '../core/GameState';
 import { audio } from '../systems/AudioManager';
 import { saveSystem } from '../systems/SaveSystem';
-import { formatTime, phaseFor, phaseLabel } from '../systems/TimeSystem';
-import type { CatDef } from '../types';
-import catsData from '../data/cats.json';
+import { seasonForWeek, seasonLabel, weekLabel } from '../systems/Calendar';
 import { DialogueBox } from './dialoguebox';
-
-const cats = catsData as CatDef[];
 
 interface ModalOptions {
   title: string;
@@ -33,7 +29,6 @@ export class UIManager {
   private modalRoot = document.getElementById('modal-root')!;
   private modalCard = document.getElementById('modal-card')!;
   private fadeEl = document.getElementById('fade')!;
-  private seekHud = document.getElementById('seek-hud')!;
   private modalClosable = true;
   private modalOnClose: (() => void) | null = null;
 
@@ -42,10 +37,9 @@ export class UIManager {
     document.getElementById('btn-continue')?.addEventListener('click', () => this.onContinue?.());
     document.getElementById('btn-title-settings')?.addEventListener('click', () => this.openSettings());
     document.getElementById('btn-settings')?.addEventListener('click', () => this.openSettings());
-    document.getElementById('btn-album')?.addEventListener('click', () => this.openAlbum());
     this.dialogue.setOpenCallback(() => undefined);
     bus.on('state:changed', () => this.updateHud());
-    bus.on('time:changed', () => this.updateHud());
+    bus.on('calendar:changed', () => this.updateHud());
     window.addEventListener('keydown', this.onEscape);
   }
 
@@ -69,15 +63,15 @@ export class UIManager {
 
   updateHud(): void {
     if (this.hud.classList.contains('hidden')) return;
-    const phase = phaseFor(gameState.timeMinutes);
-    setText('hud-day', `DAY ${gameState.day}`);
-    setText('hud-time', formatTime(gameState.timeMinutes));
-    setText('hud-phase', phaseLabel(phase));
-    setText('hud-credits', String(gameState.credits));
-    setText('hud-mood', String(gameState.mood));
-    setText('quest-text', gameState.questText());
-    const moodEl = document.getElementById('hud-mood');
-    if (moodEl) moodEl.style.color = gameState.mood < 25 ? 'var(--red)' : '';
+    const season = seasonForWeek(gameState.week);
+    setText('hud-week', weekLabel(gameState.week));
+    setText('hud-season', seasonLabel(season));
+    setText('hud-money', gameState.money.toLocaleString('zh-CN'));
+    setText('hud-hay', String(gameState.hayKg));
+    setText('hud-labor', String(gameState.labor));
+    setText('hud-reputation', String(gameState.reputation));
+    setText('hint-text', gameState.hintText());
+    audio.setSeason(season);
   }
 
   showPrompt(text: string): void {
@@ -124,23 +118,6 @@ export class UIManager {
     callback?.();
   }
 
-  openAlbum(): void {
-    const body = cats.map((cat) => {
-      const owned = gameState.hasCat(cat.id);
-      const color = ['#e8943a', '#3a3a46', '#e8e8e8', '#e8d8c8', '#9a9aa8'][cat.variant] ?? '#e8943a';
-      return `<div class="cat-card ${owned ? '' : 'locked'}">
-        <h3><span class="cat-dot" style="background:${color}"></span>${owned ? cat.name : '？？？'}</h3>
-        <p>${owned ? cat.description : '还没有在校园里遇到这只猫。'}</p>
-        ${cat.petId ? '<span class="tag">可出战</span>' : ''}
-      </div>`;
-    }).join('');
-    this.openModal({
-      title: '校园猫图鉴',
-      subtitle: `已收集 ${gameState.cats.length} / ${cats.length}`,
-      body: `<div class="cat-grid">${body}</div>`,
-    });
-  }
-
   openSettings(): void {
     const s = gameState.settings;
     const body = `
@@ -148,15 +125,15 @@ export class UIManager {
       <div class="setting-row"><label>音效</label><input id="set-sfx" type="range" min="0" max="100" value="${Math.round(s.sfx * 100)}" /><output id="out-sfx">${Math.round(s.sfx * 100)}</output></div>
       <div class="setting-row"><label>静音</label><input id="set-muted" type="checkbox" ${s.muted ? 'checked' : ''} /><span class="modal-note">开启后所有声音关闭</span></div>
       <div class="stat-row">
-        <div><b>${gameState.day}</b><span>当前天数</span></div>
-        <div><b>${gameState.cats.length}</b><span>收集猫</span></div>
+        <div><b>${gameState.week}</b><span>当前周</span></div>
+        <div><b>${gameState.reputation}</b><span>口碑</span></div>
         <div><b>${gameState.achievements.length}</b><span>成就</span></div>
       </div>
       <div class="modal-actions" style="justify-content:flex-start">
         <button class="pixel-btn" id="set-fullscreen">切换全屏</button>
         <button class="pixel-btn danger" id="set-reset">清除存档</button>
       </div>
-      <p class="modal-note" style="margin-top:14px">存档保存在浏览器 localStorage，每 60 秒、睡觉、收集猫时自动保存。</p>`;
+      <p class="modal-note" style="margin-top:14px">存档保存在浏览器 localStorage，每周结算时自动保存。</p>`;
     const el = this.openModal({ title: '设置', body });
     const music = el.querySelector('#set-music') as HTMLInputElement;
     const sfx = el.querySelector('#set-sfx') as HTMLInputElement;
@@ -181,15 +158,6 @@ export class UIManager {
       gameState.newGame();
       window.location.reload();
     });
-  }
-
-  showSeek(): void { this.seekHud.classList.remove('hidden'); }
-  hideSeek(): void { this.seekHud.classList.add('hidden'); }
-  updateSeek(secondsLeft: number, hint: string, ratio: number): void {
-    setText('seek-timer', `${String(Math.floor(secondsLeft / 60)).padStart(2, '0')}:${String(Math.floor(secondsLeft % 60)).padStart(2, '0')}`);
-    setText('seek-hint', hint);
-    const bar = document.getElementById('seek-bar-fill');
-    if (bar) bar.style.width = `${Math.max(0, Math.min(1, ratio)) * 100}%`;
   }
 
   fadeThrough(action: () => void): void {

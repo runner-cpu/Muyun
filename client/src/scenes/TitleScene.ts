@@ -18,82 +18,103 @@ export class TitleScene extends Phaser.Scene {
       audio.unlock();
       gameState.newGame();
       saveSystem.clear();
-      this.startCampus();
+      this.startRanch();
     };
     ui.onContinue = () => {
       const save = saveSystem.load();
       if (!save) {
-        ui.toast('没有找到存档，先开始新的一天吧', 'bad');
+        ui.toast('没有找到存档，先开始新的一局吧', 'bad');
         return;
       }
       audio.unlock();
       gameState.load(save);
-      this.startCampus();
+      this.startRanch();
     };
   }
 
-  private startCampus(): void {
+  private startRanch(): void {
     ui.hideTitle();
-    this.scene.start('CampusScene');
+    this.scene.start('RanchScene');
   }
 
+  /** A cold-altitude dawn: banded sky, snow line, yurt, fence and herd silhouettes. */
   private drawBackdrop(): void {
     const g = this.add.graphics();
-    const bands = ['#101726', '#17243d', '#253957', '#3d4e6b', '#6b596d', '#a86b62', '#d98a55', '#e8a15f'];
+    const bands = ['#0d1526', '#142138', '#1d3150', '#2e5c8a', '#4f86ad', '#8fb4c4', '#c9bfa0', '#e0b978'];
     const bandH = Math.ceil(GAME_HEIGHT / bands.length);
-    bands.forEach((color, i) => g.fillStyle(Phaser.Display.Color.HexStringToColor(color).color, 1).fillRect(0, i * bandH, GAME_WIDTH, bandH + 1));
-    // sun
-    g.fillStyle(0xf2c14e, 0.1).fillCircle(386, 92, 34);
-    g.fillStyle(0xf2c14e, 0.22).fillCircle(386, 92, 24);
-    g.fillStyle(0xffe9a8, 1).fillCircle(386, 92, 13);
-    // clouds
-    g.fillStyle(0xf4ecd8, 0.16);
-    for (const [x, y, w] of [[60, 48, 46], [104, 38, 26], [300, 54, 38], [420, 40, 22]]) {
-      g.fillRect(x, y, w, 5);
-      g.fillRect(x + 6, y - 4, w - 14, 4);
+    bands.forEach((color, i) => {
+      g.fillStyle(Phaser.Display.Color.HexStringToColor(color).color, 1)
+        .fillRect(0, i * bandH, GAME_WIDTH, bandH + 1);
+    });
+
+    // low sun
+    g.fillStyle(0xf2d7a0, 0.10).fillCircle(372, 150, 40);
+    g.fillStyle(0xf2d7a0, 0.18).fillCircle(372, 150, 26);
+    g.fillStyle(0xfff3d6, 1).fillCircle(372, 150, 11);
+
+    // snow mountains
+    g.fillStyle(0x2b3f5c, 1);
+    g.fillTriangle(-30, 196, 92, 96, 214, 196);
+    g.fillTriangle(140, 196, 268, 74, 396, 196);
+    g.fillTriangle(330, 196, 430, 118, 530, 196);
+    g.fillStyle(0xdce8ee, 0.9);
+    g.fillTriangle(92, 96, 74, 124, 110, 124);
+    g.fillTriangle(268, 74, 244, 112, 292, 112);
+    g.fillTriangle(430, 118, 414, 140, 446, 140);
+
+    // mid ridge
+    g.fillStyle(0x1e2c44, 1);
+    g.fillRect(0, 194, GAME_WIDTH, 26);
+
+    // pasture
+    g.fillStyle(0x5c5c2e, 1);
+    g.fillRect(0, 214, GAME_WIDTH, GAME_HEIGHT - 214);
+    g.fillStyle(0x6d6a35, 1);
+    for (let i = 0; i < 40; i++) {
+      const x = (i * 37) % GAME_WIDTH;
+      const y = 220 + ((i * 53) % 44);
+      g.fillRect(x, y, 2, 1);
     }
-    // distant hills
-    g.fillStyle(0x2f3a52, 1);
-    g.fillTriangle(0, 205, 90, 132, 190, 205);
-    g.fillTriangle(130, 205, 250, 120, 380, 205);
-    g.fillTriangle(300, 205, 400, 145, 480, 205);
-    // campus silhouette
-    g.fillStyle(0x1b2437, 1);
-    g.fillRect(0, 208, 480, 62);
-    const buildings = [[24, 178, 46, 32], [86, 166, 58, 44], [156, 186, 40, 24], [206, 156, 70, 54], [296, 182, 36, 28], [342, 168, 52, 42], [410, 184, 44, 26]];
-    for (const [x, y, w, h] of buildings) {
-      g.fillRect(x, y, w, h);
-      g.fillStyle(0xf2c14e, 0.55);
-      for (let wx = x + 5; wx < x + w - 4; wx += 9) for (let wy = y + 6; wy < y + h - 6; wy += 10) g.fillRect(wx, wy, 3, 4);
-      g.fillStyle(0x1b2437, 1);
+
+    // yurt
+    g.fillStyle(0x8a6a3a, 1).fillRect(96, 196, 54, 24);
+    g.fillStyle(0xd8c9a8, 1).fillRect(96, 192, 54, 6);
+    g.fillStyle(0xb59a6a, 1).fillTriangle(92, 192, 123, 170, 154, 192);
+    g.fillStyle(0x4a3a24, 1).fillRect(117, 206, 10, 14);
+
+    // fence
+    g.fillStyle(0x3d2f1d, 1);
+    for (let x = 8; x < GAME_WIDTH; x += 26) g.fillRect(x, 236, 3, 18);
+    g.fillRect(0, 240, GAME_WIDTH, 2);
+    g.fillRect(0, 248, GAME_WIDTH, 2);
+
+    // herd silhouettes
+    const herd: Array<[number, number, number]> = [[196, 232, 13], [228, 238, 11], [272, 230, 10], [300, 240, 12]];
+    for (const [x, y, w] of herd) {
+      g.fillStyle(0x14110e, 1);
+      g.fillRect(x, y, w, w * 0.52);
+      g.fillRect(x + w - 3, y - 3, 4, 5);
+      g.fillRect(x + 2, y + w * 0.52, 2, 5);
+      g.fillRect(x + w - 5, y + w * 0.52, 2, 5);
     }
-    // gate
-    g.fillStyle(0x0d1320, 1).fillRect(214, 186, 8, 24).fillRect(258, 186, 8, 24);
-    g.fillRect(208, 180, 64, 7);
-    // foreground path
-    g.fillStyle(0x2f3a52, 1).fillRect(0, 250, 480, 20);
-    g.fillStyle(0x4a4a55, 1).fillRect(210, 250, 60, 20);
-    // trees
-    for (const [x, y, s] of [[14, 230, 20], [66, 236, 14], [320, 230, 18], [450, 234, 16]]) {
-      g.fillStyle(0x513720, 1).fillRect(x, y + s * 0.4, 4, s * 0.6);
-      g.fillStyle(0x2e5e2e, 1).fillCircle(x + 2, y + s * 0.3, s * 0.5);
-      g.fillStyle(0x3f7d3c, 1).fillCircle(x, y + s * 0.25, s * 0.4);
-    }
+
+    // foreground
+    g.fillStyle(0x141a22, 1).fillRect(0, 258, GAME_WIDTH, 12);
   }
 
   private createMotes(): void {
-    for (let i = 0; i < 18; i++) {
-      const x = Phaser.Math.Between(240, 470);
-      const y = Phaser.Math.Between(30, 250);
-      const rect = this.add.rectangle(x, y, 2, 2, 0xf2c14e, Phaser.Math.FloatBetween(0.15, 0.6));
+    for (let i = 0; i < 16; i++) {
+      const x = Phaser.Math.Between(40, 460);
+      const y = Phaser.Math.Between(40, 240);
+      const rect = this.add.rectangle(x, y, 2, 2, 0xf2d7a0, Phaser.Math.FloatBetween(0.12, 0.5));
       this.tweens.add({
         targets: rect,
-        y: y - Phaser.Math.Between(18, 50),
+        y: y - Phaser.Math.Between(16, 46),
         alpha: 0,
-        duration: Phaser.Math.Between(2400, 5200),
+        duration: Phaser.Math.Between(2600, 5400),
         delay: Phaser.Math.Between(0, 2000),
         repeat: -1,
-        onRepeat: () => { rect.y = y; rect.alpha = Phaser.Math.FloatBetween(0.15, 0.6); },
+        onRepeat: () => { rect.y = y; rect.alpha = Phaser.Math.FloatBetween(0.12, 0.5); },
       });
     }
   }

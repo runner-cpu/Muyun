@@ -8,7 +8,7 @@ import { ui } from './ui/instance';
 import { BootScene } from './scenes/BootScene';
 import { PreloadScene } from './scenes/PreloadScene';
 import { TitleScene } from './scenes/TitleScene';
-import { CampusScene } from './scenes/CampusScene';
+import { RanchScene } from './scenes/RanchScene';
 
 const config: Phaser.Types.Core.GameConfig = {
   type: Phaser.AUTO,
@@ -31,7 +31,7 @@ const config: Phaser.Types.Core.GameConfig = {
     default: 'arcade',
     arcade: { gravity: { x: 0, y: 0 }, debug: false },
   },
-  scene: [BootScene, PreloadScene, TitleScene, CampusScene],
+  scene: [BootScene, PreloadScene, TitleScene, RanchScene],
 };
 
 const game = new Phaser.Game(config);
@@ -47,7 +47,7 @@ window.addEventListener('orientationchange', () => {
 });
 
 const persist = (): void => {
-  if (game.scene.isActive('CampusScene')) saveSystem.save(gameState.toData());
+  if (game.scene.isActive('RanchScene')) saveSystem.save(gameState.toData());
 };
 window.addEventListener('pagehide', persist);
 window.addEventListener('beforeunload', persist);
@@ -57,4 +57,4 @@ document.addEventListener('visibilitychange', () => {
 
 audio.setSettings(gameState.settings);
 // Debug handle for smoke tests and future tooling.
-(window as unknown as { __PIXEL_CAMPUS__: Phaser.Game }).__PIXEL_CAMPUS__ = game;
+(window as unknown as { __MUYUN__: Phaser.Game }).__MUYUN__ = game;
