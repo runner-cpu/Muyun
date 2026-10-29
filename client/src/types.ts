@@ -1,3 +1,5 @@
+import type { RunState } from './sim/types';
+
 export type Direction = 'down' | 'left' | 'right' | 'up';
 export type Season = 'spring' | 'summer' | 'autumn' | 'winter';
 
@@ -12,18 +14,9 @@ export interface PlayerPosition {
   y: number;
 }
 
-/**
- * D version: one run is a single pastoral year, divided into 13 weeks.
- * The animal and pasture detail lives in `src/sim` and is attached in Phase 2.
- */
+/** Everything that survives a reload. The run owns all game state. */
 export interface GameStateData {
-  week: number;
-  money: number;
-  hayKg: number;
-  labor: number;
-  reputation: number;
-  flags: Record<string, boolean>;
-  achievements: string[];
+  run: RunState;
   settings: Settings;
   player: PlayerPosition;
   lastSaved: number;

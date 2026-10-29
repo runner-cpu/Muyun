@@ -1,23 +1,43 @@
 import { bus } from './emitter';
 import { clone, createDefaultState, SPAWN } from './defaultState';
-import { clampWeek, seasonForWeek } from '../systems/Calendar';
+import {
+  applyAction as applyRunAction,
+  endWeek as endRunWeek,
+  resolveEvent as resolveRunEvent,
+  summarize,
+  weekEvent as currentWeekEvent,
+} from '../sim/run';
+import type {
+  Action,
+  Animal,
+  EventCard,
+  PastureCell,
+  RunState,
+  RunSummary,
+} from '../sim/types';
 import type { GameStateData, Season } from '../types';
 
 export class GameState {
   private data: GameStateData = createDefaultState();
 
-  get week(): number { return this.data.week; }
-  get season(): Season { return seasonForWeek(this.data.week); }
-  get money(): number { return this.data.money; }
-  get hayKg(): number { return this.data.hayKg; }
-  get labor(): number { return this.data.labor; }
-  get reputation(): number { return this.data.reputation; }
-  get achievements(): string[] { return this.data.achievements; }
-  get flags(): Record<string, boolean> { return this.data.flags; }
+  get run(): RunState { return this.data.run; }
+  get week(): number { return this.data.run.week; }
+  get season(): Season { return this.data.run.season; }
+  get money(): number { return this.data.run.money; }
+  get hayKg(): number { return this.data.run.hayKg; }
+  get labor(): number { return this.data.run.labor; }
+  get reputation(): number { return this.data.run.reputation; }
+  get actionsLeft(): number { return this.data.run.actionsLeft; }
+  get animals(): Animal[] { return this.data.run.animals; }
+  get pasture(): PastureCell[] { return this.data.run.pasture; }
+  get ended(): boolean { return this.data.run.ended; }
+  get ending(): RunState['ending'] { return this.data.run.ending; }
+  get log(): RunState['log'] { return this.data.run.log; }
+  get weather(): RunState['weather'] { return this.data.run.weather; }
   get settings() { return this.data.settings; }
 
-  newGame(): void {
-    this.data = createDefaultState();
+  newGame(seed?: number): void {
+    this.data = createDefaultState(seed);
     this.changed();
   }
 
@@ -26,9 +46,7 @@ export class GameState {
     this.data = {
       ...defaults,
       ...save,
-      week: clampWeek(save.week ?? defaults.week),
-      flags: { ...defaults.flags, ...(save.flags ?? {}) },
-      achievements: Array.isArray(save.achievements) ? [...save.achievements] : [],
+      run: save.run ?? defaults.run,
       settings: { ...defaults.settings, ...(save.settings ?? {}) },
       player: { ...defaults.player, ...(save.player ?? {}) },
     };
@@ -40,58 +58,35 @@ export class GameState {
     this.data.player.y = Math.round(y);
   }
 
-  addMoney(amount: number): void {
-    this.data.money = Math.max(0, Math.round(this.data.money + amount));
+  act(action: Action): void {
+    this.data.run = applyRunAction(this.data.run, action);
     this.changed();
   }
 
-  spend(amount: number): boolean {
-    if (this.data.money < amount) return false;
-    this.data.money = Math.round(this.data.money - amount);
-    this.changed();
-    return true;
-  }
-
-  addHay(kg: number): void {
-    this.data.hayKg = Math.max(0, Math.round(this.data.hayKg + kg));
+  resolveEvent(cardId: string, choiceId: string): void {
+    this.data.run = resolveRunEvent(this.data.run, cardId, choiceId);
     this.changed();
   }
 
-  consumeHay(kg: number): boolean {
-    if (this.data.hayKg < kg) return false;
-    this.data.hayKg = Math.round(this.data.hayKg - kg);
+  endWeek(): void {
+    this.data.run = endRunWeek(this.data.run);
     this.changed();
-    return true;
+    bus.emit('calendar:changed', { week: this.week, season: this.season });
   }
 
-  addReputation(delta: number): void {
-    this.data.reputation = Math.max(0, Math.min(100, Math.round(this.data.reputation + delta)));
-    this.changed();
+  weekEvent(): EventCard | null {
+    return currentWeekEvent(this.data.run);
   }
 
-  setWeek(week: number): void {
-    this.data.week = clampWeek(week);
-    this.changed();
-    bus.emit('calendar:changed', { week: this.data.week, season: this.season });
+  summary(): RunSummary {
+    return summarize(this.data.run);
   }
 
-  nextWeek(): number {
-    this.setWeek(this.data.week + 1);
-    return this.data.week;
-  }
-
-  hasFlag(flag: string): boolean { return Boolean(this.data.flags[flag]); }
+  hasFlag(flag: string): boolean { return Boolean(this.data.run.flags[flag]); }
 
   setFlag(flag: string, value = true): void {
-    this.data.flags[flag] = value;
+    this.data.run.flags[flag] = value;
     this.changed();
-  }
-
-  unlockAchievement(id: string): boolean {
-    if (this.data.achievements.includes(id)) return false;
-    this.data.achievements.push(id);
-    this.changed();
-    return true;
   }
 
   setSettings(settings: Partial<GameStateData['settings']>): void {
@@ -112,11 +107,9 @@ export class GameState {
   }
 
   hintText(): string {
-    if (this.data.week === 1) return '先看看畜群，再决定这一周怎么安排';
-    if (this.data.reputation < 30) return '口碑偏低，收购商可能会压价';
-    if (this.data.hayKg < 200 && this.season === 'winter') return '草料见底了，尽快补草';
-    if (this.season === 'winter') return '冬天来了，撑过去就能结算这一局';
-    return '点畜群、草场、集市或科技，安排本周的三个行动';
+    if (this.data.run.ended) return '这一局结束了，看看结算吧';
+    if (this.data.run.actionsLeft > 0) return `本周还剩 ${this.data.run.actionsLeft} 个行动点`;
+    return '行动点用完了，结束本周进入下一周';
   }
 
   private changed(): void { bus.emit('state:changed'); }

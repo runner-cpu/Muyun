@@ -8,6 +8,7 @@ import { InteractionSystem } from '../systems/InteractionSystem';
 import { RanchInteractionController } from '../systems/RanchInteractionController';
 import { tintForSeason } from '../systems/Calendar';
 import { audio } from '../systems/AudioManager';
+import { endWeekFlow } from '../systems/WeekFlow';
 import { ui } from '../ui/instance';
 import type { TriggerDef } from '../types';
 
@@ -65,6 +66,7 @@ export class RanchScene extends Phaser.Scene {
     this.unsubscribes.push(bus.on('calendar:changed', () => this.applySeasonWash()));
 
     ui.showHud();
+    ui.onEndWeek = endWeekFlow;
     audio.setSeason(gameState.season);
 
     this.events.once(Phaser.Scenes.Events.SHUTDOWN, () => this.teardown());

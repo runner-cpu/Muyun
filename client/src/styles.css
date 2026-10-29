@@ -236,6 +236,33 @@ button { font-family: inherit; }
 .setting-row input[type="range"] { flex: 1; accent-color: var(--yellow); }
 .setting-row output { width: 42px; text-align: right; font: 12px "Courier New", monospace; color: var(--cream); }
 
+/* ---------- panels ---------- */
+.table-wrap { max-height: 300px; overflow: auto; margin-top: 10px; }
+.data-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+.data-table th, .data-table td { padding: 6px 8px; text-align: left; border-bottom: 1px solid var(--line); }
+.data-table th { color: var(--muted); font-weight: 600; position: sticky; top: 0; background: var(--panel-solid); }
+.data-table em { font-style: normal; color: var(--muted); }
+.danger-text { color: var(--red); }
+.meter { display: inline-block; width: 84px; height: 8px; background: #0b1020; border: 1px solid var(--line); vertical-align: middle; }
+.meter i { display: block; height: 100%; background: var(--green); }
+.meter.warn i { background: var(--red); }
+.cell-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 10px; margin-top: 12px; }
+.cell-card { padding: 12px; background: #111a2c; border: 2px solid var(--line); }
+.cell-card.focus { border-color: var(--yellow); }
+.cell-card h3 { margin: 0 0 8px; font-size: 15px; color: var(--yellow); }
+.cell-card p { margin: 4px 0; font-size: 12px; color: #c7d4e6; }
+.cell-actions { display: flex; gap: 6px; margin-top: 8px; }
+.tech-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px; margin: 12px 0; }
+.tech-card { padding: 12px; background: #111a2c; border: 2px solid var(--line); }
+.tech-card.owned { border-color: var(--green); }
+.tech-card h3 { margin: 0 0 6px; font-size: 15px; color: var(--yellow); }
+.tech-card p { margin: 4px 0 10px; font-size: 12px; color: #c7d4e6; line-height: 1.6; }
+.timeline { margin-top: 12px; padding: 10px; background: #0b1020; border: 1px solid var(--line); max-height: 150px; overflow: auto; }
+.timeline p { margin: 0 0 4px; font-size: 12px; }
+.log-good { color: var(--green); }
+.log-bad { color: var(--red); }
+.log-info { color: #c7d4e6; }
+
 /* ---------- toast / fade ---------- */
 #toast-root {
   position: absolute; top: 84px; left: 50%; transform: translateX(-50%);

@@ -17,6 +17,7 @@ export class UIManager {
   readonly dialogue = new DialogueBox();
   onNewGame: (() => void) | null = null;
   onContinue: (() => void) | null = null;
+  onEndWeek: (() => void) | null = null;
 
   private loading = document.getElementById('loading-screen')!;
   private loadingFill = document.getElementById('loading-fill')!;
@@ -37,6 +38,7 @@ export class UIManager {
     document.getElementById('btn-continue')?.addEventListener('click', () => this.onContinue?.());
     document.getElementById('btn-title-settings')?.addEventListener('click', () => this.openSettings());
     document.getElementById('btn-settings')?.addEventListener('click', () => this.openSettings());
+    document.getElementById('btn-end-week')?.addEventListener('click', () => this.onEndWeek?.());
     this.dialogue.setOpenCallback(() => undefined);
     bus.on('state:changed', () => this.updateHud());
     bus.on('calendar:changed', () => this.updateHud());
@@ -70,7 +72,11 @@ export class UIManager {
     setText('hud-hay', String(gameState.hayKg));
     setText('hud-labor', String(gameState.labor));
     setText('hud-reputation', String(gameState.reputation));
+    setText('hud-actions', String(gameState.actionsLeft));
+    setText('hud-herd', String(gameState.animals.filter((animal) => animal.alive).length));
     setText('hint-text', gameState.hintText());
+    const weekBtn = document.getElementById('btn-end-week') as HTMLButtonElement | null;
+    if (weekBtn) weekBtn.textContent = gameState.ended ? '查看结算' : '结束本周';
     audio.setSeason(season);
   }
 
@@ -127,7 +133,7 @@ export class UIManager {
       <div class="stat-row">
         <div><b>${gameState.week}</b><span>当前周</span></div>
         <div><b>${gameState.reputation}</b><span>口碑</span></div>
-        <div><b>${gameState.achievements.length}</b><span>成就</span></div>
+        <div><b>${gameState.animals.filter((a) => a.alive).length}</b><span>存栏</span></div>
       </div>
       <div class="modal-actions" style="justify-content:flex-start">
         <button class="pixel-btn" id="set-fullscreen">切换全屏</button>

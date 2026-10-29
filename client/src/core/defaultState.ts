@@ -1,18 +1,13 @@
+import { createRun } from '../sim/run';
 import type { GameStateData, Settings } from '../types';
 
 /** Spawn point for the placeholder ranch, in world pixels. */
 export const SPAWN = { x: 20 * 16, y: 17 * 16 };
 
-export function createDefaultState(): GameStateData {
+export function createDefaultState(seed = Date.now()): GameStateData {
   const settings: Settings = { music: 0.28, sfx: 0.45, muted: false };
   return {
-    week: 1,
-    money: 12000,
-    hayKg: 800,
-    labor: 2,
-    reputation: 50,
-    flags: {},
-    achievements: [],
+    run: createRun(seed),
     settings,
     player: { ...SPAWN },
     lastSaved: 0,

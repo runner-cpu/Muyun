@@ -56,5 +56,6 @@ document.addEventListener('visibilitychange', () => {
 });
 
 audio.setSettings(gameState.settings);
-// Debug handle for smoke tests and future tooling.
+// Debug handles for smoke tests and future tooling.
 (window as unknown as { __MUYUN__: Phaser.Game }).__MUYUN__ = game;
+(window as unknown as { __MUYUN_STATE__: typeof gameState }).__MUYUN_STATE__ = gameState;
