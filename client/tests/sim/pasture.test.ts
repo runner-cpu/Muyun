@@ -67,12 +67,24 @@ describe('pasture', () => {
 
   it('regrows more in summer than in winter', () => {
     const base = { ...createPastureCells(1)[0], biomassKgPerHa: 300 };
-    const summer = rest({ ...base, grazing: true }, 'summer');
-    const winter = rest({ ...base, grazing: true }, 'winter');
+    const summer = rest(base, 'summer');
+    const winter = rest(base, 'winter');
     expect(summer.biomassKgPerHa).toBeGreaterThan(winter.biomassKgPerHa);
     expect(winter.biomassKgPerHa).toBeGreaterThanOrEqual(base.biomassKgPerHa);
     expect(summer.grazing).toBe(false);
     expect(summer.restedWeeks).toBe(1);
+  });
+
+  it('does not regrow or recover land already grazed or harvested this week', () => {
+    for (const use of [{ grazing: true }, { harvested: true }]) {
+      const cell = { ...createPastureCells(1)[0], biomassKgPerHa: 300, degradation: 0.2, restedWeeks: 3, ...use };
+      const settled = rest(cell, 'summer');
+      expect(settled.biomassKgPerHa).toBe(300);
+      expect(settled.degradation).toBe(0.2);
+      expect(settled.restedWeeks).toBe(0);
+      expect(settled.grazing).toBe(false);
+      expect(settled.harvested).toBe(false);
+    }
   });
 
   it('averages degradation across cells', () => {

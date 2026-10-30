@@ -1,0 +1,132 @@
+{
+  "date": "2026-10-30",
+  "simulationVersion": "decision-v2",
+  "plannerVersion": "beam-profile-v1",
+  "ignoredTimingFields": [
+    "elapsedMs",
+    "searchMs"
+  ],
+  "baselineCompatibility": [
+    {
+      "file": "strategy-benchmark.json",
+      "runs": 60,
+      "allNonTimedFieldsIdentical": true
+    },
+    {
+      "file": "strategy-benchmark-challenge.json",
+      "runs": 60,
+      "allNonTimedFieldsIdentical": true
+    }
+  ],
+  "semanticTextContrast": [
+    {
+      "theme": "light",
+      "foreground": "cream",
+      "background": "panel-solid",
+      "ratio": 8.83
+    },
+    {
+      "theme": "light",
+      "foreground": "cream",
+      "background": "field",
+      "ratio": 7.94
+    },
+    {
+      "theme": "light",
+      "foreground": "cream",
+      "background": "panel-2",
+      "ratio": 7.69
+    },
+    {
+      "theme": "light",
+      "foreground": "muted",
+      "background": "panel-solid",
+      "ratio": 6.01
+    },
+    {
+      "theme": "light",
+      "foreground": "muted",
+      "background": "field",
+      "ratio": 5.4
+    },
+    {
+      "theme": "light",
+      "foreground": "muted",
+      "background": "panel-2",
+      "ratio": 5.23
+    },
+    {
+      "theme": "light",
+      "foreground": "red",
+      "background": "panel-solid",
+      "ratio": 5.85
+    },
+    {
+      "theme": "light",
+      "foreground": "red",
+      "background": "field",
+      "ratio": 5.26
+    },
+    {
+      "theme": "light",
+      "foreground": "red",
+      "background": "panel-2",
+      "ratio": 5.09
+    },
+    {
+      "theme": "dark",
+      "foreground": "cream",
+      "background": "panel-solid",
+      "ratio": 12.05
+    },
+    {
+      "theme": "dark",
+      "foreground": "cream",
+      "background": "field",
+      "ratio": 13.2
+    },
+    {
+      "theme": "dark",
+      "foreground": "cream",
+      "background": "panel-2",
+      "ratio": 9.63
+    },
+    {
+      "theme": "dark",
+      "foreground": "muted",
+      "background": "panel-solid",
+      "ratio": 7.44
+    },
+    {
+      "theme": "dark",
+      "foreground": "muted",
+      "background": "field",
+      "ratio": 8.15
+    },
+    {
+      "theme": "dark",
+      "foreground": "muted",
+      "background": "panel-2",
+      "ratio": 5.94
+    },
+    {
+      "theme": "dark",
+      "foreground": "red",
+      "background": "panel-solid",
+      "ratio": 6.97
+    },
+    {
+      "theme": "dark",
+      "foreground": "red",
+      "background": "field",
+      "ratio": 7.63
+    },
+    {
+      "theme": "dark",
+      "foreground": "red",
+      "background": "panel-2",
+      "ratio": 5.56
+    }
+  ],
+  "minimumTextContrast": 5.09
+}

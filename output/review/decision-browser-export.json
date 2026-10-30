@@ -1,0 +1,1310 @@
+{
+  "schema": "muyun-run-v1",
+  "simulationVersion": "decision-v1",
+  "assessmentFormulaVersion": "decision-assessment-v1",
+  "source": {
+    "kind": "recorded-run",
+    "provenance": "new-run",
+    "fromWeek": 10,
+    "toWeek": 13,
+    "description": "从实际开局记录；仅导出真实发生的行动与周结算。"
+  },
+  "scenario": {
+    "id": "winter-challenge-v1",
+    "configuration": {
+      "scenario": "winter-challenge-v1",
+      "seed": 20261030,
+      "week": 10,
+      "season": "winter",
+      "money": 6000,
+      "hayKg": 2200,
+      "labor": 2,
+      "reputation": 50,
+      "animals": [
+        {
+          "id": "yak-1",
+          "tag": "B-001",
+          "species": "yak",
+          "sex": "female",
+          "ageWeeks": 104,
+          "weightKg": 249,
+          "bcs": 3,
+          "health": "healthy",
+          "pregnant": false,
+          "lactating": false,
+          "collar": true,
+          "alive": true
+        },
+        {
+          "id": "yak-2",
+          "tag": "B-002",
+          "species": "yak",
+          "sex": "female",
+          "ageWeeks": 130,
+          "weightKg": 270,
+          "bcs": 3,
+          "health": "healthy",
+          "pregnant": false,
+          "lactating": false,
+          "collar": true,
+          "alive": true
+        },
+        {
+          "id": "yak-3",
+          "tag": "B-003",
+          "species": "yak",
+          "sex": "female",
+          "ageWeeks": 156,
+          "weightKg": 284,
+          "bcs": 3,
+          "health": "healthy",
+          "pregnant": false,
+          "lactating": false,
+          "collar": true,
+          "alive": true
+        },
+        {
+          "id": "yak-4",
+          "tag": "B-004",
+          "species": "yak",
+          "sex": "female",
+          "ageWeeks": 182,
+          "weightKg": 293,
+          "bcs": 3,
+          "health": "healthy",
+          "pregnant": false,
+          "lactating": false,
+          "collar": true,
+          "alive": true
+        },
+        {
+          "id": "yak-5",
+          "tag": "B-005",
+          "species": "yak",
+          "sex": "female",
+          "ageWeeks": 208,
+          "weightKg": 300,
+          "bcs": 3,
+          "health": "healthy",
+          "pregnant": false,
+          "lactating": false,
+          "collar": true,
+          "alive": true
+        },
+        {
+          "id": "yak-6",
+          "tag": "B-006",
+          "species": "yak",
+          "sex": "female",
+          "ageWeeks": 234,
+          "weightKg": 300,
+          "bcs": 3,
+          "health": "healthy",
+          "pregnant": false,
+          "lactating": false,
+          "collar": true,
+          "alive": true
+        },
+        {
+          "id": "yak-7",
+          "tag": "B-007",
+          "species": "yak",
+          "sex": "female",
+          "ageWeeks": 260,
+          "weightKg": 300,
+          "bcs": 3,
+          "health": "healthy",
+          "pregnant": false,
+          "lactating": false,
+          "collar": true,
+          "alive": true
+        },
+        {
+          "id": "yak-8",
+          "tag": "B-008",
+          "species": "yak",
+          "sex": "female",
+          "ageWeeks": 286,
+          "weightKg": 300,
+          "bcs": 3,
+          "health": "healthy",
+          "pregnant": false,
+          "lactating": false,
+          "collar": true,
+          "alive": true
+        },
+        {
+          "id": "yak-9",
+          "tag": "B-009",
+          "species": "yak",
+          "sex": "female",
+          "ageWeeks": 104,
+          "weightKg": 249,
+          "bcs": 3,
+          "health": "healthy",
+          "pregnant": false,
+          "lactating": false,
+          "collar": true,
+          "alive": true
+        },
+        {
+          "id": "yak-10",
+          "tag": "B-010",
+          "species": "yak",
+          "sex": "female",
+          "ageWeeks": 130,
+          "weightKg": 270,
+          "bcs": 3,
+          "health": "healthy",
+          "pregnant": false,
+          "lactating": false,
+          "collar": true,
+          "alive": true
+        },
+        {
+          "id": "yak-11",
+          "tag": "B-011",
+          "species": "yak",
+          "sex": "male",
+          "ageWeeks": 156,
+          "weightKg": 397,
+          "bcs": 3,
+          "health": "healthy",
+          "pregnant": false,
+          "lactating": false,
+          "collar": false,
+          "alive": true
+        },
+        {
+          "id": "yak-12",
+          "tag": "B-012",
+          "species": "yak",
+          "sex": "male",
+          "ageWeeks": 182,
+          "weightKg": 411,
+          "bcs": 3,
+          "health": "healthy",
+          "pregnant": false,
+          "lactating": false,
+          "collar": false,
+          "alive": true
+        },
+        {
+          "id": "sheep-1",
+          "tag": "S-001",
+          "species": "sheep",
+          "sex": "female",
+          "ageWeeks": 39,
+          "weightKg": 46,
+          "bcs": 3,
+          "health": "healthy",
+          "pregnant": false,
+          "lactating": false,
+          "collar": false,
+          "alive": true
+        },
+        {
+          "id": "sheep-2",
+          "tag": "S-002",
+          "species": "sheep",
+          "sex": "female",
+          "ageWeeks": 52,
+          "weightKg": 50,
+          "bcs": 3,
+          "health": "healthy",
+          "pregnant": false,
+          "lactating": false,
+          "collar": false,
+          "alive": true
+        },
+        {
+          "id": "sheep-3",
+          "tag": "S-003",
+          "species": "sheep",
+          "sex": "female",
+          "ageWeeks": 65,
+          "weightKg": 53,
+          "bcs": 3,
+          "health": "healthy",
+          "pregnant": false,
+          "lactating": false,
+          "collar": false,
+          "alive": true
+        },
+        {
+          "id": "sheep-4",
+          "tag": "S-004",
+          "species": "sheep",
+          "sex": "female",
+          "ageWeeks": 78,
+          "weightKg": 55,
+          "bcs": 3,
+          "health": "healthy",
+          "pregnant": false,
+          "lactating": false,
+          "collar": false,
+          "alive": true
+        },
+        {
+          "id": "sheep-5",
+          "tag": "S-005",
+          "species": "sheep",
+          "sex": "female",
+          "ageWeeks": 91,
+          "weightKg": 55,
+          "bcs": 3,
+          "health": "healthy",
+          "pregnant": false,
+          "lactating": false,
+          "collar": false,
+          "alive": true
+        },
+        {
+          "id": "sheep-6",
+          "tag": "S-006",
+          "species": "sheep",
+          "sex": "female",
+          "ageWeeks": 104,
+          "weightKg": 55,
+          "bcs": 3,
+          "health": "healthy",
+          "pregnant": false,
+          "lactating": false,
+          "collar": false,
+          "alive": true
+        },
+        {
+          "id": "sheep-7",
+          "tag": "S-007",
+          "species": "sheep",
+          "sex": "female",
+          "ageWeeks": 39,
+          "weightKg": 46,
+          "bcs": 3,
+          "health": "healthy",
+          "pregnant": false,
+          "lactating": false,
+          "collar": false,
+          "alive": true
+        },
+        {
+          "id": "sheep-8",
+          "tag": "S-008",
+          "species": "sheep",
+          "sex": "female",
+          "ageWeeks": 52,
+          "weightKg": 50,
+          "bcs": 3,
+          "health": "healthy",
+          "pregnant": false,
+          "lactating": false,
+          "collar": false,
+          "alive": true
+        },
+        {
+          "id": "sheep-9",
+          "tag": "S-009",
+          "species": "sheep",
+          "sex": "female",
+          "ageWeeks": 65,
+          "weightKg": 53,
+          "bcs": 3,
+          "health": "healthy",
+          "pregnant": false,
+          "lactating": false,
+          "collar": false,
+          "alive": true
+        },
+        {
+          "id": "sheep-10",
+          "tag": "S-010",
+          "species": "sheep",
+          "sex": "female",
+          "ageWeeks": 78,
+          "weightKg": 55,
+          "bcs": 3,
+          "health": "healthy",
+          "pregnant": false,
+          "lactating": false,
+          "collar": false,
+          "alive": true
+        },
+        {
+          "id": "sheep-11",
+          "tag": "S-011",
+          "species": "sheep",
+          "sex": "female",
+          "ageWeeks": 91,
+          "weightKg": 55,
+          "bcs": 3,
+          "health": "healthy",
+          "pregnant": false,
+          "lactating": false,
+          "collar": false,
+          "alive": true
+        },
+        {
+          "id": "sheep-12",
+          "tag": "S-012",
+          "species": "sheep",
+          "sex": "female",
+          "ageWeeks": 104,
+          "weightKg": 55,
+          "bcs": 3,
+          "health": "healthy",
+          "pregnant": false,
+          "lactating": false,
+          "collar": false,
+          "alive": true
+        },
+        {
+          "id": "sheep-13",
+          "tag": "S-013",
+          "species": "sheep",
+          "sex": "female",
+          "ageWeeks": 39,
+          "weightKg": 46,
+          "bcs": 3,
+          "health": "healthy",
+          "pregnant": false,
+          "lactating": false,
+          "collar": false,
+          "alive": true
+        },
+        {
+          "id": "sheep-14",
+          "tag": "S-014",
+          "species": "sheep",
+          "sex": "female",
+          "ageWeeks": 52,
+          "weightKg": 50,
+          "bcs": 3,
+          "health": "healthy",
+          "pregnant": false,
+          "lactating": false,
+          "collar": false,
+          "alive": true
+        },
+        {
+          "id": "sheep-15",
+          "tag": "S-015",
+          "species": "sheep",
+          "sex": "female",
+          "ageWeeks": 65,
+          "weightKg": 53,
+          "bcs": 3,
+          "health": "healthy",
+          "pregnant": false,
+          "lactating": false,
+          "collar": false,
+          "alive": true
+        },
+        {
+          "id": "sheep-16",
+          "tag": "S-016",
+          "species": "sheep",
+          "sex": "male",
+          "ageWeeks": 78,
+          "weightKg": 70,
+          "bcs": 3,
+          "health": "healthy",
+          "pregnant": false,
+          "lactating": false,
+          "collar": false,
+          "alive": true
+        },
+        {
+          "id": "sheep-17",
+          "tag": "S-017",
+          "species": "sheep",
+          "sex": "male",
+          "ageWeeks": 91,
+          "weightKg": 70,
+          "bcs": 3,
+          "health": "healthy",
+          "pregnant": false,
+          "lactating": false,
+          "collar": false,
+          "alive": true
+        },
+        {
+          "id": "sheep-18",
+          "tag": "S-018",
+          "species": "sheep",
+          "sex": "male",
+          "ageWeeks": 104,
+          "weightKg": 70,
+          "bcs": 3,
+          "health": "healthy",
+          "pregnant": false,
+          "lactating": false,
+          "collar": false,
+          "alive": true
+        }
+      ],
+      "pasture": [
+        {
+          "id": "P1",
+          "areaHa": 2,
+          "biomassKgPerHa": 700,
+          "degradation": 0.1,
+          "restedWeeks": 0,
+          "grazing": false
+        },
+        {
+          "id": "P2",
+          "areaHa": 2,
+          "biomassKgPerHa": 560,
+          "degradation": 0.18,
+          "restedWeeks": 0,
+          "grazing": false
+        },
+        {
+          "id": "P3",
+          "areaHa": 2,
+          "biomassKgPerHa": 420,
+          "degradation": 0.25,
+          "restedWeeks": 0,
+          "grazing": false
+        },
+        {
+          "id": "P4",
+          "areaHa": 2,
+          "biomassKgPerHa": 320,
+          "degradation": 0.32,
+          "restedWeeks": 0,
+          "grazing": false
+        }
+      ],
+      "actionsLeft": 3,
+      "grazedKg": 0,
+      "weather": "clear",
+      "tech": {
+        "collared": 10,
+        "vaccinated": false,
+        "scanned": true
+      },
+      "usedEvents": [],
+      "flags": {},
+      "log": [
+        {
+          "week": 10,
+          "text": "越冬挑战：四周经营开始。6000 元为监测与十头项圈安装后的可用现金，设备每周收取维护费。",
+          "tone": "info"
+        }
+      ],
+      "ended": false,
+      "ending": null
+    }
+  },
+  "seed": 20261030,
+  "replayOrigin": {
+    "scenario": "winter-challenge-v1",
+    "seed": 20261030,
+    "week": 10,
+    "season": "winter",
+    "money": 6000,
+    "hayKg": 2200,
+    "labor": 2,
+    "reputation": 50,
+    "animals": [
+      {
+        "id": "yak-1",
+        "tag": "B-001",
+        "species": "yak",
+        "sex": "female",
+        "ageWeeks": 104,
+        "weightKg": 249,
+        "bcs": 3,
+        "health": "healthy",
+        "pregnant": false,
+        "lactating": false,
+        "collar": true,
+        "alive": true
+      },
+      {
+        "id": "yak-2",
+        "tag": "B-002",
+        "species": "yak",
+        "sex": "female",
+        "ageWeeks": 130,
+        "weightKg": 270,
+        "bcs": 3,
+        "health": "healthy",
+        "pregnant": false,
+        "lactating": false,
+        "collar": true,
+        "alive": true
+      },
+      {
+        "id": "yak-3",
+        "tag": "B-003",
+        "species": "yak",
+        "sex": "female",
+        "ageWeeks": 156,
+        "weightKg": 284,
+        "bcs": 3,
+        "health": "healthy",
+        "pregnant": false,
+        "lactating": false,
+        "collar": true,
+        "alive": true
+      },
+      {
+        "id": "yak-4",
+        "tag": "B-004",
+        "species": "yak",
+        "sex": "female",
+        "ageWeeks": 182,
+        "weightKg": 293,
+        "bcs": 3,
+        "health": "healthy",
+        "pregnant": false,
+        "lactating": false,
+        "collar": true,
+        "alive": true
+      },
+      {
+        "id": "yak-5",
+        "tag": "B-005",
+        "species": "yak",
+        "sex": "female",
+        "ageWeeks": 208,
+        "weightKg": 300,
+        "bcs": 3,
+        "health": "healthy",
+        "pregnant": false,
+        "lactating": false,
+        "collar": true,
+        "alive": true
+      },
+      {
+        "id": "yak-6",
+        "tag": "B-006",
+        "species": "yak",
+        "sex": "female",
+        "ageWeeks": 234,
+        "weightKg": 300,
+        "bcs": 3,
+        "health": "healthy",
+        "pregnant": false,
+        "lactating": false,
+        "collar": true,
+        "alive": true
+      },
+      {
+        "id": "yak-7",
+        "tag": "B-007",
+        "species": "yak",
+        "sex": "female",
+        "ageWeeks": 260,
+        "weightKg": 300,
+        "bcs": 3,
+        "health": "healthy",
+        "pregnant": false,
+        "lactating": false,
+        "collar": true,
+        "alive": true
+      },
+      {
+        "id": "yak-8",
+        "tag": "B-008",
+        "species": "yak",
+        "sex": "female",
+        "ageWeeks": 286,
+        "weightKg": 300,
+        "bcs": 3,
+        "health": "healthy",
+        "pregnant": false,
+        "lactating": false,
+        "collar": true,
+        "alive": true
+      },
+      {
+        "id": "yak-9",
+        "tag": "B-009",
+        "species": "yak",
+        "sex": "female",
+        "ageWeeks": 104,
+        "weightKg": 249,
+        "bcs": 3,
+        "health": "healthy",
+        "pregnant": false,
+        "lactating": false,
+        "collar": true,
+        "alive": true
+      },
+      {
+        "id": "yak-10",
+        "tag": "B-010",
+        "species": "yak",
+        "sex": "female",
+        "ageWeeks": 130,
+        "weightKg": 270,
+        "bcs": 3,
+        "health": "healthy",
+        "pregnant": false,
+        "lactating": false,
+        "collar": true,
+        "alive": true
+      },
+      {
+        "id": "yak-11",
+        "tag": "B-011",
+        "species": "yak",
+        "sex": "male",
+        "ageWeeks": 156,
+        "weightKg": 397,
+        "bcs": 3,
+        "health": "healthy",
+        "pregnant": false,
+        "lactating": false,
+        "collar": false,
+        "alive": true
+      },
+      {
+        "id": "yak-12",
+        "tag": "B-012",
+        "species": "yak",
+        "sex": "male",
+        "ageWeeks": 182,
+        "weightKg": 411,
+        "bcs": 3,
+        "health": "healthy",
+        "pregnant": false,
+        "lactating": false,
+        "collar": false,
+        "alive": true
+      },
+      {
+        "id": "sheep-1",
+        "tag": "S-001",
+        "species": "sheep",
+        "sex": "female",
+        "ageWeeks": 39,
+        "weightKg": 46,
+        "bcs": 3,
+        "health": "healthy",
+        "pregnant": false,
+        "lactating": false,
+        "collar": false,
+        "alive": true
+      },
+      {
+        "id": "sheep-2",
+        "tag": "S-002",
+        "species": "sheep",
+        "sex": "female",
+        "ageWeeks": 52,
+        "weightKg": 50,
+        "bcs": 3,
+        "health": "healthy",
+        "pregnant": false,
+        "lactating": false,
+        "collar": false,
+        "alive": true
+      },
+      {
+        "id": "sheep-3",
+        "tag": "S-003",
+        "species": "sheep",
+        "sex": "female",
+        "ageWeeks": 65,
+        "weightKg": 53,
+        "bcs": 3,
+        "health": "healthy",
+        "pregnant": false,
+        "lactating": false,
+        "collar": false,
+        "alive": true
+      },
+      {
+        "id": "sheep-4",
+        "tag": "S-004",
+        "species": "sheep",
+        "sex": "female",
+        "ageWeeks": 78,
+        "weightKg": 55,
+        "bcs": 3,
+        "health": "healthy",
+        "pregnant": false,
+        "lactating": false,
+        "collar": false,
+        "alive": true
+      },
+      {
+        "id": "sheep-5",
+        "tag": "S-005",
+        "species": "sheep",
+        "sex": "female",
+        "ageWeeks": 91,
+        "weightKg": 55,
+        "bcs": 3,
+        "health": "healthy",
+        "pregnant": false,
+        "lactating": false,
+        "collar": false,
+        "alive": true
+      },
+      {
+        "id": "sheep-6",
+        "tag": "S-006",
+        "species": "sheep",
+        "sex": "female",
+        "ageWeeks": 104,
+        "weightKg": 55,
+        "bcs": 3,
+        "health": "healthy",
+        "pregnant": false,
+        "lactating": false,
+        "collar": false,
+        "alive": true
+      },
+      {
+        "id": "sheep-7",
+        "tag": "S-007",
+        "species": "sheep",
+        "sex": "female",
+        "ageWeeks": 39,
+        "weightKg": 46,
+        "bcs": 3,
+        "health": "healthy",
+        "pregnant": false,
+        "lactating": false,
+        "collar": false,
+        "alive": true
+      },
+      {
+        "id": "sheep-8",
+        "tag": "S-008",
+        "species": "sheep",
+        "sex": "female",
+        "ageWeeks": 52,
+        "weightKg": 50,
+        "bcs": 3,
+        "health": "healthy",
+        "pregnant": false,
+        "lactating": false,
+        "collar": false,
+        "alive": true
+      },
+      {
+        "id": "sheep-9",
+        "tag": "S-009",
+        "species": "sheep",
+        "sex": "female",
+        "ageWeeks": 65,
+        "weightKg": 53,
+        "bcs": 3,
+        "health": "healthy",
+        "pregnant": false,
+        "lactating": false,
+        "collar": false,
+        "alive": true
+      },
+      {
+        "id": "sheep-10",
+        "tag": "S-010",
+        "species": "sheep",
+        "sex": "female",
+        "ageWeeks": 78,
+        "weightKg": 55,
+        "bcs": 3,
+        "health": "healthy",
+        "pregnant": false,
+        "lactating": false,
+        "collar": false,
+        "alive": true
+      },
+      {
+        "id": "sheep-11",
+        "tag": "S-011",
+        "species": "sheep",
+        "sex": "female",
+        "ageWeeks": 91,
+        "weightKg": 55,
+        "bcs": 3,
+        "health": "healthy",
+        "pregnant": false,
+        "lactating": false,
+        "collar": false,
+        "alive": true
+      },
+      {
+        "id": "sheep-12",
+        "tag": "S-012",
+        "species": "sheep",
+        "sex": "female",
+        "ageWeeks": 104,
+        "weightKg": 55,
+        "bcs": 3,
+        "health": "healthy",
+        "pregnant": false,
+        "lactating": false,
+        "collar": false,
+        "alive": true
+      },
+      {
+        "id": "sheep-13",
+        "tag": "S-013",
+        "species": "sheep",
+        "sex": "female",
+        "ageWeeks": 39,
+        "weightKg": 46,
+        "bcs": 3,
+        "health": "healthy",
+        "pregnant": false,
+        "lactating": false,
+        "collar": false,
+        "alive": true
+      },
+      {
+        "id": "sheep-14",
+        "tag": "S-014",
+        "species": "sheep",
+        "sex": "female",
+        "ageWeeks": 52,
+        "weightKg": 50,
+        "bcs": 3,
+        "health": "healthy",
+        "pregnant": false,
+        "lactating": false,
+        "collar": false,
+        "alive": true
+      },
+      {
+        "id": "sheep-15",
+        "tag": "S-015",
+        "species": "sheep",
+        "sex": "female",
+        "ageWeeks": 65,
+        "weightKg": 53,
+        "bcs": 3,
+        "health": "healthy",
+        "pregnant": false,
+        "lactating": false,
+        "collar": false,
+        "alive": true
+      },
+      {
+        "id": "sheep-16",
+        "tag": "S-016",
+        "species": "sheep",
+        "sex": "male",
+        "ageWeeks": 78,
+        "weightKg": 70,
+        "bcs": 3,
+        "health": "healthy",
+        "pregnant": false,
+        "lactating": false,
+        "collar": false,
+        "alive": true
+      },
+      {
+        "id": "sheep-17",
+        "tag": "S-017",
+        "species": "sheep",
+        "sex": "male",
+        "ageWeeks": 91,
+        "weightKg": 70,
+        "bcs": 3,
+        "health": "healthy",
+        "pregnant": false,
+        "lactating": false,
+        "collar": false,
+        "alive": true
+      },
+      {
+        "id": "sheep-18",
+        "tag": "S-018",
+        "species": "sheep",
+        "sex": "male",
+        "ageWeeks": 104,
+        "weightKg": 70,
+        "bcs": 3,
+        "health": "healthy",
+        "pregnant": false,
+        "lactating": false,
+        "collar": false,
+        "alive": true
+      }
+    ],
+    "pasture": [
+      {
+        "id": "P1",
+        "areaHa": 2,
+        "biomassKgPerHa": 700,
+        "degradation": 0.1,
+        "restedWeeks": 0,
+        "grazing": false
+      },
+      {
+        "id": "P2",
+        "areaHa": 2,
+        "biomassKgPerHa": 560,
+        "degradation": 0.18,
+        "restedWeeks": 0,
+        "grazing": false
+      },
+      {
+        "id": "P3",
+        "areaHa": 2,
+        "biomassKgPerHa": 420,
+        "degradation": 0.25,
+        "restedWeeks": 0,
+        "grazing": false
+      },
+      {
+        "id": "P4",
+        "areaHa": 2,
+        "biomassKgPerHa": 320,
+        "degradation": 0.32,
+        "restedWeeks": 0,
+        "grazing": false
+      }
+    ],
+    "actionsLeft": 3,
+    "grazedKg": 0,
+    "weather": "clear",
+    "tech": {
+      "collared": 10,
+      "vaccinated": false,
+      "scanned": true
+    },
+    "usedEvents": [],
+    "flags": {},
+    "log": [
+      {
+        "week": 10,
+        "text": "越冬挑战：四周经营开始。6000 元为监测与十头项圈安装后的可用现金，设备每周收取维护费。",
+        "tone": "info"
+      }
+    ],
+    "ended": false,
+    "ending": null
+  },
+  "baseline": {
+    "week": 10,
+    "money": 6000,
+    "hayKg": 2200,
+    "herdValue": 96278,
+    "netAssets": 107558,
+    "aliveCount": 30,
+    "sheepUnits": 78,
+    "averageBcs": 3,
+    "healthyCount": 30,
+    "grassKg": 4000,
+    "averageDegradation": 0.21250000000000002,
+    "deaths": 0,
+    "sold": 0,
+    "population": 30,
+    "weeklyFeedKg": 963.4240000000001,
+    "weeklyCost": 580
+  },
+  "weeks": [
+    {
+      "week": 10,
+      "season": "winter",
+      "decisions": [
+        {
+          "kind": "action",
+          "action": {
+            "kind": "sell",
+            "animalIds": [
+              "yak-8"
+            ]
+          }
+        },
+        {
+          "kind": "action",
+          "action": {
+            "kind": "graze",
+            "cellId": "P1"
+          }
+        },
+        {
+          "kind": "action",
+          "action": {
+            "kind": "cut-hay",
+            "cellId": "P2"
+          }
+        }
+      ],
+      "metrics": {
+        "week": 10,
+        "money": 12423,
+        "hayKg": 2021,
+        "herdValue": 88557,
+        "netAssets": 105830,
+        "aliveCount": 28,
+        "sheepUnits": 72,
+        "averageBcs": 3.0499999999999985,
+        "healthyCount": 28,
+        "grassKg": 3077.44,
+        "averageDegradation": 0.234203125,
+        "deaths": 1,
+        "sold": 1,
+        "population": 30,
+        "weeklyFeedKg": 887.4904499999999,
+        "weeklyCost": 577
+      },
+      "collars": {
+        "yak-1": 3.05,
+        "yak-2": 3.05,
+        "yak-3": 3.05,
+        "yak-4": 3.05,
+        "yak-5": 3.05,
+        "yak-6": 3.05,
+        "yak-7": 3.05,
+        "yak-9": 3.05,
+        "yak-10": 3.05
+      }
+    },
+    {
+      "week": 11,
+      "season": "winter",
+      "decisions": [
+        {
+          "kind": "event",
+          "cardId": "balance-check",
+          "choiceId": "comply"
+        },
+        {
+          "kind": "action",
+          "action": {
+            "kind": "tech",
+            "tech": "vaccine"
+          }
+        },
+        {
+          "kind": "action",
+          "action": {
+            "kind": "graze",
+            "cellId": "P2"
+          }
+        },
+        {
+          "kind": "action",
+          "action": {
+            "kind": "cut-hay",
+            "cellId": "P3"
+          }
+        }
+      ],
+      "metrics": {
+        "week": 11,
+        "money": 12500,
+        "hayKg": 1928,
+        "herdValue": 76674,
+        "netAssets": 93801,
+        "aliveCount": 26,
+        "sheepUnits": 62,
+        "averageBcs": 3.0999999999999996,
+        "healthyCount": 26,
+        "grassKg": 2422.5091600000005,
+        "averageDegradation": 0.25999114990234373,
+        "deaths": 1,
+        "sold": 3,
+        "population": 30,
+        "weeklyFeedKg": 788.4299500000001,
+        "weeklyCost": 611
+      },
+      "collars": {
+        "yak-3": 3.1,
+        "yak-4": 3.1,
+        "yak-5": 3.1,
+        "yak-6": 3.1,
+        "yak-7": 3.1,
+        "yak-9": 3.1,
+        "yak-10": 3.1
+      }
+    },
+    {
+      "week": 12,
+      "season": "winter",
+      "decisions": [
+        {
+          "kind": "event",
+          "cardId": "rodents",
+          "choiceId": "poison"
+        },
+        {
+          "kind": "action",
+          "action": {
+            "kind": "graze",
+            "cellId": "P3"
+          }
+        },
+        {
+          "kind": "action",
+          "action": {
+            "kind": "cut-hay",
+            "cellId": "P1"
+          }
+        },
+        {
+          "kind": "action",
+          "action": {
+            "kind": "cut-hay",
+            "cellId": "P4"
+          }
+        }
+      ],
+      "metrics": {
+        "week": 12,
+        "money": 11589,
+        "hayKg": 1729,
+        "herdValue": 76997,
+        "netAssets": 92736,
+        "aliveCount": 26,
+        "sheepUnits": 62,
+        "averageBcs": 3.1500000000000004,
+        "healthyCount": 26,
+        "grassKg": 1880.8673952887502,
+        "averageDegradation": 0.29195575228827564,
+        "deaths": 1,
+        "sold": 3,
+        "population": 30,
+        "weeklyFeedKg": 789.8313500000002,
+        "weeklyCost": 611
+      },
+      "collars": {
+        "yak-3": 3.15,
+        "yak-4": 3.15,
+        "yak-5": 3.15,
+        "yak-6": 3.15,
+        "yak-7": 3.15,
+        "yak-9": 3.15,
+        "yak-10": 3.15
+      }
+    },
+    {
+      "week": 13,
+      "season": "winter",
+      "decisions": [
+        {
+          "kind": "event",
+          "cardId": "hay-shortage",
+          "choiceId": "borrow"
+        },
+        {
+          "kind": "action",
+          "action": {
+            "kind": "graze",
+            "cellId": "P4"
+          }
+        },
+        {
+          "kind": "action",
+          "action": {
+            "kind": "cut-hay",
+            "cellId": "P2"
+          }
+        },
+        {
+          "kind": "action",
+          "action": {
+            "kind": "cut-hay",
+            "cellId": "P1"
+          }
+        }
+      ],
+      "metrics": {
+        "week": 13,
+        "money": 10978,
+        "hayKg": 1801,
+        "herdValue": 77292,
+        "netAssets": 92592,
+        "aliveCount": 26,
+        "sheepUnits": 62,
+        "averageBcs": 3.200000000000001,
+        "healthyCount": 26,
+        "grassKg": 1471.9428313830083,
+        "averageDegradation": 0.33387152407929505,
+        "deaths": 1,
+        "sold": 3,
+        "population": 30,
+        "weeklyFeedKg": 791.0749000000002,
+        "weeklyCost": 611
+      },
+      "collars": {
+        "yak-3": 3.2,
+        "yak-4": 3.2,
+        "yak-5": 3.2,
+        "yak-6": 3.2,
+        "yak-7": 3.2,
+        "yak-9": 3.2,
+        "yak-10": 3.2
+      }
+    }
+  ],
+  "pending": [],
+  "result": {
+    "ended": true,
+    "ending": "subsistence",
+    "metrics": {
+      "week": 13,
+      "money": 10978,
+      "hayKg": 1801,
+      "herdValue": 77292,
+      "netAssets": 92592,
+      "aliveCount": 26,
+      "sheepUnits": 62,
+      "averageBcs": 3.200000000000001,
+      "healthyCount": 26,
+      "grassKg": 1471.9428313830083,
+      "averageDegradation": 0.33387152407929505,
+      "deaths": 1,
+      "sold": 3,
+      "population": 30,
+      "weeklyFeedKg": 791.0749000000002,
+      "weeklyCost": 611
+    },
+    "assessment": {
+      "metrics": {
+        "week": 13,
+        "money": 10978,
+        "hayKg": 1801,
+        "herdValue": 77292,
+        "netAssets": 92592,
+        "aliveCount": 26,
+        "sheepUnits": 62,
+        "averageBcs": 3.200000000000001,
+        "healthyCount": 26,
+        "grassKg": 1471.9428313830083,
+        "averageDegradation": 0.33387152407929505,
+        "deaths": 1,
+        "sold": 3,
+        "population": 30,
+        "weeklyFeedKg": 791.0749000000002,
+        "weeklyCost": 611
+      },
+      "baseline": {
+        "week": 10,
+        "money": 6000,
+        "hayKg": 2200,
+        "herdValue": 96278,
+        "netAssets": 107558,
+        "aliveCount": 30,
+        "sheepUnits": 78,
+        "averageBcs": 3,
+        "healthyCount": 30,
+        "grassKg": 4000,
+        "averageDegradation": 0.21250000000000002,
+        "deaths": 0,
+        "sold": 0,
+        "population": 30,
+        "weeklyFeedKg": 963.4240000000001,
+        "weeklyCost": 580
+      },
+      "economy": 15.214117034530194,
+      "ecology": 57.6685645498219,
+      "health": 99,
+      "overall": 57.294227194784035,
+      "eligible": false,
+      "retainedShare": 0.7948717948717948,
+      "knownDeaths": 1,
+      "births": 0
+    }
+  }
+}

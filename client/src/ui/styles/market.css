@@ -1,0 +1,33 @@
+.market-custom-hay {
+  display: grid;
+  grid-template-columns: minmax(140px, 240px) auto;
+  align-items: end;
+  justify-content: start;
+  gap: 10px 12px;
+  margin-top: 20px;
+  padding: 16px;
+  background: var(--field);
+  border: 1px solid var(--line);
+}
+.market-hay-field { display: grid; gap: 6px; }
+.market-hay-field label { color: var(--cream); font-size: 12px; font-weight: 600; }
+.market-hay-field input {
+  width: 100%;
+  min-width: 0;
+  min-height: 44px;
+  padding: 8px 10px;
+  border: 1px solid var(--line);
+  border-radius: 2px;
+  background: var(--panel-solid);
+  color: var(--cream);
+  font-variant-numeric: tabular-nums;
+}
+.market-hay-field input[aria-invalid='true'] { border-color: var(--red); }
+.market-hay-feedback { grid-column: 1 / -1; color: var(--muted); font-size: 12px; }
+.market-hay-feedback output { display: block; font-variant-numeric: tabular-nums; }
+.market-hay-feedback .market-hay-reason { margin: 4px 0 0; color: var(--red); }
+.market-hay-reason:empty { display: none; }
+@media (max-width: 480px) {
+  .market-custom-hay { grid-template-columns: minmax(0, 1fr); padding: 12px; }
+  .market-custom-hay button { justify-self: start; }
+}

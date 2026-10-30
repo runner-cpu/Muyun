@@ -44,13 +44,13 @@ export function settleBirths(
   rng: Rng,
 ): { animals: Animal[]; born: number } {
   const next = animals.map((animal) =>
-    animal.pregnant ? { ...animal, pregnant: false, lactating: true } : animal,
+    animal.alive && animal.pregnant ? { ...animal, pregnant: false, lactating: true } : animal,
   );
   const newborns: Animal[] = [];
   let born = 0;
 
   for (const animal of animals) {
-    if (!animal.pregnant) continue;
+    if (!animal.alive || !animal.pregnant) continue;
     born += 1;
     newborns.push(
       createAnimal({

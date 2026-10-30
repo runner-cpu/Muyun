@@ -1,27 +1,23 @@
-import { applyWeeklyGrowth, createAnimal } from './animal';
+import { createAnimal } from './animal';
 import { WEEKS_PER_RUN, seasonForWeek } from './calendar';
-import { outbreakChance, progressWeek } from './disease';
 import {
   buyHay,
-  evaluateEnding,
   hayPricePerKg,
   sellAnimals,
   techCost,
-  weeklyCosts,
 } from './economy';
 import { drawEvent, findCard } from './events';
-import { feedRatio, feedRequirementKg } from './nutrition';
-import { averageDegradation, createPastureCells, graze, rest, totalBiomassKg } from './pasture';
+import { averageDegradation, createPastureCells, graze, totalBiomassKg } from './pasture';
+import { actionLimit, actionStatus, eventChoiceStatus } from './rules';
+import { ensureTracking, recordDecision, recordWeek } from './history';
+import { settleDeterministic } from './settlement';
+import { assessRun } from './assessment';
+import { alive, applyEffect, applyWeather, clamp, note, progressDisease, rngFor } from './runEffects';
 import { breedHerd, settleBirths } from './reproduction';
-import { chance, mulberry32 } from './rng';
-import type { Rng } from './rng';
-import { drawWeather, isDisaster } from './weather';
 import type {
   Action,
   Animal,
-  Effect,
   EventCard,
-  LogEntry,
   RunState,
   RunSummary,
 } from './types';
@@ -41,7 +37,8 @@ export interface RunOptions {
 }
 
 export function createRun(seed: number, options: RunOptions = {}): RunState {
-  return {
+  return ensureTracking({
+    scenario: 'year',
     seed,
     week: 1,
     season: 'spring',
@@ -60,7 +57,7 @@ export function createRun(seed: number, options: RunOptions = {}): RunState {
     log: [{ week: 1, text: '开春。草场刚返青，先看看畜群。', tone: 'info' }],
     ended: false,
     ending: null,
-  };
+  }, 'new-run');
 }
 
 export function availableActions(state: RunState): Action['kind'][] {
@@ -74,7 +71,7 @@ export function weekEvent(state: RunState): EventCard | null {
 }
 
 export function applyAction(state: RunState, action: Action): RunState {
-  if (state.ended || state.actionsLeft <= 0) return state;
+  if (actionStatus(state, action).reason) return state;
   const next: RunState = { ...state, actionsLeft: state.actionsLeft - 1, log: [...state.log] };
 
   switch (action.kind) {
@@ -94,7 +91,7 @@ export function applyAction(state: RunState, action: Action): RunState {
       next.hayKg += cut;
       next.pasture = next.pasture.map((item) =>
         item.id === cell.id
-          ? { ...item, biomassKgPerHa: Math.max(0, item.biomassKgPerHa * 0.9) }
+          ? { ...item, biomassKgPerHa: Math.max(0, item.biomassKgPerHa * 0.9), harvested: true, restedWeeks: 0 }
           : item,
       );
       note(next, `${cell.id} 区割草 ${cut} kg`, 'good');
@@ -120,6 +117,7 @@ export function applyAction(state: RunState, action: Action): RunState {
       const result = sellAnimals(next.animals, action.animalIds, state.season);
       if (result.sold === 0) return state;
       next.animals = result.animals;
+      next.animals = next.animals.map(a => a.exitReason === 'sold' && a.exitWeek === undefined ? { ...a, exitWeek: state.week } : a);
       next.money += result.revenue;
       next.reputation = clamp(next.reputation + 1, 0, 100);
       note(next, `卖出 ${result.sold} 头，收入 ${result.revenue} 元`, 'good');
@@ -136,7 +134,7 @@ export function applyAction(state: RunState, action: Action): RunState {
     }
     case 'tech': {
       if (action.tech === 'collar') {
-        const capacity = Math.min(10, alive(next.animals).length - next.tech.collared);
+        const capacity = Math.min(10, alive(next.animals).filter(a => !a.collar).length);
         if (capacity <= 0) return state;
         const cost = techCost('collar', capacity);
         if (next.money < cost) return state;
@@ -149,7 +147,7 @@ export function applyAction(state: RunState, action: Action): RunState {
           }
           return a;
         });
-        next.tech = { ...next.tech, collared: next.tech.collared + capacity };
+        next.tech = { ...next.tech, collared: alive(next.animals).filter(a => a.collar).length };
         note(next, `给 ${capacity} 头戴上项圈，花费 ${cost} 元`, 'good');
       } else if (action.tech === 'vaccine') {
         const cost = techCost('vaccine', alive(next.animals).length);
@@ -170,58 +168,54 @@ export function applyAction(state: RunState, action: Action): RunState {
       if (next.money < HIRE_COST) return state;
       next.money -= HIRE_COST;
       next.labor += 1;
-      note(next, '雇了一名帮工', 'info');
+      note(next, `雇了一名帮工，下周行动上限 ${actionLimit(next)} 点；每周增加 260 元人工费`, 'info');
       break;
     }
   }
 
-  return next;
+  next.tech = { ...next.tech, collared: alive(next.animals).filter(a => a.collar).length };
+  return recordDecision(state, next, { kind: 'action', action: JSON.parse(JSON.stringify(action)) as Action });
 }
 
 export function resolveEvent(state: RunState, cardId: string, choiceId: string): RunState {
+  if (eventChoiceStatus(state, cardId, choiceId).reason) return state;
   const card = findCard(cardId);
   if (!card || state.ended) return state;
   const choice = card.choices.find((item) => item.id === choiceId);
   if (!choice) return state;
-  const next: RunState = { ...state, log: [...state.log], usedEvents: [...state.usedEvents, cardId] };
+  const next: RunState = { ...state, flags: { ...state.flags }, log: [...state.log], usedEvents: [...state.usedEvents, cardId] };
   applyEffect(next, choice.effect);
   note(next, `${card.title}：${choice.label}`, 'info');
-  return next;
+  next.tech = { ...next.tech, collared: alive(next.animals).filter(a => a.collar).length };
+  return recordDecision(state, next, { kind: 'event', cardId, choiceId });
 }
 
 export function endWeek(state: RunState): RunState {
   if (state.ended) return state;
-  const next: RunState = { ...state, log: [...state.log] };
-  const season = state.season;
-
-  const ratio = feedHerd(next);
-  next.animals = next.animals.map((animal) => ({
-    ...applyWeeklyGrowth(animal, ratio),
-    ageWeeks: animal.ageWeeks + 1,
-  }));
-
-  next.pasture = next.pasture.map((cell) => (cell.grazing ? { ...cell, grazing: false } : rest(cell, season)));
+  let next = settleDeterministic(state);
   progressDisease(next);
   applyWeather(next);
-  next.money = Math.max(0, next.money - weeklyCosts(next.labor, next.tech));
+  next.tech = { ...next.tech, collared: alive(next.animals).filter(a => a.collar).length };
   next.grazedKg = 0;
-  next.actionsLeft = ACTIONS_PER_WEEK;
-  next.week = Math.min(WEEKS_PER_RUN, next.week + 1);
-  next.season = seasonForWeek(next.week);
+  next.actionsLeft = actionLimit(next);
 
   if (state.week >= WEEKS_PER_RUN) {
     const births = settleBirths(next.animals, rngFor(next, 10));
     next.animals = births.animals;
     if (births.born > 0) note(next, `接羔 ${births.born} 头`, 'good');
     next.ended = true;
-    next.ending = evaluateEnding({
-      money: next.money,
-      reputation: next.reputation,
-      averageDegradation: averageDegradation(next.pasture),
-    });
-    note(next, `一局结束：${next.ending}`, 'info');
+    const assessment = assessRun(next);
+    next.ending = next.money <= 0 ? 'bankrupt'
+      : averageDegradation(next.pasture) >= .7 ? 'collapse'
+      : assessment.eligible ? 'cooperative'
+      : assessment.economy >= 50 && assessment.health >= 50 && assessment.ecology >= 40 && assessment.retainedShare >= .25 ? 'well-off'
+      : 'subsistence';
+    const endingName = { bankrupt: '资金耗尽', collapse: '生态失衡', subsistence: '维持经营', 'well-off': '经营有余', cooperative: '均衡经营' }[next.ending];
+    note(next, `一局结束：${endingName}`, 'info');
   }
-
+  next = recordWeek(state, next);
+  next.week = Math.min(WEEKS_PER_RUN, state.week + 1);
+  next.season = seasonForWeek(next.week);
   return next;
 }
 
@@ -238,112 +232,6 @@ export function summarize(state: RunState): RunSummary {
     reputation: state.reputation,
     ending: state.ending,
   };
-}
-
-function feedHerd(state: RunState): number {
-  const requirement = feedRequirementKg(alive(state.animals));
-  const available = state.grazedKg + state.hayKg;
-  const ratio = feedRatio(available, requirement);
-  const hayNeeded = Math.max(0, requirement - state.grazedKg);
-  const hayUsed = Math.min(state.hayKg, hayNeeded);
-  state.hayKg = Math.round(state.hayKg - hayUsed);
-  if (ratio < 0.85) note(state, `草料不足，采食率 ${Math.round(ratio * 100)}%`, 'bad');
-  return ratio;
-}
-
-function progressDisease(state: RunState): void {
-  const herd = alive(state.animals).length;
-  if (chance(rngFor(state, 5), outbreakChance(herd, state.season, state.tech.vaccinated))) {
-    const rng = rngFor(state, 6);
-    let sickened = 0;
-    state.animals = state.animals.map((animal) => {
-      if (sickened < 2 && animal.alive && animal.health === 'healthy' && chance(rng, 0.3)) {
-        sickened += 1;
-        return { ...animal, health: 'sick' as const };
-      }
-      return animal;
-    });
-    if (sickened > 0) note(state, `周边疫情传入，${sickened} 头出现症状`, 'bad');
-  }
-
-  const progress = progressWeek(state.animals, rngFor(state, 7), false);
-  state.animals = progress.animals;
-  if (progress.deaths > 0) note(state, `疫病死亡 ${progress.deaths} 头`, 'bad');
-}
-
-function applyWeather(state: RunState): void {
-  const weather = drawWeather(state.week, rngFor(state, 8));
-  state.weather = weather;
-  if (!isDisaster(weather)) return;
-  const lost = Math.round(state.hayKg * 0.1);
-  state.hayKg = Math.max(0, state.hayKg - lost);
-  note(state, `暴雪，草料损失 ${lost} kg`, 'bad');
-  const victim = alive(state.animals).find(() => chance(rngFor(state, 9), 0.05));
-  if (victim) {
-    state.animals = state.animals.map((a) => (a.id === victim.id ? { ...a, alive: false } : a));
-    note(state, `暴雪中损失 1 头`, 'bad');
-  }
-}
-
-function applyEffect(state: RunState, effect: Effect): void {
-  if (effect.money) state.money = Math.max(0, state.money + effect.money);
-  if (effect.hayKg) state.hayKg = Math.max(0, state.hayKg + effect.hayKg);
-  if (effect.reputation) state.reputation = clamp(state.reputation + effect.reputation, 0, 100);
-  if (effect.labor) state.labor = Math.max(0, state.labor + effect.labor);
-  if (effect.bcsDelta) {
-    state.animals = state.animals.map((animal) =>
-      animal.alive
-        ? { ...animal, bcs: clamp(Math.round((animal.bcs + effect.bcsDelta!) * 100) / 100, 1, 5) }
-        : animal,
-    );
-  }
-  if (effect.infect) state.animals = infect(state.animals, effect.infect);
-  if (effect.loseAnimals) state.animals = kill(state.animals, effect.loseAnimals);
-  if (effect.degradationDelta) {
-    state.pasture = state.pasture.map((cell) => ({
-      ...cell,
-      degradation: clamp(cell.degradation + effect.degradationDelta!, 0, 1),
-    }));
-  }
-  if (effect.flag) state.flags[effect.flag] = true;
-}
-
-function infect(animals: Animal[], count: number): Animal[] {
-  let remaining = count;
-  return animals.map((animal) => {
-    if (remaining > 0 && animal.alive && animal.health === 'healthy') {
-      remaining -= 1;
-      return { ...animal, health: 'sick' as const };
-    }
-    return animal;
-  });
-}
-
-function kill(animals: Animal[], count: number): Animal[] {
-  let remaining = count;
-  return animals.map((animal) => {
-    if (remaining > 0 && animal.alive) {
-      remaining -= 1;
-      return { ...animal, alive: false };
-    }
-    return animal;
-  });
-}
-
-function alive(animals: Animal[]): Animal[] {
-  return animals.filter((animal) => animal.alive);
-}
-
-function note(state: RunState, text: string, tone: LogEntry['tone']): void {
-  state.log.push({ week: state.week, text, tone });
-}
-
-function rngFor(state: RunState, salt: number): Rng {
-  return mulberry32(state.seed * 7919 + state.week * 31 + salt * 17);
-}
-
-function clamp(value: number, min: number, max: number): number {
-  return Math.max(min, Math.min(max, value));
 }
 
 function startingHerd(scale = 1): Animal[] {

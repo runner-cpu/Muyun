@@ -9,6 +9,8 @@
     "preview": "vite preview --host 0.0.0.0",
     "test": "vitest run",
     "sim:monte": "vite-node scripts/monte-carlo.ts",
+    "sim:strategies": "vite-node scripts/strategy-benchmark.ts",
+    "sim:verify-week": "vite-node scripts/verify-week-experiment.ts",
     "gen:ranch": "node ../tools/gen-terrain.mjs && node ../tools/gen-sprites.mjs && node ../tools/gen-structures.mjs"
   },
   "dependencies": {

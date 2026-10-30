@@ -41,8 +41,8 @@ describe('run state', () => {
 
   it('refuses actions when the week is spent', () => {
     let state = createRun(7);
-    state = applyAction(state, { kind: 'graze', cellId: 'P1' });
-    state = applyAction(state, { kind: 'graze', cellId: 'P1' });
+    state = applyAction(state, { kind: 'graze', cellId: 'P2' });
+    state = applyAction(state, { kind: 'graze', cellId: 'P3' });
     state = applyAction(state, { kind: 'graze', cellId: 'P1' });
     const blocked = applyAction(state, { kind: 'graze', cellId: 'P1' });
     expect(blocked.actionsLeft).toBe(0);

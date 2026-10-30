@@ -1,5 +1,6 @@
 import { bus } from './emitter';
 import { clone, createDefaultState, SPAWN } from './defaultState';
+import { ensureTracking } from '../sim/history';
 import {
   applyAction as applyRunAction,
   endWeek as endRunWeek,
@@ -14,6 +15,7 @@ import type {
   PastureCell,
   RunState,
   RunSummary,
+  ScenarioId,
 } from '../sim/types';
 import type { GameStateData, Season } from '../types';
 
@@ -36,9 +38,10 @@ export class GameState {
   get weather(): RunState['weather'] { return this.data.run.weather; }
   get settings() { return this.data.settings; }
 
-  newGame(seed?: number): void {
-    this.data = createDefaultState(seed);
+  newGame(seed?: number, scenario: ScenarioId = 'year'): void {
+    this.data = createDefaultState(seed, scenario);
     this.changed();
+    bus.emit('calendar:changed', { week: this.week, season: this.season });
   }
 
   load(save: Partial<GameStateData>): void {
@@ -46,7 +49,7 @@ export class GameState {
     this.data = {
       ...defaults,
       ...save,
-      run: save.run ?? defaults.run,
+      run: save.run ? ensureTracking(save.run) : defaults.run,
       settings: { ...defaults.settings, ...(save.settings ?? {}) },
       player: { ...defaults.player, ...(save.player ?? {}) },
     };

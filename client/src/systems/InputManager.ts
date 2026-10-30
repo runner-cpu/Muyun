@@ -12,14 +12,13 @@ export class InputManager {
   constructor(scene: Phaser.Scene) {
     const keyboard = scene.input.keyboard;
     if (keyboard) {
-      this.keys = keyboard.addKeys('W,A,S,D,UP,DOWN,LEFT,RIGHT,E,SPACE') as Record<string, Phaser.Input.Keyboard.Key>;
-      keyboard.addCapture(['UP', 'DOWN', 'LEFT', 'RIGHT', 'SPACE']);
+      this.keys = keyboard.addKeys('W,A,S,D,UP,DOWN,LEFT,RIGHT,E,SPACE', false) as Record<string, Phaser.Input.Keyboard.Key>;
     }
     const base = document.getElementById('joystick');
     const knob = document.getElementById('joystick-knob');
     if (base && knob) this.joystick = new Joystick(base, knob);
     this.button = document.getElementById('btn-interact') as HTMLButtonElement | null;
-    this.button?.addEventListener('pointerdown', this.queueInteract);
+    this.button?.addEventListener('click', this.queueInteract);
     window.addEventListener('keydown', this.onKeyDown);
   }
 
@@ -27,7 +26,10 @@ export class InputManager {
     if (this.enabled === enabled) return;
     this.enabled = enabled;
     this.joystick?.setEnabled(enabled);
-    if (!enabled) this.interactQueued = false;
+    if (!enabled) {
+      this.interactQueued = false;
+      for (const key of Object.values(this.keys)) key.reset();
+    }
   }
 
   getVector(): { x: number; y: number } {
@@ -58,8 +60,11 @@ export class InputManager {
   }
 
   destroy(): void {
+    this.setEnabled(false);
+    this.joystick?.destroy();
+    this.joystick = null;
     window.removeEventListener('keydown', this.onKeyDown);
-    this.button?.removeEventListener('pointerdown', this.queueInteract);
+    this.button?.removeEventListener('click', this.queueInteract);
   }
 
   private queueInteract = (): void => {
@@ -70,6 +75,7 @@ export class InputManager {
 
   private onKeyDown = (event: KeyboardEvent): void => {
     if (!this.enabled) return;
+    if ((event.target as HTMLElement)?.closest('button, input, select, textarea, [role="dialog"]')) return;
     if (event.code === 'KeyE' || event.code === 'Space') {
       if (event.code === 'Space') event.preventDefault();
       this.queueInteract();

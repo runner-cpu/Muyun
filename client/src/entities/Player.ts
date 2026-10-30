@@ -11,8 +11,8 @@ export class Player {
 
   constructor(scene: Phaser.Scene, x: number, y: number) {
     this.shadow = scene.add.ellipse(x, y + 14, 14, 5, 0x000000, 0.3).setDepth(8);
-    this.sprite = scene.physics.add.sprite(x, y, 'player', 0).setDepth(10);
-    this.sprite.setSize(12, 10).setOffset(6, 21);
+    this.sprite = scene.physics.add.sprite(x, y, 'player', 0).setDisplaySize(24, 32).setDepth(10);
+    this.sprite.setSize(24, 20).setOffset(12, 42);
     this.sprite.setCollideWorldBounds(true);
     this.sprite.setDrag(900, 900);
   }

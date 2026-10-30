@@ -4,7 +4,7 @@ import { registerPlayerAnims } from '../entities/Player';
 import { registerAnimalAnims } from '../entities/Animal';
 
 /** Bump when art files change so browsers never serve a stale sheet. */
-const V = '?v=5';
+const V = '?v=6';
 
 export class PreloadScene extends Phaser.Scene {
   constructor() { super('PreloadScene'); }
@@ -15,9 +15,9 @@ export class PreloadScene extends Phaser.Scene {
     for (const season of ['spring', 'summer', 'autumn', 'winter']) {
       this.load.image(`ranch-tiles-${season}`, `assets/tilesets/ranch-tiles-${season}.png${V}`);
     }
-    this.load.spritesheet('player', `assets/sprites/player.png${V}`, { frameWidth: 24, frameHeight: 32 });
-    this.load.spritesheet('yak', `assets/sprites/yak.png${V}`, { frameWidth: 32, frameHeight: 32 });
-    this.load.spritesheet('sheep', `assets/sprites/sheep.png${V}`, { frameWidth: 32, frameHeight: 32 });
+    this.load.spritesheet('player', `assets/sprites/herder-detailed.png${V}`, { frameWidth: 48, frameHeight: 64 });
+    this.load.spritesheet('yak', `assets/sprites/yak-detailed.png${V}`, { frameWidth: 64, frameHeight: 64 });
+    this.load.spritesheet('sheep', `assets/sprites/sheep-detailed.png${V}`, { frameWidth: 64, frameHeight: 64 });
     this.load.image('barn', `assets/structures/barn.png${V}`);
     this.load.image('sign', `assets/structures/sign.png${V}`);
     this.load.image('well', `assets/structures/well.png${V}`);

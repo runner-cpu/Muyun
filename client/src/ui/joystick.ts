@@ -19,6 +19,16 @@ export class Joystick {
     if (!enabled) this.reset();
   }
 
+  destroy(): void {
+    this.enabled = false;
+    this.base.removeEventListener('pointerdown', this.onDown);
+    this.base.removeEventListener('pointermove', this.onMove);
+    this.base.removeEventListener('pointerup', this.onUp);
+    this.base.removeEventListener('pointercancel', this.onUp);
+    this.base.removeEventListener('lostpointercapture', this.onUp);
+    this.reset();
+  }
+
   private onDown = (event: PointerEvent): void => {
     if (!this.enabled) return;
     event.preventDefault();
@@ -57,8 +67,10 @@ export class Joystick {
   }
 
   private reset(): void {
+    const captured = this.pointerId;
     this.pointerId = null;
     this.vector = { x: 0, y: 0 };
     this.knob.style.transform = 'translate(0px, 0px)';
+    if (captured !== null && this.base.hasPointerCapture(captured)) this.base.releasePointerCapture(captured);
   }
 }

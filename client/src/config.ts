@@ -1,5 +1,7 @@
 export const GAME_WIDTH = 480;
 export const GAME_HEIGHT = 270;
+/** Render two pixels per world unit so detailed sprites survive canvas compositing. */
+export const RENDER_SCALE = 2;
 export const TILE = 16;
 
 /** Placeholder world until the Tiled ranch map lands in Phase 2. */

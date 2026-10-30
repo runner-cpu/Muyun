@@ -1,6 +1,6 @@
 import Phaser from 'phaser';
 import './styles.css';
-import { GAME_HEIGHT, GAME_WIDTH } from './config';
+import { GAME_HEIGHT, GAME_WIDTH, RENDER_SCALE } from './config';
 import { gameState } from './core/GameState';
 import { saveSystem } from './systems/SaveSystem';
 import { audio } from './systems/AudioManager';
@@ -12,10 +12,10 @@ import { RanchScene } from './scenes/RanchScene';
 
 const config: Phaser.Types.Core.GameConfig = {
   type: Phaser.AUTO,
-  width: GAME_WIDTH,
-  height: GAME_HEIGHT,
+  width: GAME_WIDTH * RENDER_SCALE,
+  height: GAME_HEIGHT * RENDER_SCALE,
   parent: 'game',
-  backgroundColor: '#101726',
+  backgroundColor: '#1e3528',
   render: {
     pixelArt: true,
     antialias: false,
@@ -24,8 +24,8 @@ const config: Phaser.Types.Core.GameConfig = {
   scale: {
     mode: Phaser.Scale.FIT,
     autoCenter: Phaser.Scale.CENTER_BOTH,
-    width: GAME_WIDTH,
-    height: GAME_HEIGHT,
+    width: GAME_WIDTH * RENDER_SCALE,
+    height: GAME_HEIGHT * RENDER_SCALE,
   },
   physics: {
     default: 'arcade',
@@ -47,7 +47,7 @@ window.addEventListener('orientationchange', () => {
 });
 
 const persist = (): void => {
-  if (game.scene.isActive('RanchScene')) saveSystem.save(gameState.toData());
+  if (game.scene.isActive('RanchScene')) saveSystem.saveOnExit(gameState.toData());
 };
 window.addEventListener('pagehide', persist);
 window.addEventListener('beforeunload', persist);

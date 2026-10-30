@@ -1,0 +1,721 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-10-30T09:24:02.743004Z",
+  "title": "Design System: 牧云",
+  "extensions": {
+    "colorMeta": {
+      "yellow": {
+        "role": "primary",
+        "displayName": "草金行动色",
+        "canonical": "#dec285",
+        "tonalRamp": [
+          "oklch(15% 0.0364 85.93)",
+          "oklch(25% 0.0606 85.93)",
+          "oklch(35% 0.0848 85.93)",
+          "oklch(45% 0.0848 85.93)",
+          "oklch(57% 0.0848 85.93)",
+          "oklch(70% 0.0848 85.93)",
+          "oklch(84% 0.0617 85.93)",
+          "oklch(95% 0.0193 85.93)"
+        ]
+      },
+      "yellow-hover": {
+        "role": "primary",
+        "displayName": "草金悬停色",
+        "canonical": "#edcf8e",
+        "tonalRamp": [
+          "oklch(15% 0.0383 85.81)",
+          "oklch(25% 0.0638 85.81)",
+          "oklch(35% 0.0893 85.81)",
+          "oklch(45% 0.0893 85.81)",
+          "oklch(57% 0.0893 85.81)",
+          "oklch(70% 0.0893 85.81)",
+          "oklch(84% 0.0650 85.81)",
+          "oklch(95% 0.0203 85.81)"
+        ]
+      },
+      "button-ink": {
+        "role": "neutral",
+        "displayName": "主要按钮深绿文字",
+        "canonical": "#243c2d",
+        "tonalRamp": [
+          "oklch(15% 0.0172 156.04)",
+          "oklch(25% 0.0287 156.04)",
+          "oklch(35% 0.0402 156.04)",
+          "oklch(45% 0.0402 156.04)",
+          "oklch(57% 0.0402 156.04)",
+          "oklch(70% 0.0402 156.04)",
+          "oklch(84% 0.0292 156.04)",
+          "oklch(95% 0.0091 156.04)"
+        ]
+      },
+      "green": {
+        "role": "secondary",
+        "displayName": "牧草状态绿",
+        "canonical": "#315f3d",
+        "tonalRamp": [
+          "oklch(15% 0.0325 150.74)",
+          "oklch(25% 0.0537 150.74)",
+          "oklch(35% 0.0756 150.74)",
+          "oklch(45% 0.0756 150.74)",
+          "oklch(57% 0.0756 150.74)",
+          "oklch(70% 0.0756 150.74)",
+          "oklch(84% 0.0552 150.74)",
+          "oklch(95% 0.0174 150.74)"
+        ]
+      },
+      "red": {
+        "role": "secondary",
+        "displayName": "风险红",
+        "canonical": "#8f3025",
+        "tonalRamp": [
+          "oklch(15% 0.0563 29.71)",
+          "oklch(25% 0.0929 29.71)",
+          "oklch(35% 0.1308 29.71)",
+          "oklch(45% 0.1308 29.71)",
+          "oklch(57% 0.1308 29.71)",
+          "oklch(70% 0.1308 29.71)",
+          "oklch(84% 0.0955 29.71)",
+          "oklch(95% 0.0301 29.71)"
+        ]
+      },
+      "ink": {
+        "role": "neutral",
+        "displayName": "画面底色",
+        "canonical": "#213b30",
+        "tonalRamp": [
+          "oklch(15% 0.0162 165.43)",
+          "oklch(25% 0.0271 165.43)",
+          "oklch(35% 0.0379 165.43)",
+          "oklch(45% 0.0379 165.43)",
+          "oklch(57% 0.0379 165.43)",
+          "oklch(70% 0.0379 165.43)",
+          "oklch(84% 0.0275 165.43)",
+          "oklch(95% 0.0086 165.43)"
+        ]
+      },
+      "panel": {
+        "role": "neutral",
+        "displayName": "晨光主表面",
+        "canonical": "#d8dfc7",
+        "tonalRamp": [
+          "oklch(15% 0.0142 120.30)",
+          "oklch(25% 0.0234 120.30)",
+          "oklch(35% 0.0330 120.30)",
+          "oklch(45% 0.0330 120.30)",
+          "oklch(57% 0.0330 120.30)",
+          "oklch(70% 0.0330 120.30)",
+          "oklch(84% 0.0241 120.30)",
+          "oklch(95% 0.0076 120.30)"
+        ]
+      },
+      "panel-solid": {
+        "role": "neutral",
+        "displayName": "晨光弹窗表面",
+        "canonical": "#d8dfc7",
+        "tonalRamp": [
+          "oklch(15% 0.0142 120.30)",
+          "oklch(25% 0.0234 120.30)",
+          "oklch(35% 0.0330 120.30)",
+          "oklch(45% 0.0330 120.30)",
+          "oklch(57% 0.0330 120.30)",
+          "oklch(70% 0.0330 120.30)",
+          "oklch(84% 0.0241 120.30)",
+          "oklch(95% 0.0076 120.30)"
+        ]
+      },
+      "panel-2": {
+        "role": "neutral",
+        "displayName": "晨光次表面",
+        "canonical": "#c8d2b4",
+        "tonalRamp": [
+          "oklch(15% 0.0181 122.30)",
+          "oklch(25% 0.0298 122.30)",
+          "oklch(35% 0.0420 122.30)",
+          "oklch(45% 0.0420 122.30)",
+          "oklch(57% 0.0420 122.30)",
+          "oklch(70% 0.0420 122.30)",
+          "oklch(84% 0.0307 122.30)",
+          "oklch(95% 0.0097 122.30)"
+        ]
+      },
+      "cream": {
+        "role": "neutral",
+        "displayName": "晨光正文",
+        "canonical": "#213b30",
+        "tonalRamp": [
+          "oklch(15% 0.0162 165.43)",
+          "oklch(25% 0.0271 165.43)",
+          "oklch(35% 0.0379 165.43)",
+          "oklch(45% 0.0379 165.43)",
+          "oklch(57% 0.0379 165.43)",
+          "oklch(70% 0.0379 165.43)",
+          "oklch(84% 0.0275 165.43)",
+          "oklch(95% 0.0086 165.43)"
+        ]
+      },
+      "muted": {
+        "role": "neutral",
+        "displayName": "晨光辅助文字",
+        "canonical": "#43533f",
+        "tonalRamp": [
+          "oklch(15% 0.0164 139.43)",
+          "oklch(25% 0.0271 139.43)",
+          "oklch(35% 0.0381 139.43)",
+          "oklch(45% 0.0381 139.43)",
+          "oklch(57% 0.0381 139.43)",
+          "oklch(70% 0.0381 139.43)",
+          "oklch(84% 0.0278 139.43)",
+          "oklch(95% 0.0088 139.43)"
+        ]
+      },
+      "line": {
+        "role": "neutral",
+        "displayName": "晨光分隔线",
+        "canonical": "#a8b798",
+        "tonalRamp": [
+          "oklch(15% 0.0199 128.55)",
+          "oklch(25% 0.0328 128.55)",
+          "oklch(35% 0.0462 128.55)",
+          "oklch(45% 0.0462 128.55)",
+          "oklch(57% 0.0462 128.55)",
+          "oklch(70% 0.0462 128.55)",
+          "oklch(84% 0.0338 128.55)",
+          "oklch(95% 0.0106 128.55)"
+        ]
+      },
+      "field": {
+        "role": "neutral",
+        "displayName": "晨光数据底色",
+        "canonical": "#cbd5b9",
+        "tonalRamp": [
+          "oklch(15% 0.0169 123.24)",
+          "oklch(25% 0.0279 123.24)",
+          "oklch(35% 0.0393 123.24)",
+          "oklch(45% 0.0393 123.24)",
+          "oklch(57% 0.0393 123.24)",
+          "oklch(70% 0.0393 123.24)",
+          "oklch(84% 0.0287 123.24)",
+          "oklch(95% 0.0090 123.24)"
+        ]
+      },
+      "focus": {
+        "role": "primary",
+        "displayName": "晨光焦点金棕",
+        "canonical": "#805014",
+        "tonalRamp": [
+          "oklch(15% 0.0412 66.51)",
+          "oklch(25% 0.0681 66.51)",
+          "oklch(35% 0.0959 66.51)",
+          "oklch(45% 0.0959 66.51)",
+          "oklch(57% 0.0959 66.51)",
+          "oklch(70% 0.0959 66.51)",
+          "oklch(84% 0.0700 66.51)",
+          "oklch(95% 0.0221 66.51)"
+        ]
+      },
+      "dark-ink": {
+        "role": "neutral",
+        "displayName": "暮色画面底色",
+        "canonical": "#101e19",
+        "tonalRamp": [
+          "oklch(15% 0.0094 169.79)",
+          "oklch(25% 0.0156 169.79)",
+          "oklch(35% 0.0219 169.79)",
+          "oklch(45% 0.0219 169.79)",
+          "oklch(57% 0.0219 169.79)",
+          "oklch(70% 0.0219 169.79)",
+          "oklch(84% 0.0159 169.79)",
+          "oklch(95% 0.0050 169.79)"
+        ]
+      },
+      "dark-panel": {
+        "role": "neutral",
+        "displayName": "暮色主表面",
+        "canonical": "#1c3027",
+        "tonalRamp": [
+          "oklch(15% 0.0132 164.38)",
+          "oklch(25% 0.0221 164.38)",
+          "oklch(35% 0.0309 164.38)",
+          "oklch(45% 0.0309 164.38)",
+          "oklch(57% 0.0309 164.38)",
+          "oklch(70% 0.0309 164.38)",
+          "oklch(84% 0.0225 164.38)",
+          "oklch(95% 0.0070 164.38)"
+        ]
+      },
+      "dark-panel-2": {
+        "role": "neutral",
+        "displayName": "暮色次表面",
+        "canonical": "#2a4033",
+        "tonalRamp": [
+          "oklch(15% 0.0154 157.97)",
+          "oklch(25% 0.0256 157.97)",
+          "oklch(35% 0.0359 157.97)",
+          "oklch(45% 0.0359 157.97)",
+          "oklch(57% 0.0359 157.97)",
+          "oklch(70% 0.0359 157.97)",
+          "oklch(84% 0.0261 157.97)",
+          "oklch(95% 0.0082 157.97)"
+        ]
+      },
+      "dark-cream": {
+        "role": "neutral",
+        "displayName": "暮色正文",
+        "canonical": "#ecf0df",
+        "tonalRamp": [
+          "oklch(15% 0.0098 117.60)",
+          "oklch(25% 0.0163 117.60)",
+          "oklch(35% 0.0229 117.60)",
+          "oklch(45% 0.0229 117.60)",
+          "oklch(57% 0.0229 117.60)",
+          "oklch(70% 0.0229 117.60)",
+          "oklch(84% 0.0166 117.60)",
+          "oklch(95% 0.0052 117.60)"
+        ]
+      },
+      "dark-muted": {
+        "role": "neutral",
+        "displayName": "暮色辅助文字",
+        "canonical": "#b5c1aa",
+        "tonalRamp": [
+          "oklch(15% 0.0147 129.79)",
+          "oklch(25% 0.0246 129.79)",
+          "oklch(35% 0.0344 129.79)",
+          "oklch(45% 0.0344 129.79)",
+          "oklch(57% 0.0344 129.79)",
+          "oklch(70% 0.0344 129.79)",
+          "oklch(84% 0.0250 129.79)",
+          "oklch(95% 0.0078 129.79)"
+        ]
+      },
+      "dark-green": {
+        "role": "secondary",
+        "displayName": "暮色状态绿",
+        "canonical": "#aacb95",
+        "tonalRamp": [
+          "oklch(15% 0.0350 133.56)",
+          "oklch(25% 0.0584 133.56)",
+          "oklch(35% 0.0818 133.56)",
+          "oklch(45% 0.0818 133.56)",
+          "oklch(57% 0.0818 133.56)",
+          "oklch(70% 0.0818 133.56)",
+          "oklch(84% 0.0595 133.56)",
+          "oklch(95% 0.0186 133.56)"
+        ]
+      },
+      "dark-red": {
+        "role": "secondary",
+        "displayName": "暮色风险红",
+        "canonical": "#f3a391",
+        "tonalRamp": [
+          "oklch(15% 0.0425 33.24)",
+          "oklch(25% 0.0709 33.24)",
+          "oklch(35% 0.0992 33.24)",
+          "oklch(45% 0.0992 33.24)",
+          "oklch(57% 0.0992 33.24)",
+          "oklch(70% 0.0992 33.24)",
+          "oklch(84% 0.0722 33.24)",
+          "oklch(95% 0.0226 33.24)"
+        ]
+      },
+      "dark-line": {
+        "role": "neutral",
+        "displayName": "暮色分隔线",
+        "canonical": "#49604c",
+        "tonalRamp": [
+          "oklch(15% 0.0182 148.39)",
+          "oklch(25% 0.0303 148.39)",
+          "oklch(35% 0.0424 148.39)",
+          "oklch(45% 0.0424 148.39)",
+          "oklch(57% 0.0424 148.39)",
+          "oklch(70% 0.0424 148.39)",
+          "oklch(84% 0.0309 148.39)",
+          "oklch(95% 0.0096 148.39)"
+        ]
+      },
+      "dark-field": {
+        "role": "neutral",
+        "displayName": "暮色数据底色",
+        "canonical": "#16291f",
+        "tonalRamp": [
+          "oklch(15% 0.0135 160.20)",
+          "oklch(25% 0.0225 160.20)",
+          "oklch(35% 0.0315 160.20)",
+          "oklch(45% 0.0315 160.20)",
+          "oklch(57% 0.0315 160.20)",
+          "oklch(70% 0.0315 160.20)",
+          "oklch(84% 0.0229 160.20)",
+          "oklch(95% 0.0071 160.20)"
+        ]
+      },
+      "dark-focus": {
+        "role": "primary",
+        "displayName": "暮色焦点草金",
+        "canonical": "#dec285",
+        "tonalRamp": [
+          "oklch(15% 0.0364 85.93)",
+          "oklch(25% 0.0606 85.93)",
+          "oklch(35% 0.0848 85.93)",
+          "oklch(45% 0.0848 85.93)",
+          "oklch(57% 0.0848 85.93)",
+          "oklch(70% 0.0848 85.93)",
+          "oklch(84% 0.0617 85.93)",
+          "oklch(95% 0.0193 85.93)"
+        ]
+      },
+      "hud-surface": {
+        "role": "neutral",
+        "displayName": "场景工具主表面",
+        "canonical": "#263c2c",
+        "tonalRamp": [
+          "oklch(15% 0.0171 152.38)",
+          "oklch(25% 0.0282 152.38)",
+          "oklch(35% 0.0397 152.38)",
+          "oklch(45% 0.0397 152.38)",
+          "oklch(57% 0.0397 152.38)",
+          "oklch(70% 0.0397 152.38)",
+          "oklch(84% 0.0290 152.38)",
+          "oklch(95% 0.0091 152.38)"
+        ]
+      },
+      "hud-raised": {
+        "role": "neutral",
+        "displayName": "场景工具选中表面",
+        "canonical": "#334b34",
+        "tonalRamp": [
+          "oklch(15% 0.0209 145.57)",
+          "oklch(25% 0.0345 145.57)",
+          "oklch(35% 0.0486 145.57)",
+          "oklch(45% 0.0486 145.57)",
+          "oklch(57% 0.0486 145.57)",
+          "oklch(70% 0.0486 145.57)",
+          "oklch(84% 0.0355 145.57)",
+          "oklch(95% 0.0112 145.57)"
+        ]
+      },
+      "hud-text": {
+        "role": "neutral",
+        "displayName": "场景工具正文",
+        "canonical": "#f0f1da",
+        "tonalRamp": [
+          "oklch(15% 0.0130 108.99)",
+          "oklch(25% 0.0215 108.99)",
+          "oklch(35% 0.0303 108.99)",
+          "oklch(45% 0.0303 108.99)",
+          "oklch(57% 0.0303 108.99)",
+          "oklch(70% 0.0303 108.99)",
+          "oklch(84% 0.0221 108.99)",
+          "oklch(95% 0.0070 108.99)"
+        ]
+      },
+      "hud-muted": {
+        "role": "neutral",
+        "displayName": "场景工具辅助文字",
+        "canonical": "#c5cfb3",
+        "tonalRamp": [
+          "oklch(15% 0.0170 123.26)",
+          "oklch(25% 0.0281 123.26)",
+          "oklch(35% 0.0395 123.26)",
+          "oklch(45% 0.0395 123.26)",
+          "oklch(57% 0.0395 123.26)",
+          "oklch(70% 0.0395 123.26)",
+          "oklch(84% 0.0289 123.26)",
+          "oklch(95% 0.0091 123.26)"
+        ]
+      },
+      "hud-line": {
+        "role": "neutral",
+        "displayName": "场景工具分隔线",
+        "canonical": "#53664b",
+        "tonalRamp": [
+          "oklch(15% 0.0206 136.54)",
+          "oklch(25% 0.0340 136.54)",
+          "oklch(35% 0.0479 136.54)",
+          "oklch(45% 0.0479 136.54)",
+          "oklch(57% 0.0479 136.54)",
+          "oklch(70% 0.0479 136.54)",
+          "oklch(84% 0.0350 136.54)",
+          "oklch(95% 0.0110 136.54)"
+        ]
+      },
+      "hud-field": {
+        "role": "neutral",
+        "displayName": "场景工具数据底色",
+        "canonical": "#3b5239",
+        "tonalRamp": [
+          "oklch(15% 0.0214 142.64)",
+          "oklch(25% 0.0353 142.64)",
+          "oklch(35% 0.0497 142.64)",
+          "oklch(45% 0.0497 142.64)",
+          "oklch(57% 0.0497 142.64)",
+          "oklch(70% 0.0497 142.64)",
+          "oklch(84% 0.0363 142.64)",
+          "oklch(95% 0.0114 142.64)"
+        ]
+      },
+      "hud-green": {
+        "role": "secondary",
+        "displayName": "场景工具充足状态",
+        "canonical": "#d3dfa5",
+        "tonalRamp": [
+          "oklch(15% 0.0332 117.51)",
+          "oklch(25% 0.0549 117.51)",
+          "oklch(35% 0.0773 117.51)",
+          "oklch(45% 0.0773 117.51)",
+          "oklch(57% 0.0773 117.51)",
+          "oklch(70% 0.0773 117.51)",
+          "oklch(84% 0.0564 117.51)",
+          "oklch(95% 0.0178 117.51)"
+        ]
+      },
+      "hud-red": {
+        "role": "secondary",
+        "displayName": "场景工具风险状态",
+        "canonical": "#ffc0a5",
+        "tonalRamp": [
+          "oklch(15% 0.0351 44.24)",
+          "oklch(25% 0.0580 44.24)",
+          "oklch(35% 0.0817 44.24)",
+          "oklch(45% 0.0817 44.24)",
+          "oklch(57% 0.0817 44.24)",
+          "oklch(70% 0.0817 44.24)",
+          "oklch(84% 0.0596 44.24)",
+          "oklch(95% 0.0188 44.24)"
+        ]
+      }
+    },
+    "typographyMeta": {
+      "display": {
+        "displayName": "品牌展示",
+        "purpose": "标题页名称；自托管像素字体，响应式按视口调整。"
+      },
+      "headline": {
+        "displayName": "弹窗标题",
+        "purpose": "经营、事件与设置弹窗标题。"
+      },
+      "title": {
+        "displayName": "场区名称",
+        "purpose": "草场小区等少量区域标题。"
+      },
+      "body": {
+        "displayName": "基础正文",
+        "purpose": "清晰中文界面与一般说明。"
+      },
+      "panel-body": {
+        "displayName": "面板正文",
+        "purpose": "经营面板、说明、状态与日志。"
+      },
+      "control": {
+        "displayName": "按钮文字",
+        "purpose": "可执行控件；清楚的中文动词与行动代价。"
+      }
+    },
+    "shadows": [
+      {
+        "name": "tool-light",
+        "value": "0 12px 40px rgb(14 35 25 / 20%)",
+        "purpose": "晨光经营菜单、叙事与工具。"
+      },
+      {
+        "name": "tool-dark",
+        "value": "0 12px 40px rgb(5 15 10 / 35%)",
+        "purpose": "暮色经营菜单与常驻深绿 HUD。"
+      },
+      {
+        "name": "modal",
+        "value": "0 24px 90px rgb(5 22 12 / 38%)",
+        "purpose": "被遮罩保护的独立任务。"
+      },
+      {
+        "name": "scene-label",
+        "value": "0 3px 10px rgb(13 30 18 / 28%)",
+        "purpose": "场景地点木牌与草地之间的轻微分离。"
+      }
+    ],
+    "motion": [
+      {
+        "name": "control-background",
+        "value": "background .15s",
+        "purpose": "按钮背景变化。"
+      },
+      {
+        "name": "control-press",
+        "value": "transform .1s; translateY(1px)",
+        "purpose": "按钮按压反馈。"
+      },
+      {
+        "name": "scene-fade",
+        "value": "opacity .3s",
+        "purpose": "场景淡出。"
+      },
+      {
+        "name": "reduced-motion",
+        "value": "prefers-reduced-motion: reduce",
+        "purpose": "系统偏好停用 CSS 动画、标题微粒、牲畜漫游与冬雪；人物仍响应主动移动。"
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "hud-tight",
+        "value": "(max-width: 1100px)"
+      },
+      {
+        "name": "compact-landscape",
+        "value": "(max-width: 900px), (max-height: 560px)"
+      },
+      {
+        "name": "narrow-controls",
+        "value": "(max-width: 700px)"
+      },
+      {
+        "name": "short-title",
+        "value": "(max-height: 430px)"
+      },
+      {
+        "name": "portrait",
+        "value": "(orientation: portrait) and (max-width: 900px)"
+      }
+    ],
+    "decisionTraining": {
+      "surfaces": [
+        "overview",
+        "strategy",
+        "event",
+        "market",
+        "result"
+      ],
+      "flow": [
+        "季末使命",
+        "本周风险",
+        "参考行动与代价",
+        "真实周结算",
+        "三维成果",
+        "完局策略对照与导出"
+      ],
+      "rules": [
+        "预测仅含可见状态的确定性结算",
+        "参考方案由玩家手动执行",
+        "事件直接显示真实即时变化",
+        "完整局与挑战存档独立",
+        "缺失的旧历史不补造"
+      ],
+      "evidence": "output/review/decision-acceptance.md"
+    }
+  },
+  "components": [
+    {
+      "name": "主要行动按钮",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "开始、周推进及确认等主要行动；保留深绿文字和清楚的焦点。",
+      "html": "<button class=\"ds-btn-primary\">结束本周</button>",
+      "css": ".ds-btn-primary{appearance:none;min-height:44px;border:1px solid var(--line, #a8b798);border-radius:2px;background:var(--panel-2, #c8d2b4);color:var(--cream, #213b30);padding:10px 18px;font:700 13px/1.6 \"Microsoft YaHei\", \"PingFang SC\", system-ui, sans-serif;white-space:nowrap;cursor:pointer;transition:background .15s,transform .1s}.ds-btn-primary:hover:not(:disabled){background:var(--field, #cbd5b9);border-color:var(--muted, #43533f)}.ds-btn-primary:focus-visible{outline:3px solid var(--focus, #805014);outline-offset:4px;}.ds-btn-primary:active:not(:disabled){transform:translateY(1px)}.ds-btn-primary:disabled{opacity:.5;cursor:not-allowed}@media(prefers-reduced-motion:reduce){.ds-btn-primary{transition:none}}.ds-btn-primary{background:var(--yellow, #dec285);border-color:var(--yellow, #dec285);color:#243c2d}.ds-btn-primary:hover:not(:disabled){background:#edcf8e}"
+    },
+    {
+      "name": "次级按钮",
+      "kind": "button",
+      "refersTo": "button-secondary",
+      "description": "使用语义次表面承载一般操作。",
+      "html": "<button class=\"ds-btn-secondary\">返回牧场</button>",
+      "css": ".ds-btn-secondary{appearance:none;min-height:44px;border:1px solid var(--line, #a8b798);border-radius:2px;background:var(--panel-2, #c8d2b4);color:var(--cream, #213b30);padding:10px 18px;font:700 13px/1.6 \"Microsoft YaHei\", \"PingFang SC\", system-ui, sans-serif;white-space:nowrap;cursor:pointer;transition:background .15s,transform .1s}.ds-btn-secondary:hover:not(:disabled){background:var(--field, #cbd5b9);border-color:var(--muted, #43533f)}.ds-btn-secondary:focus-visible{outline:3px solid var(--focus, #805014);outline-offset:4px;}.ds-btn-secondary:active:not(:disabled){transform:translateY(1px)}.ds-btn-secondary:disabled{opacity:.5;cursor:not-allowed}@media(prefers-reduced-motion:reduce){.ds-btn-secondary{transition:none}}"
+    },
+    {
+      "name": "透明按钮",
+      "kind": "button",
+      "refersTo": "button-ghost",
+      "description": "弱化背景、保留边界，用于次要操作。",
+      "html": "<button class=\"ds-btn-ghost\">查看本周概览</button>",
+      "css": ".ds-btn-ghost{appearance:none;min-height:44px;border:1px solid var(--line, #a8b798);border-radius:2px;background:var(--panel-2, #c8d2b4);color:var(--cream, #213b30);padding:10px 18px;font:700 13px/1.6 \"Microsoft YaHei\", \"PingFang SC\", system-ui, sans-serif;white-space:nowrap;cursor:pointer;transition:background .15s,transform .1s}.ds-btn-ghost:hover:not(:disabled){background:var(--field, #cbd5b9);border-color:var(--muted, #43533f)}.ds-btn-ghost:focus-visible{outline:3px solid var(--focus, #805014);outline-offset:4px;}.ds-btn-ghost:active:not(:disabled){transform:translateY(1px)}.ds-btn-ghost:disabled{opacity:.5;cursor:not-allowed}@media(prefers-reduced-motion:reduce){.ds-btn-ghost{transition:none}}.ds-btn-ghost{background:transparent}"
+    },
+    {
+      "name": "四项经营导航",
+      "kind": "nav",
+      "description": "四个固定名称构成稳定入口。预览省略依赖本地图片的像素缩略图；实际界面含缩略图和快捷键。",
+      "html": "<nav class=\"ds-ranch-nav\" aria-label=\"牧场经营预览\"><button class=\"ds-nav-item\" aria-expanded=\"true\">畜群<small class=\"ds-nav-note\">照料与繁育</small></button><button class=\"ds-nav-item\" aria-expanded=\"false\">草场<small class=\"ds-nav-note\">放牧与收草</small></button><button class=\"ds-nav-item\" aria-expanded=\"false\">集市<small class=\"ds-nav-note\">交易与补给</small></button><button class=\"ds-nav-item\" aria-expanded=\"false\">科技<small class=\"ds-nav-note\">牧场服务</small></button></nav>",
+      "css": ".ds-ranch-nav{--panel:var(--hud-surface,#263c2c);--panel-2:var(--hud-raised,#334b34);--cream:var(--hud-text,#f0f1da);--muted:var(--hud-muted,#c5cfb3);--line:var(--hud-line,#53664b);--focus:#dec285;display:grid;grid-template-columns:repeat(4,1fr);background:var(--panel, #d8dfc7);box-shadow:var(--shadow, 0 12px 40px rgb(14 35 25 / 20%))}.ds-nav-item{min-width:80px;min-height:72px;padding:10px 15px 10px 10px;border:0;border-right:1px solid var(--line, #a8b798);background:transparent;color:var(--cream, #213b30);text-align:left;font:700 14px/1.6 \"Microsoft YaHei\", \"PingFang SC\", system-ui, sans-serif;cursor:pointer}.ds-nav-item:last-child{border-right:0}.ds-nav-item:hover,.ds-nav-item[aria-expanded='true']{background:var(--panel-2, #c8d2b4)}.ds-nav-item:focus-visible{outline:3px solid var(--focus, #805014);outline-offset:4px;}.ds-nav-item:active{transform:translateY(1px)}.ds-nav-note{display:block;margin-top:3px;color:var(--muted, #43533f);font-size:11px;font-weight:400}"
+    },
+    {
+      "name": "真实状态标签",
+      "kind": "chip",
+      "refersTo": "status-label",
+      "description": "平直的只读状态，不把装饰当作信号。",
+      "html": "<span class=\"ds-status-label\">已接种</span>",
+      "css": ".ds-status-label{display:inline-block;padding:2px 7px;background:var(--panel-2, #c8d2b4);color:var(--muted, #43533f);font:400 10px/1.6 \"Microsoft YaHei\", \"PingFang SC\", system-ui, sans-serif}"
+    },
+    {
+      "name": "草场小区",
+      "kind": "card",
+      "refersTo": "pasture-cell",
+      "description": "数据底色分区，用少量像素标题保持牧场身份。此处为静态组件示例。",
+      "html": "<article class=\"ds-cell-card\"><h3 class=\"ds-cell-title\">东坡草场</h3><p class=\"ds-cell-line\">草量 <span class=\"ds-meter\"><i class=\"ds-meter-fill\"></i></span> 68%</p><p class=\"ds-cell-line\">轮牧休养中</p></article>",
+      "css": ".ds-cell-card{padding:18px;background:var(--field, #cbd5b9);color:var(--cream, #213b30);font-family:\"Microsoft YaHei\", \"PingFang SC\", system-ui, sans-serif}.ds-cell-title{margin:0 0 10px;font:400 24px/1.4 var(--display, 'Fusion Pixel', sans-serif)}.ds-cell-line{margin:5px 0;font-size:12px;line-height:1.75}.ds-meter{display:inline-block;width:60px;height:4px;margin:0 5px;vertical-align:middle;background:var(--line, #a8b798)}.ds-meter-fill{display:block;width:68%;height:100%;background:var(--green, #315f3d)}"
+    },
+    {
+      "name": "主题选择",
+      "kind": "input",
+      "refersTo": "setting-select",
+      "description": "关联原生标签的设置控件，沿用正文、数据底色与焦点变量。",
+      "html": "<div class=\"ds-setting-row\"><label class=\"ds-setting-label\" for=\"ds-theme-select\">界面主题</label><select class=\"ds-setting-select\" id=\"ds-theme-select\"><option>跟随系统</option><option>晨光</option><option>暮色</option></select></div>",
+      "css": ".ds-setting-row{display:grid;grid-template-columns:72px minmax(120px,1fr);align-items:center;gap:16px;font-family:\"Microsoft YaHei\", \"PingFang SC\", system-ui, sans-serif}.ds-setting-label{color:var(--muted, #43533f);font-size:12px}.ds-setting-select{width:100%;border:1px solid var(--line, #a8b798);padding:8px;background:var(--field, #cbd5b9);color:var(--cream, #213b30);font:400 14px/1.6 \"Microsoft YaHei\", \"PingFang SC\", system-ui, sans-serif}.ds-setting-select:focus-visible{outline:3px solid var(--focus, #805014);outline-offset:4px;}"
+    },
+    {
+      "name": "饲草状态摘要",
+      "kind": "custom",
+      "refersTo": "overview-feed",
+      "description": "文字与语义颜色共同说明饲草状态。示例数值不参与模拟，运行时读取真实周摘要。",
+      "html": "<section class=\"ds-overview-feed\"><h3 class=\"ds-feed-title\">本周饲草储备充足</h3><p class=\"ds-feed-copy\">预计需补干草 0 kg</p></section>",
+      "css": ".ds-overview-feed{padding:15px 18px;background:var(--field, #cbd5b9);color:var(--green, #315f3d);font-family:\"Microsoft YaHei\", \"PingFang SC\", system-ui, sans-serif}.ds-feed-title{margin:0 0 5px;font-size:16px;line-height:1.6}.ds-feed-copy{margin:0;font-size:13px;line-height:1.75}"
+    },
+    {
+      "name": "经营动作及代价",
+      "kind": "custom",
+      "description": "左对齐动作组把按钮与费用、禁用原因绑定；本例展示行动点不足状态。",
+      "html": "<div class=\"ds-panel-actions\"><div class=\"ds-action-control\"><button class=\"ds-action-button\" disabled>接种疫苗 · 1 行动</button><span class=\"ds-action-hint\">本周行动点已用完，可结束本周后再安排</span></div></div>",
+      "css": ".ds-action-button{appearance:none;min-height:44px;border:1px solid var(--line, #a8b798);border-radius:2px;background:var(--panel-2, #c8d2b4);color:var(--cream, #213b30);padding:10px 18px;font:700 13px/1.6 \"Microsoft YaHei\", \"PingFang SC\", system-ui, sans-serif;white-space:nowrap;cursor:pointer;transition:background .15s,transform .1s}.ds-action-button:hover:not(:disabled){background:var(--field, #cbd5b9);border-color:var(--muted, #43533f)}.ds-action-button:focus-visible{outline:3px solid var(--focus, #805014);outline-offset:4px;}.ds-action-button:active:not(:disabled){transform:translateY(1px)}.ds-action-button:disabled{opacity:.5;cursor:not-allowed}@media(prefers-reduced-motion:reduce){.ds-action-button{transition:none}}.ds-panel-actions{display:flex;flex-wrap:wrap;gap:12px;justify-content:flex-start;margin-top:16px}.ds-action-control{display:flex;flex-direction:column;align-items:flex-start;gap:5px}.ds-action-button{min-height:36px;padding:5px 12px;font-size:12px}.ds-action-hint{display:block;max-width:32ch;color:var(--red, #8f3025);font:400 12px/1.6 \"Microsoft YaHei\", \"PingFang SC\", system-ui, sans-serif}"
+    },
+    {
+      "name": "场景地点标签",
+      "kind": "custom",
+      "description": "固定 CSS 字号的 DOM 中文木牌；运行时按镜头投影、避让工具与弹窗。",
+      "html": "<button class=\"ds-scene-label\" type=\"button\">草场 P1</button>",
+      "css": ".ds-scene-label{min-height:32px;padding:5px 12px;border:1px solid #8fa47a;border-radius:2px;background:#244335;color:#f0edcf;box-shadow:0 3px 10px rgb(13 30 18 / 28%);font:600 14px/1.4 \"Microsoft YaHei\",\"PingFang SC\",system-ui,sans-serif;white-space:nowrap;cursor:pointer}.ds-scene-label:hover{background:#35563d;border-color:#dec285}.ds-scene-label:active{background:#1a3529}.ds-scene-label:focus-visible{outline:3px solid #dec285;outline-offset:4px}"
+    }
+  ],
+  "narrative": {
+    "northStar": "像素牧场，清晰经营",
+    "overview": "用户已确认保留像素风，重做界面和信息层级。图像、场景瓦片、角色与少量像素标题维持游戏身份；可阅读的中文正文、明确的经营入口和真实数据负责帮助玩家做决定。不要把整个经营工具变成低分辨率像素画布。\n\n视觉来自高原草地、冷杉绿和草金色。常驻 HUD 使用深绿表面和暖白文字，与牧场相接；经营菜单可切换草木灰绿的晨光、深绿暮色或系统主题。标题画面保留高原图、绿色遮罩和明亮文字。全局身份取自实际实现，不将特定页面的构图推广为所有页面模板。\n\n决策训练将四季使命、付费监测、受约束策略搜索与真实后果连成闭环。完整十三周经营与四周越冬挑战各自存档；结算显示经营、生态、动物健康与逐周选择，完局开放同起点对照和 JSON 导出。所有新面板沿用已有语义表面与字体，游戏评分及搜索边界明确披露。",
+    "keyCharacteristics": [
+      "像素场景与清晰 DOM 工具并存。",
+      "草金色指向主要行动，绿色与红色说明真实经营状态。",
+      "平直容器、紧密数据分组、适度留白。",
+      "先解释现状与代价，再让玩家执行和回顾。"
+    ],
+    "rules": [
+      {
+        "name": "The Theme Mapping Rule",
+        "body": "经营弹窗通过根节点语义变量切换主题；常驻 HUD 在自己的范围映射到固定场景令牌。不要在单个草场卡片或面板中硬编码另一套浅深模式。标题艺术画面和四季场景有各自的图像色彩，不随工具主题重绘。",
+        "section": "colors"
+      },
+      {
+        "name": "The Two Registers Rule",
+        "body": "像素标题承担游戏身份，正文家族承担阅读和操作。不要为了统一外观，把长说明和每一格数值都换成像素字。",
+        "section": "typography"
+      }
+    ],
+    "dos": [
+      "Do 保留像素美术、品牌名称与四个经营入口的既有名称。",
+      "Do 让数值、风险、费用和操作反馈来自真实模拟状态。",
+      "Do 在新组件中使用语义表面、正文、辅助文字和状态色，覆盖晨光与暮色。",
+      "Do 使用清楚的中文动词、单位、禁用原因与可达的完整个体列表。",
+      "Do 区分已实现的科技能力和试验功能，并说明持续费用。"
+    ],
+    "donts": [
+      "Don't 重新加入棕色厚框、扫描线和大面积装饰英文标签。",
+      "Don't 用装饰数据、虚假预警或未实现收益替代产品能力。",
+      "Don't 让走近地图设施成为经营功能的唯一入口。",
+      "Don't 截断牲畜列表，或把成功操作做成没有结果说明的关闭重开。",
+      "Don't 把当前实现说明当成浏览器、对比度或真机验收通过的证明。"
+    ]
+  }
+}

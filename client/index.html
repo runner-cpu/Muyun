@@ -2,93 +2,76 @@
 <html lang="zh-CN">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
-    <meta name="theme-color" content="#0d1526" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta name="theme-color" content="#203c31" />
     <meta name="description" content="牧云：一座高原牧场，十三个星期，草畜之间的取舍。" />
     <link rel="icon" href="data:," />
+    <link rel="preload" href="/assets/fonts/fusion-pixel-12px.woff2" as="font" type="font/woff2" crossorigin />
     <title>牧云 · 高原牧场</title>
   </head>
   <body>
+    <!--
+      THESIS: 保留可漫游的像素高原，以清晰的经营外壳帮助玩家安排十三周牧场。
+      OWN-WORLD: 冷杉绿、雾白与草金；自托管像素标题，直角容器和清晰的中文正文。
+      STORY: 看懂本周资源与饲草风险，安排照料和交易，再查看结算并处理事件。
+      FIRST VIEWPORT: 标题左侧名称与开始入口，右侧真实像素牧场；游戏顶部资源、底部四项经营与结算。
+      FORM: 用户确认的像素场景与 DOM 经营界面；seed: user-pixel-preserve-20261030。
+      FINISH: unreviewed and undocumented is unfinished; this build ends with the finish review, the verdict, and DESIGN.md
+    -->
     <div id="app">
-      <div id="game" aria-label="牧云游戏画面"></div>
-      <div class="scanlines" aria-hidden="true"></div>
-
+      <div id="game" role="img" aria-label="牧云像素牧场，可使用 WASD 或方向键移动"></div>
       <section id="loading-screen" class="screen">
         <div class="loading-inner">
-          <div class="loading-logo">MU<br /><span>YUN</span></div>
-          <div class="loading-bar"><i id="loading-fill"></i></div>
-          <p id="loading-text">正在加载牧场...</p>
-          <p class="loading-tip">提示：点黄色标记，或者走近按 E</p>
+          <div class="loading-logo">牧云</div><p>山野有时，放牧有度。</p>
+          <div class="loading-bar" role="progressbar" aria-label="加载牧场" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><i id="loading-fill"></i></div>
+          <p id="loading-text" role="status">正在加载牧场...</p>
         </div>
       </section>
-
-      <section id="title-screen" class="screen hidden">
+      <section id="title-screen" class="screen hidden" aria-label="牧云主菜单">
+        <header class="title-topbar"><span class="title-wordmark">牧云 <small>MUYUN</small></span><div><button id="btn-guide" class="text-btn">玩法说明</button><button id="btn-title-settings" class="text-btn">设置</button></div></header>
         <div class="title-card">
-          <p class="eyebrow">A PLATEAU PASTORAL YEAR</p>
-          <h1>牧云</h1>
-          <p class="subtitle">MUYUN · CLOUD HERD</p>
-          <p class="title-copy">经营一座高原牧场，撑过十三个星期。<br />草畜平衡、雪灾、疫病，还有你养了三年的一头牛。</p>
-          <div class="title-actions">
-            <button id="btn-new" class="pixel-btn primary">开始新的一局</button>
-            <button id="btn-continue" class="pixel-btn">继续存档</button>
-            <button id="btn-title-settings" class="pixel-btn ghost">设置</button>
-          </div>
-          <p class="title-hint">WASD / 方向键移动 · E 互动 · 手机横屏游玩</p>
+          <h1>牧云</h1><p class="title-tagline">山野有时，放牧有度。</p>
+          <p class="title-copy">在高原安顿一座牧场。<br />照料牛羊，养护草地，走过十三周四季。</p>
+          <div class="title-actions"><button id="btn-new" class="pixel-btn primary">开始新的一局</button><button id="btn-continue" class="pixel-btn">继续存档</button></div>
+          <div class="title-actions challenge-actions"><button id="btn-winter" class="pixel-btn">越冬挑战 · 四周</button><button id="btn-continue-winter" class="text-btn">继续挑战</button></div>
+          <p id="save-status" class="save-status">还没有存档，从这个春天开始吧。</p>
         </div>
-        <div class="title-badge">v0.1 骨架 · 青海大学动物科学</div>
+        <footer class="title-footer"><span>一座牧场，十三周四季。</span><span>键鼠游玩 / 触屏横屏</span></footer>
       </section>
-
       <div id="hud" class="hidden">
-        <div class="hud-bar">
-          <div class="hud-pill time-pill">
-            <span id="hud-week">第 1 周</span>
-            <em id="hud-season">春季</em>
+        <header class="hud-bar">
+          <div class="ranch-identity"><span class="ranch-wordmark">牧云</span><div><span id="hud-season">春季</span><span id="hud-weather">晴朗</span></div></div>
+          <button id="btn-overview-top" class="calendar-chip" aria-label="查看本周概览"><b id="hud-week">第 1 周</b><span>/ 13 周</span><div id="week-track" class="week-track" aria-hidden="true"></div></button>
+          <div class="hud-resources" aria-label="牧场资源">
+            <div class="resource"><span>现金</span><b><small>¥</small> <span id="hud-money">12,000</span></b></div>
+            <div class="resource"><span>干草储备</span><b><span id="hud-hay">2,200</span> <small>kg</small></b></div>
+            <div class="resource"><span>存栏</span><b><span id="hud-herd">50</span> <small>头</small></b></div>
+            <div class="resource resource-reputation"><span>口碑</span><b><span id="hud-reputation">50</span> <small>/ 100</small></b></div>
           </div>
-          <div class="hud-pill stats-pill">
-            <span>¥ <b id="hud-money">12,000</b></span>
-            <span class="divider"></span>
-            <span>草 <b id="hud-hay">2200</b></span>
-            <span class="divider"></span>
-            <span>畜 <b id="hud-herd">50</b></span>
-            <span class="divider"></span>
-            <span>口碑 <b id="hud-reputation">50</b></span>
-            <span class="divider"></span>
-            <span>行动 <b id="hud-actions">3</b></span>
-          </div>
-          <div class="hud-actions">
-            <button id="btn-end-week" class="pixel-btn tiny primary">结束本周</button>
-            <button id="btn-settings" class="pixel-btn tiny">设置</button>
-          </div>
-        </div>
-        <div id="quest-line"><span>提示</span><b id="hint-text">先看看畜群，再决定这一周怎么安排</b></div>
+          <button id="btn-settings" class="text-btn hud-settings">设置</button>
+        </header>
+        <button id="btn-overview-risk" class="hud-risk" data-tone="info" aria-label="查看本周风险与安排"><span id="hud-risk-text">查看本周安排</span><span aria-hidden="true">详情 ›</span></button>
+        <aside class="week-note">
+          <div class="note-heading"><h2>这一周的牧场</h2><button id="btn-overview" class="text-btn">查看详情</button></div>
+          <p id="hint-text">先看看畜群，再决定这一周怎么安排。</p>
+          <div class="feed-summary"><span>预计需补干草</span><b><span id="hud-feed-need">0</span> <small>kg</small></b><span id="hud-feed-status" class="feed-status">储备充足</span></div>
+          <p id="hud-objective" class="note-foot">先安排放牧，再补足饲草。</p>
+        </aside>
+        <nav class="ranch-nav" aria-label="牧场经营">
+          <button data-panel="herd" class="nav-item"><span class="nav-art art-herd" aria-hidden="true"></span><span>畜群<small>照料与繁育</small></span><kbd>1</kbd></button>
+          <button data-panel="pasture" class="nav-item"><span class="nav-art art-pasture" aria-hidden="true"></span><span>草场<small>放牧与收草</small></span><kbd>2</kbd></button>
+          <button data-panel="market" class="nav-item"><span class="nav-art art-market" aria-hidden="true"></span><span>集市<small>交易与补给</small></span><kbd>3</kbd></button>
+          <button data-panel="tech" class="nav-item"><span class="nav-art art-tech" aria-hidden="true"></span><span>科技<small>牧场服务</small></span><kbd>4</kbd></button>
+        </nav>
+        <div class="week-advance"><div class="action-points"><span>本周行动</span><b><span id="hud-actions">3</span><small> / <span id="hud-action-limit">3</span></small></b></div><button id="btn-end-week" class="pixel-btn primary">结束本周</button></div>
         <div id="prompt" class="hidden"><kbd>E</kbd><span id="prompt-text"></span></div>
-        <div id="joystick" class="joystick"><div id="joystick-knob"></div></div>
-        <button id="btn-interact" class="interact-btn">互动</button>
-        <div id="controls-hint">WASD 移动 · E 互动 · ESC 设置</div>
+        <div id="joystick" class="joystick" aria-label="移动摇杆"><div id="joystick-knob"></div></div><button id="btn-interact" class="interact-btn">互动</button>
+        <div id="controls-hint"><span><kbd>WASD</kbd> 移动</span><span><kbd>E</kbd> 互动</span><button id="btn-fieldnotes" class="text-btn">高原手记</button><button id="btn-ranch-guide" class="text-btn">玩法说明</button></div>
       </div>
-
-      <div id="dialogue" class="hidden">
-        <div class="dialogue-card">
-          <div id="dialogue-speaker">牧民</div>
-          <p id="dialogue-text"></p>
-          <div id="dialogue-choices"></div>
-          <div class="dialogue-next">点击 / E 继续 ▾</div>
-        </div>
-      </div>
-
-      <div id="modal-root" class="hidden">
-        <div class="modal-backdrop"></div>
-        <div class="modal-card" id="modal-card" role="dialog" aria-modal="true"></div>
-      </div>
-
-      <div id="toast-root"></div>
-      <div id="fade"></div>
-
-      <section id="rotate-hint" class="screen">
-        <div class="rotate-icon">▭</div>
-        <h2>请把手机横过来</h2>
-        <p>牧云为横屏设计，旋转后体验更好。</p>
-      </section>
+      <div id="dialogue" class="hidden"><div class="dialogue-card"><div id="dialogue-speaker">牧民</div><p id="dialogue-text"></p><div id="dialogue-choices"></div><div class="dialogue-next">点击或按 E 继续</div></div></div>
+      <div id="modal-root" class="hidden"><div class="modal-backdrop"></div><div class="modal-card" id="modal-card" role="dialog" aria-modal="true" aria-labelledby="modal-title" tabindex="-1"></div></div>
+      <div id="toast-root" role="status" aria-live="polite" aria-atomic="false"></div><div id="fade" aria-hidden="true"></div>
+      <section id="rotate-hint" class="screen"><div class="rotate-device" aria-hidden="true"></div><h2>把牧场横过来看</h2><p>横屏后，草场和经营工具会完整展开。</p></section>
     </div>
     <script type="module" src="/src/main.ts"></script>
   </body>

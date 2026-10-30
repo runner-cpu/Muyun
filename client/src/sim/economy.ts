@@ -55,7 +55,7 @@ export function sellAnimals(
     if (!wanted.has(animal.id) || !animal.alive) return animal;
     revenue += animalPrice(animal, season);
     sold += 1;
-    return { ...animal, alive: false };
+    return { ...animal, alive: false, exitReason: 'sold' as const };
   });
   return { animals: next, revenue, sold };
 }

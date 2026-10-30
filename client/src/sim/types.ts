@@ -26,6 +26,50 @@ export interface Animal {
   lactating: boolean;
   collar: boolean;
   alive: boolean;
+  exitReason?: 'sold' | 'death';
+  exitWeek?: number;
+}
+
+export type ScenarioId = 'year' | 'winter-challenge-v1';
+export const SIM_VERSION = 'decision-v2';
+
+export interface RunMetrics {
+  week: number;
+  money: number;
+  hayKg: number;
+  herdValue: number;
+  netAssets: number;
+  aliveCount: number;
+  sheepUnits: number;
+  averageBcs: number;
+  healthyCount: number;
+  grassKg: number;
+  averageDegradation: number;
+  /** Cumulative known exits; assessment subtracts the baseline. */
+  deaths: number;
+  sold: number;
+  /** Total animal records, so change from baseline counts new births. */
+  population: number;
+  weeklyFeedKg: number;
+  weeklyCost: number;
+}
+
+export type Decision = { kind: 'action'; action: Action } | { kind: 'event'; cardId: string; choiceId: string };
+export interface WeekRecord {
+  week: number;
+  season: Season;
+  decisions: Decision[];
+  metrics: RunMetrics;
+  collars: Record<string, number>;
+}
+export type ReplayOrigin = Omit<RunState, 'tracking'>;
+export interface RunTracking {
+  version: string;
+  provenance: 'new-run' | 'continued';
+  origin: ReplayOrigin;
+  baseline: RunMetrics;
+  weeks: WeekRecord[];
+  pending: Decision[];
 }
 
 export interface PastureCell {
@@ -36,6 +80,8 @@ export interface PastureCell {
   degradation: number;
   restedWeeks: number;
   grazing: boolean;
+  /** Cut for hay during the current week; resets after settlement. */
+  harvested?: boolean;
 }
 
 export interface Effect {
@@ -82,6 +128,8 @@ export interface LogEntry {
 }
 
 export interface RunState {
+  scenario?: ScenarioId;
+  tracking?: RunTracking;
   seed: number;
   week: number;
   season: Season;

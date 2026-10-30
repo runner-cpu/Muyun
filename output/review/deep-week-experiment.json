@@ -1,0 +1,1249 @@
+{
+  "schema": "muyun-week-experiment-v1",
+  "plannerVersion": "beam-profile-v2",
+  "simulationVersion": "decision-v2",
+  "source": {
+    "kind": "hypothetical-current-week",
+    "description": "从可见当前状态独立试算；不含真实经营轨迹和未来随机结果。"
+  },
+  "method": {
+    "search": "beam-search",
+    "width": 24,
+    "maximumDepth": 5,
+    "maximumCandidates": 16,
+    "maximumExpandedPerProfile": 1552,
+    "profiles": {
+      "balanced": {
+        "id": "balanced",
+        "label": "均衡经营",
+        "description": "兼顾本周饲草、草场、健康与资产。",
+        "weights": {
+          "feed": 45,
+          "ecology": 20,
+          "health": 20,
+          "value": 15
+        }
+      },
+      "ecology": {
+        "id": "ecology",
+        "label": "草场优先",
+        "description": "在饲草和现金条件满足后，更重视草场退化。",
+        "weights": {
+          "feed": 45,
+          "ecology": 35,
+          "health": 15,
+          "value": 5
+        }
+      },
+      "assets": {
+        "id": "assets",
+        "label": "资产优先",
+        "description": "在饲草和现金条件满足后，更重视本周净资产。",
+        "weights": {
+          "feed": 45,
+          "ecology": 10,
+          "health": 15,
+          "value": 30
+        }
+      }
+    },
+    "constraints": {
+      "availableActions": 3,
+      "minimumRetainedSheepUnits": 39,
+      "safeFeedGapToleranceKg": 0.000001,
+      "settlementCashMustBePositive": true,
+      "pastureUsesPerWeek": 1,
+      "canStopEarly": true
+    }
+  },
+  "input": {
+    "scenario": "winter-challenge-v1",
+    "seed": 20261030,
+    "week": 10,
+    "season": "winter",
+    "money": 6000,
+    "hayKg": 2200,
+    "labor": 2,
+    "reputation": 50,
+    "animals": [
+      {
+        "id": "yak-1",
+        "tag": "B-001",
+        "species": "yak",
+        "sex": "female",
+        "ageWeeks": 104,
+        "weightKg": 249,
+        "bcs": 3,
+        "health": "healthy",
+        "pregnant": false,
+        "lactating": false,
+        "collar": true,
+        "alive": true
+      },
+      {
+        "id": "yak-2",
+        "tag": "B-002",
+        "species": "yak",
+        "sex": "female",
+        "ageWeeks": 130,
+        "weightKg": 270,
+        "bcs": 3,
+        "health": "healthy",
+        "pregnant": false,
+        "lactating": false,
+        "collar": true,
+        "alive": true
+      },
+      {
+        "id": "yak-3",
+        "tag": "B-003",
+        "species": "yak",
+        "sex": "female",
+        "ageWeeks": 156,
+        "weightKg": 284,
+        "bcs": 3,
+        "health": "healthy",
+        "pregnant": false,
+        "lactating": false,
+        "collar": true,
+        "alive": true
+      },
+      {
+        "id": "yak-4",
+        "tag": "B-004",
+        "species": "yak",
+        "sex": "female",
+        "ageWeeks": 182,
+        "weightKg": 293,
+        "bcs": 3,
+        "health": "healthy",
+        "pregnant": false,
+        "lactating": false,
+        "collar": true,
+        "alive": true
+      },
+      {
+        "id": "yak-5",
+        "tag": "B-005",
+        "species": "yak",
+        "sex": "female",
+        "ageWeeks": 208,
+        "weightKg": 300,
+        "bcs": 3,
+        "health": "healthy",
+        "pregnant": false,
+        "lactating": false,
+        "collar": true,
+        "alive": true
+      },
+      {
+        "id": "yak-6",
+        "tag": "B-006",
+        "species": "yak",
+        "sex": "female",
+        "ageWeeks": 234,
+        "weightKg": 300,
+        "bcs": 3,
+        "health": "healthy",
+        "pregnant": false,
+        "lactating": false,
+        "collar": true,
+        "alive": true
+      },
+      {
+        "id": "yak-7",
+        "tag": "B-007",
+        "species": "yak",
+        "sex": "female",
+        "ageWeeks": 260,
+        "weightKg": 300,
+        "bcs": 3,
+        "health": "healthy",
+        "pregnant": false,
+        "lactating": false,
+        "collar": true,
+        "alive": true
+      },
+      {
+        "id": "yak-8",
+        "tag": "B-008",
+        "species": "yak",
+        "sex": "female",
+        "ageWeeks": 286,
+        "weightKg": 300,
+        "bcs": 3,
+        "health": "healthy",
+        "pregnant": false,
+        "lactating": false,
+        "collar": true,
+        "alive": true
+      },
+      {
+        "id": "yak-9",
+        "tag": "B-009",
+        "species": "yak",
+        "sex": "female",
+        "ageWeeks": 104,
+        "weightKg": 249,
+        "bcs": 3,
+        "health": "healthy",
+        "pregnant": false,
+        "lactating": false,
+        "collar": true,
+        "alive": true
+      },
+      {
+        "id": "yak-10",
+        "tag": "B-010",
+        "species": "yak",
+        "sex": "female",
+        "ageWeeks": 130,
+        "weightKg": 270,
+        "bcs": 3,
+        "health": "healthy",
+        "pregnant": false,
+        "lactating": false,
+        "collar": true,
+        "alive": true
+      },
+      {
+        "id": "yak-11",
+        "tag": "B-011",
+        "species": "yak",
+        "sex": "male",
+        "ageWeeks": 156,
+        "weightKg": 397,
+        "bcs": 3,
+        "health": "healthy",
+        "pregnant": false,
+        "lactating": false,
+        "collar": false,
+        "alive": true
+      },
+      {
+        "id": "yak-12",
+        "tag": "B-012",
+        "species": "yak",
+        "sex": "male",
+        "ageWeeks": 182,
+        "weightKg": 411,
+        "bcs": 3,
+        "health": "healthy",
+        "pregnant": false,
+        "lactating": false,
+        "collar": false,
+        "alive": true
+      },
+      {
+        "id": "sheep-1",
+        "tag": "S-001",
+        "species": "sheep",
+        "sex": "female",
+        "ageWeeks": 39,
+        "weightKg": 46,
+        "bcs": 3,
+        "health": "healthy",
+        "pregnant": false,
+        "lactating": false,
+        "collar": false,
+        "alive": true
+      },
+      {
+        "id": "sheep-2",
+        "tag": "S-002",
+        "species": "sheep",
+        "sex": "female",
+        "ageWeeks": 52,
+        "weightKg": 50,
+        "bcs": 3,
+        "health": "healthy",
+        "pregnant": false,
+        "lactating": false,
+        "collar": false,
+        "alive": true
+      },
+      {
+        "id": "sheep-3",
+        "tag": "S-003",
+        "species": "sheep",
+        "sex": "female",
+        "ageWeeks": 65,
+        "weightKg": 53,
+        "bcs": 3,
+        "health": "healthy",
+        "pregnant": false,
+        "lactating": false,
+        "collar": false,
+        "alive": true
+      },
+      {
+        "id": "sheep-4",
+        "tag": "S-004",
+        "species": "sheep",
+        "sex": "female",
+        "ageWeeks": 78,
+        "weightKg": 55,
+        "bcs": 3,
+        "health": "healthy",
+        "pregnant": false,
+        "lactating": false,
+        "collar": false,
+        "alive": true
+      },
+      {
+        "id": "sheep-5",
+        "tag": "S-005",
+        "species": "sheep",
+        "sex": "female",
+        "ageWeeks": 91,
+        "weightKg": 55,
+        "bcs": 3,
+        "health": "healthy",
+        "pregnant": false,
+        "lactating": false,
+        "collar": false,
+        "alive": true
+      },
+      {
+        "id": "sheep-6",
+        "tag": "S-006",
+        "species": "sheep",
+        "sex": "female",
+        "ageWeeks": 104,
+        "weightKg": 55,
+        "bcs": 3,
+        "health": "healthy",
+        "pregnant": false,
+        "lactating": false,
+        "collar": false,
+        "alive": true
+      },
+      {
+        "id": "sheep-7",
+        "tag": "S-007",
+        "species": "sheep",
+        "sex": "female",
+        "ageWeeks": 39,
+        "weightKg": 46,
+        "bcs": 3,
+        "health": "healthy",
+        "pregnant": false,
+        "lactating": false,
+        "collar": false,
+        "alive": true
+      },
+      {
+        "id": "sheep-8",
+        "tag": "S-008",
+        "species": "sheep",
+        "sex": "female",
+        "ageWeeks": 52,
+        "weightKg": 50,
+        "bcs": 3,
+        "health": "healthy",
+        "pregnant": false,
+        "lactating": false,
+        "collar": false,
+        "alive": true
+      },
+      {
+        "id": "sheep-9",
+        "tag": "S-009",
+        "species": "sheep",
+        "sex": "female",
+        "ageWeeks": 65,
+        "weightKg": 53,
+        "bcs": 3,
+        "health": "healthy",
+        "pregnant": false,
+        "lactating": false,
+        "collar": false,
+        "alive": true
+      },
+      {
+        "id": "sheep-10",
+        "tag": "S-010",
+        "species": "sheep",
+        "sex": "female",
+        "ageWeeks": 78,
+        "weightKg": 55,
+        "bcs": 3,
+        "health": "healthy",
+        "pregnant": false,
+        "lactating": false,
+        "collar": false,
+        "alive": true
+      },
+      {
+        "id": "sheep-11",
+        "tag": "S-011",
+        "species": "sheep",
+        "sex": "female",
+        "ageWeeks": 91,
+        "weightKg": 55,
+        "bcs": 3,
+        "health": "healthy",
+        "pregnant": false,
+        "lactating": false,
+        "collar": false,
+        "alive": true
+      },
+      {
+        "id": "sheep-12",
+        "tag": "S-012",
+        "species": "sheep",
+        "sex": "female",
+        "ageWeeks": 104,
+        "weightKg": 55,
+        "bcs": 3,
+        "health": "healthy",
+        "pregnant": false,
+        "lactating": false,
+        "collar": false,
+        "alive": true
+      },
+      {
+        "id": "sheep-13",
+        "tag": "S-013",
+        "species": "sheep",
+        "sex": "female",
+        "ageWeeks": 39,
+        "weightKg": 46,
+        "bcs": 3,
+        "health": "healthy",
+        "pregnant": false,
+        "lactating": false,
+        "collar": false,
+        "alive": true
+      },
+      {
+        "id": "sheep-14",
+        "tag": "S-014",
+        "species": "sheep",
+        "sex": "female",
+        "ageWeeks": 52,
+        "weightKg": 50,
+        "bcs": 3,
+        "health": "healthy",
+        "pregnant": false,
+        "lactating": false,
+        "collar": false,
+        "alive": true
+      },
+      {
+        "id": "sheep-15",
+        "tag": "S-015",
+        "species": "sheep",
+        "sex": "female",
+        "ageWeeks": 65,
+        "weightKg": 53,
+        "bcs": 3,
+        "health": "healthy",
+        "pregnant": false,
+        "lactating": false,
+        "collar": false,
+        "alive": true
+      },
+      {
+        "id": "sheep-16",
+        "tag": "S-016",
+        "species": "sheep",
+        "sex": "male",
+        "ageWeeks": 78,
+        "weightKg": 70,
+        "bcs": 3,
+        "health": "healthy",
+        "pregnant": false,
+        "lactating": false,
+        "collar": false,
+        "alive": true
+      },
+      {
+        "id": "sheep-17",
+        "tag": "S-017",
+        "species": "sheep",
+        "sex": "male",
+        "ageWeeks": 91,
+        "weightKg": 70,
+        "bcs": 3,
+        "health": "healthy",
+        "pregnant": false,
+        "lactating": false,
+        "collar": false,
+        "alive": true
+      },
+      {
+        "id": "sheep-18",
+        "tag": "S-018",
+        "species": "sheep",
+        "sex": "male",
+        "ageWeeks": 104,
+        "weightKg": 70,
+        "bcs": 3,
+        "health": "healthy",
+        "pregnant": false,
+        "lactating": false,
+        "collar": false,
+        "alive": true
+      }
+    ],
+    "pasture": [
+      {
+        "id": "P1",
+        "areaHa": 2,
+        "biomassKgPerHa": 700,
+        "degradation": 0.1,
+        "restedWeeks": 0,
+        "grazing": false,
+        "harvested": false
+      },
+      {
+        "id": "P2",
+        "areaHa": 2,
+        "biomassKgPerHa": 560,
+        "degradation": 0.18,
+        "restedWeeks": 0,
+        "grazing": false,
+        "harvested": false
+      },
+      {
+        "id": "P3",
+        "areaHa": 2,
+        "biomassKgPerHa": 420,
+        "degradation": 0.25,
+        "restedWeeks": 0,
+        "grazing": false,
+        "harvested": false
+      },
+      {
+        "id": "P4",
+        "areaHa": 2,
+        "biomassKgPerHa": 320,
+        "degradation": 0.32,
+        "restedWeeks": 0,
+        "grazing": false,
+        "harvested": false
+      }
+    ],
+    "actionsLeft": 3,
+    "grazedKg": 0,
+    "weather": "clear",
+    "tech": {
+      "collared": 10,
+      "vaccinated": false,
+      "scanned": true
+    },
+    "usedEvents": [],
+    "flags": {},
+    "log": [],
+    "ended": false,
+    "ending": null
+  },
+  "output": {
+    "plannerVersion": "beam-profile-v2",
+    "simulationVersion": "decision-v2",
+    "inputFingerprint": "fnv1a-42376d72",
+    "week": 10,
+    "seed": 20261030,
+    "lockedReason": null,
+    "baseline": {
+      "metrics": {
+        "week": 10,
+        "money": 5420,
+        "hayKg": 1237,
+        "herdValue": 96578,
+        "netAssets": 104967,
+        "aliveCount": 30,
+        "sheepUnits": 78,
+        "averageBcs": 3.0499999999999985,
+        "healthyCount": 30,
+        "grassKg": 4028.96,
+        "averageDegradation": 0.21250000000000002,
+        "deaths": 0,
+        "sold": 0,
+        "population": 30,
+        "weeklyFeedKg": 964.1054499999998,
+        "weeklyCost": 580
+      },
+      "feedNeedKg": 963.4240000000001,
+      "feedGapKg": 0,
+      "feedCoverage": 1,
+      "safe": true
+    },
+    "plans": [
+      {
+        "profile": "balanced",
+        "components": {
+          "feed": {
+            "value": 1,
+            "weight": 45,
+            "points": 45
+          },
+          "ecology": {
+            "value": 0.7657968749999999,
+            "weight": 20,
+            "points": 15.315937499999999
+          },
+          "health": {
+            "value": 1,
+            "weight": 20,
+            "points": 20
+          },
+          "value": {
+            "value": 0.49569999442161433,
+            "weight": 15,
+            "points": 7.435499916324215
+          }
+        },
+        "actions": [
+          {
+            "kind": "sell",
+            "animalIds": [
+              "yak-8"
+            ]
+          },
+          {
+            "kind": "graze",
+            "cellId": "P1"
+          },
+          {
+            "kind": "cut-hay",
+            "cellId": "P2"
+          }
+        ],
+        "score": 87.75143741632421,
+        "metrics": {
+          "week": 10,
+          "money": 12423,
+          "hayKg": 2246,
+          "herdValue": 89560,
+          "netAssets": 107373,
+          "aliveCount": 29,
+          "sheepUnits": 73,
+          "averageBcs": 3.0499999999999985,
+          "healthyCount": 29,
+          "grassKg": 3069.632,
+          "averageDegradation": 0.234203125,
+          "deaths": 0,
+          "sold": 1,
+          "population": 30,
+          "weeklyFeedKg": 906.3554499999999,
+          "weeklyCost": 577
+        },
+        "expanded": 401,
+        "elapsedMs": 14.699999988079071,
+        "lockedReason": null,
+        "safe": true,
+        "explanation": "参考方案覆盖本周饲草，确定性结算后现金 12423 元；可提前停止，不必用完行动。评分按 45F + 20E + 20H + 15V，保留试算起点至少一半羊单位。未计未来天气、事件与疫病，有限搜索不保证最优。",
+        "feedNeedKg": 905.6740000000001,
+        "feedGapKg": 0,
+        "feedCoverage": 1,
+        "sameActionsAs": null,
+        "steps": [
+          {
+            "index": 1,
+            "action": {
+              "kind": "sell",
+              "animalIds": [
+                "yak-8"
+              ]
+            },
+            "cost": 0,
+            "income": 7000,
+            "immediate": {
+              "week": 10,
+              "money": 13000,
+              "hayKg": 2200,
+              "herdValue": 89278,
+              "netAssets": 107558,
+              "aliveCount": 29,
+              "sheepUnits": 73,
+              "averageBcs": 3,
+              "healthyCount": 29,
+              "grassKg": 4000,
+              "averageDegradation": 0.21250000000000002,
+              "deaths": 0,
+              "sold": 1,
+              "population": 30,
+              "weeklyFeedKg": 905.6740000000001,
+              "weeklyCost": 577
+            },
+            "settled": {
+              "week": 10,
+              "money": 12423,
+              "hayKg": 1294,
+              "herdValue": 89560,
+              "netAssets": 105089,
+              "aliveCount": 29,
+              "sheepUnits": 73,
+              "averageBcs": 3.0499999999999985,
+              "healthyCount": 29,
+              "grassKg": 4028.96,
+              "averageDegradation": 0.21250000000000002,
+              "deaths": 0,
+              "sold": 1,
+              "population": 30,
+              "weeklyFeedKg": 906.3554499999999,
+              "weeklyCost": 577
+            },
+            "feedNeedKg": 905.6740000000001,
+            "feedGapKg": 0
+          },
+          {
+            "index": 2,
+            "action": {
+              "kind": "graze",
+              "cellId": "P1"
+            },
+            "cost": 0,
+            "income": 0,
+            "immediate": {
+              "week": 10,
+              "money": 13000,
+              "hayKg": 2200,
+              "herdValue": 89278,
+              "netAssets": 107558,
+              "aliveCount": 29,
+              "sheepUnits": 73,
+              "averageBcs": 3,
+              "healthyCount": 29,
+              "grassKg": 3160,
+              "averageDegradation": 0.234203125,
+              "deaths": 0,
+              "sold": 1,
+              "population": 30,
+              "weeklyFeedKg": 905.6740000000001,
+              "weeklyCost": 577
+            },
+            "settled": {
+              "week": 10,
+              "money": 12423,
+              "hayKg": 2134,
+              "herdValue": 89560,
+              "netAssets": 107105,
+              "aliveCount": 29,
+              "sheepUnits": 73,
+              "averageBcs": 3.0499999999999985,
+              "healthyCount": 29,
+              "grassKg": 3187.2000000000003,
+              "averageDegradation": 0.234203125,
+              "deaths": 0,
+              "sold": 1,
+              "population": 30,
+              "weeklyFeedKg": 906.3554499999999,
+              "weeklyCost": 577
+            },
+            "feedNeedKg": 905.6740000000001,
+            "feedGapKg": 0
+          },
+          {
+            "index": 3,
+            "action": {
+              "kind": "cut-hay",
+              "cellId": "P2"
+            },
+            "cost": 0,
+            "income": 0,
+            "immediate": {
+              "week": 10,
+              "money": 13000,
+              "hayKg": 2312,
+              "herdValue": 89278,
+              "netAssets": 107827,
+              "aliveCount": 29,
+              "sheepUnits": 73,
+              "averageBcs": 3,
+              "healthyCount": 29,
+              "grassKg": 3048,
+              "averageDegradation": 0.234203125,
+              "deaths": 0,
+              "sold": 1,
+              "population": 30,
+              "weeklyFeedKg": 905.6740000000001,
+              "weeklyCost": 577
+            },
+            "settled": {
+              "week": 10,
+              "money": 12423,
+              "hayKg": 2246,
+              "herdValue": 89560,
+              "netAssets": 107373,
+              "aliveCount": 29,
+              "sheepUnits": 73,
+              "averageBcs": 3.0499999999999985,
+              "healthyCount": 29,
+              "grassKg": 3069.632,
+              "averageDegradation": 0.234203125,
+              "deaths": 0,
+              "sold": 1,
+              "population": 30,
+              "weeklyFeedKg": 906.3554499999999,
+              "weeklyCost": 577
+            },
+            "feedNeedKg": 905.6740000000001,
+            "feedGapKg": 0
+          }
+        ],
+        "delta": {
+          "money": 7003,
+          "hayKg": 1009,
+          "netAssets": 2406,
+          "averageBcs": 0,
+          "averageDegradation": 0.02170312499999999,
+          "grassKg": -959.328,
+          "sheepUnits": -5,
+          "feedGapKg": 0
+        }
+      },
+      {
+        "profile": "ecology",
+        "components": {
+          "feed": {
+            "value": 1,
+            "weight": 45,
+            "points": 45
+          },
+          "ecology": {
+            "value": 0.7875,
+            "weight": 35,
+            "points": 27.5625
+          },
+          "health": {
+            "value": 1,
+            "weight": 15,
+            "points": 15
+          },
+          "value": {
+            "value": 0.458510756986928,
+            "weight": 5,
+            "points": 2.29255378493464
+          }
+        },
+        "actions": [
+          {
+            "kind": "cut-hay",
+            "cellId": "P1"
+          },
+          {
+            "kind": "cut-hay",
+            "cellId": "P2"
+          },
+          {
+            "kind": "cut-hay",
+            "cellId": "P3"
+          }
+        ],
+        "score": 89.85505378493464,
+        "metrics": {
+          "week": 10,
+          "money": 5420,
+          "hayKg": 1573,
+          "herdValue": 96578,
+          "netAssets": 105773,
+          "aliveCount": 30,
+          "sheepUnits": 78,
+          "averageBcs": 3.0499999999999985,
+          "healthyCount": 30,
+          "grassKg": 3676.032,
+          "averageDegradation": 0.21250000000000002,
+          "deaths": 0,
+          "sold": 0,
+          "population": 30,
+          "weeklyFeedKg": 964.1054499999998,
+          "weeklyCost": 580
+        },
+        "expanded": 405,
+        "elapsedMs": 11.5,
+        "lockedReason": null,
+        "safe": true,
+        "explanation": "参考方案覆盖本周饲草，确定性结算后现金 5420 元；可提前停止，不必用完行动。评分按 45F + 35E + 15H + 5V，保留试算起点至少一半羊单位。未计未来天气、事件与疫病，有限搜索不保证最优。",
+        "feedNeedKg": 963.4240000000001,
+        "feedGapKg": 0,
+        "feedCoverage": 1,
+        "sameActionsAs": null,
+        "steps": [
+          {
+            "index": 1,
+            "action": {
+              "kind": "cut-hay",
+              "cellId": "P1"
+            },
+            "cost": 0,
+            "income": 0,
+            "immediate": {
+              "week": 10,
+              "money": 6000,
+              "hayKg": 2340,
+              "herdValue": 96278,
+              "netAssets": 107894,
+              "aliveCount": 30,
+              "sheepUnits": 78,
+              "averageBcs": 3,
+              "healthyCount": 30,
+              "grassKg": 3860,
+              "averageDegradation": 0.21250000000000002,
+              "deaths": 0,
+              "sold": 0,
+              "population": 30,
+              "weeklyFeedKg": 963.4240000000001,
+              "weeklyCost": 580
+            },
+            "settled": {
+              "week": 10,
+              "money": 5420,
+              "hayKg": 1377,
+              "herdValue": 96578,
+              "netAssets": 105303,
+              "aliveCount": 30,
+              "sheepUnits": 78,
+              "averageBcs": 3.0499999999999985,
+              "healthyCount": 30,
+              "grassKg": 3887.2000000000003,
+              "averageDegradation": 0.21250000000000002,
+              "deaths": 0,
+              "sold": 0,
+              "population": 30,
+              "weeklyFeedKg": 964.1054499999998,
+              "weeklyCost": 580
+            },
+            "feedNeedKg": 963.4240000000001,
+            "feedGapKg": 0
+          },
+          {
+            "index": 2,
+            "action": {
+              "kind": "cut-hay",
+              "cellId": "P2"
+            },
+            "cost": 0,
+            "income": 0,
+            "immediate": {
+              "week": 10,
+              "money": 6000,
+              "hayKg": 2452,
+              "herdValue": 96278,
+              "netAssets": 108163,
+              "aliveCount": 30,
+              "sheepUnits": 78,
+              "averageBcs": 3,
+              "healthyCount": 30,
+              "grassKg": 3748,
+              "averageDegradation": 0.21250000000000002,
+              "deaths": 0,
+              "sold": 0,
+              "population": 30,
+              "weeklyFeedKg": 963.4240000000001,
+              "weeklyCost": 580
+            },
+            "settled": {
+              "week": 10,
+              "money": 5420,
+              "hayKg": 1489,
+              "herdValue": 96578,
+              "netAssets": 105572,
+              "aliveCount": 30,
+              "sheepUnits": 78,
+              "averageBcs": 3.0499999999999985,
+              "healthyCount": 30,
+              "grassKg": 3769.632,
+              "averageDegradation": 0.21250000000000002,
+              "deaths": 0,
+              "sold": 0,
+              "population": 30,
+              "weeklyFeedKg": 964.1054499999998,
+              "weeklyCost": 580
+            },
+            "feedNeedKg": 963.4240000000001,
+            "feedGapKg": 0
+          },
+          {
+            "index": 3,
+            "action": {
+              "kind": "cut-hay",
+              "cellId": "P3"
+            },
+            "cost": 0,
+            "income": 0,
+            "immediate": {
+              "week": 10,
+              "money": 6000,
+              "hayKg": 2536,
+              "herdValue": 96278,
+              "netAssets": 108364,
+              "aliveCount": 30,
+              "sheepUnits": 78,
+              "averageBcs": 3,
+              "healthyCount": 30,
+              "grassKg": 3664,
+              "averageDegradation": 0.21250000000000002,
+              "deaths": 0,
+              "sold": 0,
+              "population": 30,
+              "weeklyFeedKg": 963.4240000000001,
+              "weeklyCost": 580
+            },
+            "settled": {
+              "week": 10,
+              "money": 5420,
+              "hayKg": 1573,
+              "herdValue": 96578,
+              "netAssets": 105773,
+              "aliveCount": 30,
+              "sheepUnits": 78,
+              "averageBcs": 3.0499999999999985,
+              "healthyCount": 30,
+              "grassKg": 3676.032,
+              "averageDegradation": 0.21250000000000002,
+              "deaths": 0,
+              "sold": 0,
+              "population": 30,
+              "weeklyFeedKg": 964.1054499999998,
+              "weeklyCost": 580
+            },
+            "feedNeedKg": 963.4240000000001,
+            "feedGapKg": 0
+          }
+        ],
+        "delta": {
+          "money": 0,
+          "hayKg": 336,
+          "netAssets": 806,
+          "averageBcs": 0,
+          "averageDegradation": 0,
+          "grassKg": -352.9279999999999,
+          "sheepUnits": 0,
+          "feedGapKg": 0
+        }
+      },
+      {
+        "profile": "assets",
+        "components": {
+          "feed": {
+            "value": 1,
+            "weight": 45,
+            "points": 45
+          },
+          "ecology": {
+            "value": 0.76415625,
+            "weight": 10,
+            "points": 7.6415625
+          },
+          "health": {
+            "value": 1,
+            "weight": 15,
+            "points": 15
+          },
+          "value": {
+            "value": 0.4975594562933487,
+            "weight": 30,
+            "points": 14.92678368880046
+          }
+        },
+        "actions": [
+          {
+            "kind": "cut-hay",
+            "cellId": "P2"
+          },
+          {
+            "kind": "graze",
+            "cellId": "P1"
+          },
+          {
+            "kind": "cut-hay",
+            "cellId": "P3"
+          }
+        ],
+        "score": 82.56834618880045,
+        "metrics": {
+          "week": 10,
+          "money": 5420,
+          "hayKg": 2273,
+          "herdValue": 96578,
+          "netAssets": 107453,
+          "aliveCount": 30,
+          "sheepUnits": 78,
+          "averageBcs": 3.0499999999999985,
+          "healthyCount": 30,
+          "grassKg": 2976.032,
+          "averageDegradation": 0.23584375000000002,
+          "deaths": 0,
+          "sold": 0,
+          "population": 30,
+          "weeklyFeedKg": 964.1054499999998,
+          "weeklyCost": 580
+        },
+        "expanded": 397,
+        "elapsedMs": 8.699999988079071,
+        "lockedReason": null,
+        "safe": true,
+        "explanation": "参考方案覆盖本周饲草，确定性结算后现金 5420 元；可提前停止，不必用完行动。评分按 45F + 10E + 15H + 30V，保留试算起点至少一半羊单位。未计未来天气、事件与疫病，有限搜索不保证最优。",
+        "feedNeedKg": 963.4240000000001,
+        "feedGapKg": 0,
+        "feedCoverage": 1,
+        "sameActionsAs": null,
+        "steps": [
+          {
+            "index": 1,
+            "action": {
+              "kind": "cut-hay",
+              "cellId": "P2"
+            },
+            "cost": 0,
+            "income": 0,
+            "immediate": {
+              "week": 10,
+              "money": 6000,
+              "hayKg": 2312,
+              "herdValue": 96278,
+              "netAssets": 107827,
+              "aliveCount": 30,
+              "sheepUnits": 78,
+              "averageBcs": 3,
+              "healthyCount": 30,
+              "grassKg": 3888,
+              "averageDegradation": 0.21250000000000002,
+              "deaths": 0,
+              "sold": 0,
+              "population": 30,
+              "weeklyFeedKg": 963.4240000000001,
+              "weeklyCost": 580
+            },
+            "settled": {
+              "week": 10,
+              "money": 5420,
+              "hayKg": 1349,
+              "herdValue": 96578,
+              "netAssets": 105236,
+              "aliveCount": 30,
+              "sheepUnits": 78,
+              "averageBcs": 3.0499999999999985,
+              "healthyCount": 30,
+              "grassKg": 3911.3920000000003,
+              "averageDegradation": 0.21250000000000002,
+              "deaths": 0,
+              "sold": 0,
+              "population": 30,
+              "weeklyFeedKg": 964.1054499999998,
+              "weeklyCost": 580
+            },
+            "feedNeedKg": 963.4240000000001,
+            "feedGapKg": 0
+          },
+          {
+            "index": 2,
+            "action": {
+              "kind": "graze",
+              "cellId": "P1"
+            },
+            "cost": 0,
+            "income": 0,
+            "immediate": {
+              "week": 10,
+              "money": 6000,
+              "hayKg": 2312,
+              "herdValue": 96278,
+              "netAssets": 107827,
+              "aliveCount": 30,
+              "sheepUnits": 78,
+              "averageBcs": 3,
+              "healthyCount": 30,
+              "grassKg": 3048,
+              "averageDegradation": 0.23584375000000002,
+              "deaths": 0,
+              "sold": 0,
+              "population": 30,
+              "weeklyFeedKg": 963.4240000000001,
+              "weeklyCost": 580
+            },
+            "settled": {
+              "week": 10,
+              "money": 5420,
+              "hayKg": 2189,
+              "herdValue": 96578,
+              "netAssets": 107252,
+              "aliveCount": 30,
+              "sheepUnits": 78,
+              "averageBcs": 3.0499999999999985,
+              "healthyCount": 30,
+              "grassKg": 3069.632,
+              "averageDegradation": 0.23584375000000002,
+              "deaths": 0,
+              "sold": 0,
+              "population": 30,
+              "weeklyFeedKg": 964.1054499999998,
+              "weeklyCost": 580
+            },
+            "feedNeedKg": 963.4240000000001,
+            "feedGapKg": 0
+          },
+          {
+            "index": 3,
+            "action": {
+              "kind": "cut-hay",
+              "cellId": "P3"
+            },
+            "cost": 0,
+            "income": 0,
+            "immediate": {
+              "week": 10,
+              "money": 6000,
+              "hayKg": 2396,
+              "herdValue": 96278,
+              "netAssets": 108028,
+              "aliveCount": 30,
+              "sheepUnits": 78,
+              "averageBcs": 3,
+              "healthyCount": 30,
+              "grassKg": 2964,
+              "averageDegradation": 0.23584375000000002,
+              "deaths": 0,
+              "sold": 0,
+              "population": 30,
+              "weeklyFeedKg": 963.4240000000001,
+              "weeklyCost": 580
+            },
+            "settled": {
+              "week": 10,
+              "money": 5420,
+              "hayKg": 2273,
+              "herdValue": 96578,
+              "netAssets": 107453,
+              "aliveCount": 30,
+              "sheepUnits": 78,
+              "averageBcs": 3.0499999999999985,
+              "healthyCount": 30,
+              "grassKg": 2976.032,
+              "averageDegradation": 0.23584375000000002,
+              "deaths": 0,
+              "sold": 0,
+              "population": 30,
+              "weeklyFeedKg": 964.1054499999998,
+              "weeklyCost": 580
+            },
+            "feedNeedKg": 963.4240000000001,
+            "feedGapKg": 0
+          }
+        ],
+        "delta": {
+          "money": 0,
+          "hayKg": 1036,
+          "netAssets": 2486,
+          "averageBcs": 0,
+          "averageDegradation": 0.023343749999999996,
+          "grassKg": -1052.9279999999999,
+          "sheepUnits": 0,
+          "feedGapKg": 0
+        }
+      }
+    ],
+    "totalExpanded": 1203
+  },
+  "limitations": [
+    "这是当前周的假设试算，不是已发生的经营记录；不会改变真实存档、行动点或历史。",
+    "仅结算可见的饲喂、体况生长、草场恢复及维护费用；不抽取未来天气、事件、疫病或出生。",
+    "F 为本周饲草覆盖率，E 为 1−平均退化，H 为当前起点下的健康评价，V 为当前起点下的净资产评价；E 不等于最终生态分。",
+    "每种取向先优先足草且结算现金大于零的方案，再按各自权重排序；不同权重下的总分不能直接比较。",
+    "有限宽度和候选动作的束搜索不保证全局最优，也不表示全局帕累托前沿；不同取向可能得到完全相同的行动。",
+    "免疫的未来风险收益不在本周确定性模型内；结果不能证明真实牧场收益、教学效果或策略总能胜出。"
+  ]
+}

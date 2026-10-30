@@ -8,10 +8,11 @@ describe('event deck', () => {
     expect(new Set(EVENTS.map((card) => card.id)).size).toBe(12);
   });
 
-  it('gives every card two or three choices with unique ids', () => {
+  it('gives every card two to four choices with unique ids, including a fallback', () => {
     for (const card of EVENTS) {
       expect(card.choices.length).toBeGreaterThanOrEqual(2);
-      expect(card.choices.length).toBeLessThanOrEqual(3);
+      expect(card.choices.length).toBeLessThanOrEqual(4);
+      expect(card.choices.some(choice => choice.id === 'defer')).toBe(true);
       const ids = card.choices.map((choice) => choice.id);
       expect(new Set(ids).size).toBe(ids.length);
       for (const choice of card.choices) {

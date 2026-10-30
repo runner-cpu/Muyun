@@ -34,8 +34,36 @@
 **实现规则**（来自 `docs/ART_RESEARCH.md`）：
 - 草地 70% 平涂 / 20% 草簇 / 10% 花，簇跨格，不做逐像素随机。
 - 栅栏每格 1 根 4px 立柱 + 2 根 2px 横杆 + 每根横杆下 1px 阴影。
-- 动物 32×32，1px 深色轮廓 + 2–3 阶明度 + 烘焙椭圆接地影。
+- 原程序化动物单帧 32×32，1px 深色轮廓 + 2-3 阶明度 + 烘焙椭圆接地影。当前运行时使用下方单独登记的细化图集，世界显示尺寸仍为 32×32。
 - 道具单独一层渲染，避免透明像素露出背景色。
+
+## AI 生成的标题画面
+
+| 项目 | 记录 |
+|---|---|
+| 用途 | 标题页高原牧场主视觉 |
+| 生成日期 | 2026-10-30 |
+| 生成入口 | 全局命令 `C:\Users\runner\.codex\tools\codex-image.cmd` |
+| 本次模型 | `gpt-image-2.5` |
+| 生成源文件 | `output/imagegen/muyun-plateau.png` |
+| 运行时资源 | `client/public/assets/art/plateau-title.webp` |
+| 授权说明 | 项目通过图像生成服务生成的素材，使用范围依生成服务条款及适用法律确定；不列入本文件的 CC0 自制素材授权 |
+
+运行时使用压缩 WebP，生成源图独立保留，便于追溯与重新导出。生成过程遵循模型检查与图像生成接口规则，不在项目文件中保存 API 密钥。
+
+## AI 生成的细化人物与牲畜
+
+2026-10-30 通过全局命令 `C:\Users\runner\.codex\tools\codex-image.cmd`、模型 `gpt-image-2.5` 生成三套四方向图集。每套 4 行 × 4 列，行顺序为下、左、右、上，每方向四帧。人物增加帽檐、围巾、腰带和衣褶；牦牛增加肩峰、长毛、弯角与蹄；藏羊增加卷毛、黑脸和角。
+
+| 生成源文件 | 运行时资源 | 图集与显示尺寸 |
+|---|---|---|
+| `output/imagegen/herder-sheet-source.png` | `client/public/assets/sprites/herder-detailed.png` | 192×256，单帧 48×64，显示 24×32 世界单位 |
+| `output/imagegen/yak-sheet-source.png` | `client/public/assets/sprites/yak-detailed.png` | 256×256，单帧 64×64，显示 32×32 世界单位 |
+| `output/imagegen/sheep-sheet-source.png` | `client/public/assets/sprites/sheep-detailed.png` | 256×256，单帧 64×64，显示 32×32 世界单位 |
+
+`tools/normalize-ranch-sprites.py` 负责去除品红底、清理边缘、按整套共享比例进行最近邻缩放，并统一脚底锚点；处理记录保存在 `output/imagegen/ranch-sprites-normalization.json`，静态与动画预览保存在 `output/review/*-sprite-preview.{png,gif}`。新资源使用独立文件名，不会被旧 `gen-sprites.mjs` 覆盖；HUD 畜群缩略图使用同一新版牦牛素材。
+
+以上图像由生成服务生成，使用范围依生成服务条款及适用法律确定，**不列入 CC0 程序化自制素材授权**。生成遵循模型检查与 images/generations 接口规则；图像与处理记录不包含 API 密钥。
 
 ## 已移除的校园素材
 
@@ -51,17 +79,27 @@ Phase 0 删除了以下内容，完整版本见 tag `campus-v0.1`：
 
 ## 音频
 
-没有外部音频文件。`src/systems/AudioManager.ts` 用 WebAudio 振荡器合成占位
-BGM 与音效，无版权风险。后续替换为 CC0 素材时，必须登记曲名、作者、来源 URL、许可证。
+没有外部音频文件。`client/src/systems/AudioManager.ts` 用 WebAudio 振荡器合成
+BGM 与音效，没有引入第三方录音。后续替换或新增音频时，应登记曲名、作者、来源和许可证。
 
 ## 字体
 
-使用系统中文字体栈（Microsoft YaHei / PingFang SC / Noto Sans SC），未打包字体文件。
+| 项目 | 记录 |
+|---|---|
+| 字体 | Fusion Pixel Font，简体中文 12px 比例字形 |
+| 原作者 | TakWolf |
+| 本地文件 | `client/public/assets/fonts/fusion-pixel-12px.woff2` |
+| 来源 | [fusion-pixel-12px-proportional-zh_hans.otf.woff2](https://fusion-pixel-font.takwolf.com/fusion-pixel-12px-proportional-zh_hans.otf.woff2) |
+| 许可证 | SIL Open Font License 1.1（OFL 1.1） |
+| 本地许可证 | `client/public/assets/fonts/OFL.txt`，保留上游版权和完整授权文本 |
+
+该字体自托管，不依赖运行时请求外部字体服务。系统中文字体栈作为回退。字体授权独立于项目自制图像，不属于 CC0 素材。
 
 ## 待补清单
 
-- [ ] 暖棚、谷仓、棚圈、土房的立面精灵（当前用墙/屋顶瓦片拼）
-- [ ] 牦牛、藏羊的 3–4 帧行走动画（当前 2 帧 idle）
-- [ ] 季节草地变体（秋季枯黄、冬季覆雪）
+- [x] 独立谷仓立面，以及水井、柴堆、推车和晾衣绳道具
+- [x] 牦牛、藏羊四方向四帧精灵与场内游走
+- [x] 春夏秋冬草地瓦片与树木季节变化
+- [x] 标题页高原画面与自托管字体，登记来源和授权
 - [ ] CC0 风雪环境音与牛铃音效
 - [ ] 宣传截图、GIF、3 分钟演示视频

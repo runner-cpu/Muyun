@@ -1,0 +1,48 @@
+.experiment-comparison { margin: 24px 0 12px; padding-top: 20px; border-top: 1px solid var(--line); }
+.modal-body[data-experiment-ready='true'] #strategy-intro,
+.modal-body[data-experiment-ready='true'] .decision-run-controls { display: none; }
+.modal-body[data-experiment-ready='true'] #strategy-run-status { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+.modal-body[data-experiment-ready='true'] .experiment-comparison { margin-top: 0; padding-top: 0; border-top: 0; }
+.experiment-comparison > h3 { margin: 0 0 10px; font-size: 18px; line-height: 1.5; text-wrap: balance; }
+.experiment-comparison > p { max-width: 70ch; }
+.experiment-table { min-width: 620px; table-layout: fixed; }
+.experiment-table th:first-child { width: 23%; }
+.experiment-table th, .experiment-table td { padding: 10px 9px; vertical-align: top; white-space: normal; overflow-wrap: anywhere; }
+.experiment-table td { font-weight: 600; }
+.experiment-table small { display: block; margin-top: 2px; color: var(--muted); font-size: 11px; font-weight: 400; }
+.experiment-same, .experiment-empty { background: var(--field); padding: 12px 16px; }
+.experiment-more { margin: 18px 0 22px; }
+.experiment-more > summary, .experiment-score > summary, .experiment-steps summary { cursor: pointer; font-weight: 600; text-underline-offset: 3px; }
+.experiment-more > summary:hover, .experiment-score > summary:hover, .experiment-steps summary:hover { text-decoration: underline; }
+.experiment-more > summary:focus-visible, .experiment-score > summary:focus-visible, .experiment-steps summary:focus-visible { outline: 3px solid var(--focus); outline-offset: 4px; }
+.experiment-profiles { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; margin: 26px 0 18px; padding: 0; border: 0; }
+.experiment-profiles legend { padding: 0; margin-bottom: 12px; font-weight: 600; font-size: 15px; }
+.experiment-profiles label { display: flex; align-items: flex-start; gap: 8px; padding: 12px 10px; min-height: 60px; background: var(--field); cursor: pointer; }
+.experiment-profiles label:has(input:checked) { outline: 2px solid var(--green); outline-offset: -2px; background: var(--panel-2); }
+.experiment-profiles input { flex: 0 0 auto; width: 16px; height: 16px; margin: 3px 0 0; accent-color: var(--green); }
+.experiment-profiles strong { display: block; font-size: 13px; }
+.experiment-profiles small { display: block; color: var(--muted); font-size: 11px; line-height: 1.6; margin-top: 3px; }
+.experiment-plan { margin: 18px 0 24px; padding: 20px 0; border-block: 1px solid var(--line); }
+.experiment-plan-risk .status-label { color: var(--red); }
+.experiment-plan > p { max-width: 70ch; }
+.experiment-steps details { margin: 10px 0 0; }
+.experiment-steps summary { color: var(--cream); font-size: 12px; }
+.experiment-step-facts { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px 20px; padding: 12px 14px; margin: 10px 0 0; background: var(--field); font-size: 12px; font-variant-numeric: tabular-nums; }
+.experiment-step-facts dt { color: var(--muted); }
+.experiment-step-facts dd { margin: 2px 0 0; font-weight: 600; }
+.experiment-score { margin-top: 22px; }
+.experiment-score tfoot { border-top: 1px solid var(--line); font-weight: 600; }
+.experiment-export { display: flex; justify-content: space-between; align-items: center; gap: 20px; margin: 22px 0 12px; }
+.experiment-export h3 { margin: 0 0 6px; font-size: 15px; }
+.experiment-export p { max-width: 48ch; margin: 0; color: var(--muted); font-size: 12px; }
+.experiment-export .pixel-btn { flex: 0 0 auto; }
+
+@media (max-width: 700px) {
+  .experiment-export { align-items: flex-start; flex-direction: column; gap: 12px; }
+  .experiment-profiles { gap: 8px; }
+}
+@media (max-width: 480px) {
+  .experiment-profiles { grid-template-columns: 1fr; }
+  .experiment-profiles label { min-height: 44px; }
+  .experiment-step-facts { grid-template-columns: 1fr; }
+}

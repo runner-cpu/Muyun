@@ -33,6 +33,7 @@ export function createPastureCells(count = 4): PastureCell[] {
     degradation: 0,
     restedWeeks: 0,
     grazing: false,
+    harvested: false,
   }));
 }
 
@@ -72,6 +73,7 @@ export function graze(
         1,
       ),
       grazing: true,
+      harvested: false,
       restedWeeks: 0,
     },
     consumedKg,
@@ -79,6 +81,7 @@ export function graze(
 }
 
 export function rest(cell: PastureCell, season: Season): PastureCell {
+  if (cell.grazing || cell.harvested) return { ...cell, grazing: false, harvested: false, restedWeeks: 0 };
   const ceiling = PEAK_BIOMASS[season] * (1 - cell.degradation * 0.7);
   const growth = Math.max(0, ceiling - cell.biomassKgPerHa) * REGROWTH_RATE[season];
   const recovery = cell.restedWeeks >= 2 ? 0.01 : 0;
@@ -88,6 +91,7 @@ export function rest(cell: PastureCell, season: Season): PastureCell {
     biomassKgPerHa: Math.max(0, cell.biomassKgPerHa + growth),
     degradation: clamp(cell.degradation - recovery, 0, 1),
     grazing: false,
+    harvested: false,
     restedWeeks: cell.restedWeeks + 1,
   };
 }

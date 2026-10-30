@@ -1,9 +1,8 @@
 import { bus } from '../core/emitter';
-import { gameState } from '../core/GameState';
-import { audio } from '../systems/AudioManager';
-import { saveSystem } from '../systems/SaveSystem';
-import { seasonForWeek, seasonLabel, weekLabel } from '../systems/Calendar';
 import { DialogueBox } from './dialoguebox';
+import { renderHud, setText } from './HudView';
+import { openSettingsPanel, restoreTheme } from './settings';
+import { openGuidePanel } from './panels/guide';
 
 interface ModalOptions {
   title: string;
@@ -17,6 +16,9 @@ export class UIManager {
   readonly dialogue = new DialogueBox();
   onNewGame: (() => void) | null = null;
   onContinue: (() => void) | null = null;
+  onWinterChallenge: (() => void) | null = null;
+  onContinueWinter: (() => void) | null = null;
+  onReturnTitle: (() => void) | null = null;
   onEndWeek: (() => void) | null = null;
 
   private loading = document.getElementById('loading-screen')!;
@@ -32,13 +34,20 @@ export class UIManager {
   private fadeEl = document.getElementById('fade')!;
   private modalClosable = true;
   private modalOnClose: (() => void) | null = null;
+  private previousFocus: HTMLElement | null = null;
 
   constructor() {
+    restoreTheme();
     document.getElementById('btn-new')?.addEventListener('click', () => this.onNewGame?.());
     document.getElementById('btn-continue')?.addEventListener('click', () => this.onContinue?.());
+    document.getElementById('btn-winter')?.addEventListener('click', () => this.onWinterChallenge?.());
+    document.getElementById('btn-continue-winter')?.addEventListener('click', () => this.onContinueWinter?.());
     document.getElementById('btn-title-settings')?.addEventListener('click', () => this.openSettings());
     document.getElementById('btn-settings')?.addEventListener('click', () => this.openSettings());
-    document.getElementById('btn-end-week')?.addEventListener('click', () => this.onEndWeek?.());
+    document.getElementById('btn-end-week')?.addEventListener('click', () => { if (!this.isBlocking()) this.onEndWeek?.(); });
+    document.getElementById('btn-guide')?.addEventListener('click', () => { if (!this.isBlocking()) openGuidePanel(); });
+    this.modalRoot.querySelector('.modal-backdrop')?.addEventListener('click', () => this.closeModal());
+    this.modalCard.addEventListener('keydown', this.onModalKeyDown);
     this.dialogue.setOpenCallback(() => undefined);
     bus.on('state:changed', () => this.updateHud());
     bus.on('calendar:changed', () => this.updateHud());
@@ -48,6 +57,7 @@ export class UIManager {
   showLoading(): void { this.loading.classList.remove('hidden'); }
   setLoading(progress: number, text?: string): void {
     this.loadingFill.style.width = `${Math.max(0, Math.min(1, progress)) * 100}%`;
+    this.loadingFill.parentElement?.setAttribute('aria-valuenow', String(Math.round(Math.max(0, Math.min(1, progress)) * 100)));
     if (text) this.loadingText.textContent = text;
   }
   hideLoading(): void { this.loading.classList.add('hidden'); }
@@ -57,28 +67,17 @@ export class UIManager {
     this.title.classList.remove('hidden');
     const continueBtn = document.getElementById('btn-continue') as HTMLButtonElement | null;
     if (continueBtn) continueBtn.disabled = !hasSave;
+    setText('save-status', hasSave ? '上次的牧场还在等你，继续照料吧。' : '还没有存档，从这个春天开始吧。');
+    document.getElementById('app')!.dataset.playing = 'false';
   }
   hideTitle(): void { this.title.classList.add('hidden'); }
 
-  showHud(): void { this.hud.classList.remove('hidden'); this.updateHud(); }
+  showHud(): void { this.hud.classList.remove('hidden'); document.getElementById('app')!.dataset.playing = 'true'; this.updateHud(); }
   hideHud(): void { this.hud.classList.add('hidden'); }
 
   updateHud(): void {
     if (this.hud.classList.contains('hidden')) return;
-    const season = seasonForWeek(gameState.week);
-    setText('hud-week', weekLabel(gameState.week));
-    setText('hud-season', seasonLabel(season));
-    document.getElementById('hud-season')?.setAttribute('data-season', season);
-    setText('hud-money', gameState.money.toLocaleString('zh-CN'));
-    setText('hud-hay', String(gameState.hayKg));
-    setText('hud-labor', String(gameState.labor));
-    setText('hud-reputation', String(gameState.reputation));
-    setText('hud-actions', String(gameState.actionsLeft));
-    setText('hud-herd', String(gameState.animals.filter((animal) => animal.alive).length));
-    setText('hint-text', gameState.hintText());
-    const weekBtn = document.getElementById('btn-end-week') as HTMLButtonElement | null;
-    if (weekBtn) weekBtn.textContent = gameState.ended ? '查看结算' : '结束本周';
-    audio.setSeason(season);
+    renderHud();
   }
 
   showPrompt(text: string): void {
@@ -100,18 +99,22 @@ export class UIManager {
   isBlocking(): boolean { return this.isModalOpen() || this.dialogue.isOpen(); }
 
   openModal(options: ModalOptions): HTMLElement {
+    if (!this.isModalOpen()) this.previousFocus = document.activeElement as HTMLElement;
     if (this.isModalOpen()) this.closeModal(true);
     this.modalClosable = options.closable ?? true;
     this.modalOnClose = options.onClose ?? null;
     this.modalCard.innerHTML = `
       <div class="modal-head">
-        <div><h2>${options.title}</h2>${options.subtitle ? `<p>${options.subtitle}</p>` : ''}</div>
+        <div><h2 id="modal-title">${options.title}</h2>${options.subtitle ? `<p>${options.subtitle}</p>` : ''}</div>
         ${this.modalClosable ? '<button class="modal-close" aria-label="关闭">×</button>' : ''}
       </div>
       <div class="modal-body">${options.body}</div>`;
     this.modalRoot.classList.remove('hidden');
+    this.hud.inert = true;
+    this.title.inert = true;
+    this.modalCard.scrollTop = 0;
+    this.modalCard.focus({ preventScroll: true });
     this.modalCard.querySelector('.modal-close')?.addEventListener('click', () => this.closeModal());
-    this.modalRoot.querySelector('.modal-backdrop')?.addEventListener('click', () => this.closeModal());
     return this.modalCard.querySelector('.modal-body') as HTMLElement;
   }
 
@@ -119,53 +122,33 @@ export class UIManager {
     if (!this.isModalOpen()) return;
     if (!this.modalClosable && !force) return;
     this.modalRoot.classList.add('hidden');
+    this.hud.inert = false;
+    this.title.inert = false;
     this.modalCard.innerHTML = '';
     const callback = this.modalOnClose;
     this.modalOnClose = null;
     callback?.();
+    if (!this.isModalOpen()) this.previousFocus?.focus({ preventScroll: true });
   }
 
   openSettings(): void {
-    const s = gameState.settings;
-    const body = `
-      <div class="setting-row"><label>音乐</label><input id="set-music" type="range" min="0" max="100" value="${Math.round(s.music * 100)}" /><output id="out-music">${Math.round(s.music * 100)}</output></div>
-      <div class="setting-row"><label>音效</label><input id="set-sfx" type="range" min="0" max="100" value="${Math.round(s.sfx * 100)}" /><output id="out-sfx">${Math.round(s.sfx * 100)}</output></div>
-      <div class="setting-row"><label>静音</label><input id="set-muted" type="checkbox" ${s.muted ? 'checked' : ''} /><span class="modal-note">开启后所有声音关闭</span></div>
-      <div class="stat-row">
-        <div><b>${gameState.week}</b><span>当前周</span></div>
-        <div><b>${gameState.reputation}</b><span>口碑</span></div>
-        <div><b>${gameState.animals.filter((a) => a.alive).length}</b><span>存栏</span></div>
-      </div>
-      <div class="modal-actions" style="justify-content:flex-start">
-        <button class="pixel-btn" id="set-fullscreen">切换全屏</button>
-        <button class="pixel-btn danger" id="set-reset">清除存档</button>
-      </div>
-      <p class="modal-note" style="margin-top:14px">存档保存在浏览器 localStorage，每周结算时自动保存。</p>`;
-    const el = this.openModal({ title: '设置', body });
-    const music = el.querySelector('#set-music') as HTMLInputElement;
-    const sfx = el.querySelector('#set-sfx') as HTMLInputElement;
-    const muted = el.querySelector('#set-muted') as HTMLInputElement;
-    const apply = (): void => {
-      const next = { music: Number(music.value) / 100, sfx: Number(sfx.value) / 100, muted: muted.checked };
-      gameState.setSettings(next);
-      audio.setSettings(next);
-      setText('out-music', music.value);
-      setText('out-sfx', sfx.value);
-    };
-    music.addEventListener('input', apply);
-    sfx.addEventListener('input', apply);
-    muted.addEventListener('change', apply);
-    el.querySelector('#set-fullscreen')?.addEventListener('click', () => {
-      if (document.fullscreenElement) void document.exitFullscreen();
-      else void document.documentElement.requestFullscreen?.().catch(() => undefined);
-    });
-    el.querySelector('#set-reset')?.addEventListener('click', () => {
-      if (!window.confirm('确定清除本地存档吗？此操作不可撤销。')) return;
-      saveSystem.clear();
-      gameState.newGame();
-      window.location.reload();
-    });
+    if (this.isBlocking()) return;
+    openSettingsPanel(this);
   }
+
+  private onModalKeyDown = (event: KeyboardEvent): void => {
+    if (event.key === 'Escape') { event.preventDefault(); this.closeModal(); }
+    if (event.key === 'Tab') {
+    const controls = Array.from(this.modalCard.querySelectorAll<HTMLElement>('button:not(:disabled), input:not(:disabled), select:not(:disabled), textarea:not(:disabled), summary, a[href], [tabindex="0"]'))
+      .filter(control => control.tabIndex >= 0 && control.getClientRects().length > 0);
+      const first = controls[0];
+      const last = controls.at(-1);
+      if (!first) { event.preventDefault(); return; }
+      if (event.shiftKey && (document.activeElement === first || document.activeElement === this.modalCard)) { event.preventDefault(); last?.focus(); }
+      else if (!event.shiftKey && (document.activeElement === last || document.activeElement === this.modalCard)) { event.preventDefault(); first.focus(); }
+    }
+    event.stopPropagation();
+  };
 
   fadeThrough(action: () => void): void {
     this.fadeEl.classList.add('on');
@@ -184,9 +167,4 @@ export class UIManager {
     if (this.dialogue.isOpen()) return;
     if (!this.title.classList.contains('hidden') || !this.hud.classList.contains('hidden')) this.openSettings();
   };
-}
-
-function setText(id: string, text: string): void {
-  const el = document.getElementById(id);
-  if (el) el.textContent = text;
 }

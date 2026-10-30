@@ -1,0 +1,21 @@
+.fieldnotes-intro { max-width: 64ch; margin: 0 0 22px; color: var(--muted); }
+.fieldnotes-entry { padding: 22px 0 24px; border-top: 1px solid var(--line); }
+.fieldnotes-entry h3 { margin: 0 0 10px; font-size: 18px; line-height: 1.5; text-wrap: balance; }
+.fieldnotes-observation { margin: 0 0 16px; max-width: 66ch; }
+.fieldnotes-attention .fieldnotes-observation { padding: 12px 14px; background: var(--field); color: var(--red); }
+.fieldnotes-evidence { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px 28px; margin: 0 0 18px; font-variant-numeric: tabular-nums; }
+.fieldnotes-evidence > div { min-width: 0; }
+.fieldnotes-evidence dt { margin-bottom: 3px; color: var(--muted); font-size: 12px; }
+.fieldnotes-evidence dd { margin: 0; font-size: 14px; font-weight: 600; overflow-wrap: anywhere; }
+.fieldnotes-mechanism { margin: 0 0 18px; }
+.fieldnotes-mechanism summary { width: fit-content; cursor: pointer; text-underline-offset: 3px; font-weight: 600; }
+.fieldnotes-mechanism summary:hover { text-decoration: underline; }
+.fieldnotes-mechanism summary:focus-visible { outline: 3px solid var(--focus); outline-offset: 4px; }
+.fieldnotes-mechanism p { max-width: 66ch; margin: 10px 0 0; color: var(--muted); }
+.fieldnotes-scope { padding-top: 18px; border-top: 1px solid var(--line); margin: 0; color: var(--muted); font-size: 12px; max-width: 74ch; }
+
+@media (max-width: 480px) {
+  .fieldnotes-entry { padding-block: 20px; }
+  .fieldnotes-entry h3 { font-size: 17px; }
+  .fieldnotes-evidence { grid-template-columns: 1fr; gap: 12px; }
+}

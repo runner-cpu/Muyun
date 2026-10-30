@@ -13,8 +13,8 @@ export const EVENTS: EventCard[] = [
     body: '气象站说，十天后有强降雪。草料贩子已经开始涨价。',
     season: 'winter',
     choices: [
-      { id: 'prep', label: '提前备草', hint: '花钱，但雪来了不慌', effect: { money: -800, hayKg: 400, flag: 'prepared' } },
-      { id: 'wait', label: '再等等', hint: '省下这笔钱，赌天气', effect: {} },
+      { id: 'prep', label: '提前备草', hint: '增加储备，不改变暴雪发生概率', effect: { money: -800, hayKg: 400, flag: 'prepared' } },
+      { id: 'wait', label: '再等等', hint: '维持当前储备，承担天气风险', effect: {} },
       { id: 'destock', label: '先卖两头减载', hint: '减轻冬季压力，但少了牲畜', effect: { money: 4000, loseAnimals: 2 } },
     ],
   },
@@ -26,7 +26,7 @@ export const EVENTS: EventCard[] = [
     choices: [
       { id: 'cut-early', label: '提前割草', hint: '保住一部分干草', effect: { money: -400, hayKg: 300 } },
       { id: 'reduce', label: '减少放牧', hint: '让草场喘口气，畜群掉膘', effect: { bcsDelta: -0.1 } },
-      { id: 'well', label: '出钱打井', hint: '长期受益，短期肉疼', effect: { money: -2000, reputation: 2 } },
+      { id: 'well', label: '资助应急供水', hint: '花费 2000 元，口碑 +2；不增加草场恢复', effect: { money: -2000, reputation: 2 } },
     ],
   },
   {
@@ -34,9 +34,9 @@ export const EVENTS: EventCard[] = [
     title: '草场鼠害',
     body: '鼠洞越来越多，草根被啃，踩上去发空。',
     choices: [
-      { id: 'poison', label: '组织投药', hint: '有效，但要花钱', effect: { money: -300, reputation: 2 } },
+      { id: 'poison', label: '组织投药', hint: '支付费用并提升口碑；本次不恢复草场', effect: { money: -300, reputation: 2 } },
       { id: 'ignore', label: '先不管', hint: '省事，草场继续退化', effect: { degradationDelta: 0.04 } },
-      { id: 'trap', label: '人工捕鼠', hint: '省钱，费人手', effect: { labor: -1, money: -100, reputation: 1 } },
+      { id: 'trap', label: '人工捕鼠', hint: '减少可用人手并提升口碑；本次不恢复草场', effect: { labor: -1, money: -100, reputation: 1 } },
     ],
   },
   {
@@ -45,8 +45,8 @@ export const EVENTS: EventCard[] = [
     body: '收购商说今年行情不好，只肯给二十八一斤。',
     season: 'autumn',
     choices: [
-      { id: 'accept', label: '接受', hint: '落袋为安', effect: { money: 6000 } },
-      { id: 'haggle', label: '还价', hint: '多卖一点，得罪人', effect: { money: 8000, reputation: -2 } },
+      { id: 'accept', label: '接受', hint: '转出 1 头存栏，固定收入 6000 元', effect: { money: 6000, loseAnimals: 1 } },
+      { id: 'haggle', label: '还价', hint: '转出 1 头存栏，固定收入 8000 元，口碑 -2', effect: { money: 8000, loseAnimals: 1, reputation: -2 } },
       { id: 'refuse', label: '不卖', hint: '再等等行情', effect: {} },
     ],
   },
@@ -76,7 +76,7 @@ export const EVENTS: EventCard[] = [
     body: '县里来核查载畜量，你的草场已经有点吃紧。',
     choices: [
       { id: 'comply', label: '配合减载', hint: '拿补贴，少养两头', effect: { loseAnimals: 2, reputation: 5, money: 1000 } },
-      { id: 'hide', label: '隐瞒', hint: '保住牲畜，冒罚款风险', effect: { reputation: -6, money: -1000, flag: 'fined' } },
+      { id: 'hide', label: '隐瞒', hint: '保留牲畜，本次支付罚款并降低口碑', effect: { reputation: -6, money: -1000, flag: 'fined' } },
     ],
   },
   {
@@ -94,7 +94,7 @@ export const EVENTS: EventCard[] = [
     body: '乡里的合作社想拉你入伙，统一采购、统一销售。',
     season: 'autumn',
     choices: [
-      { id: 'join', label: '加入', hint: '交会费，换来长期渠道', effect: { money: -1500, reputation: 8, flag: 'coop' } },
+      { id: 'join', label: '加入', hint: '会费 1500 元，口碑 +8；本局不另加销售收益', effect: { money: -1500, reputation: 8, flag: 'coop' } },
       { id: 'decline', label: '再等等', hint: '保持独立', effect: {} },
     ],
   },
@@ -104,8 +104,8 @@ export const EVENTS: EventCard[] = [
     body: '畜牧站的技术员来了，可以顺便做一次全面检查。',
     season: 'spring',
     choices: [
-      { id: 'full', label: '全面检查', hint: '花钱，但早发现早处理', effect: { money: -600, flag: 'checked' } },
-      { id: 'partial', label: '只看有问题的', hint: '省钱，可能漏掉潜伏病例', effect: { money: -200, infect: 1 } },
+      { id: 'full', label: '建档检查', hint: '花费 600 元建立检查记录；不替代治疗', effect: { money: -600, flag: 'checked' } },
+      { id: 'partial', label: '简略排查', hint: '花费 200 元，模拟中仍有 1 头出现症状', effect: { money: -200, infect: 1 } },
     ],
   },
   {
@@ -124,11 +124,20 @@ export const EVENTS: EventCard[] = [
     title: '牲畜走失',
     body: '清点时少了两头牛，可能是昨天转场时走散了。',
     choices: [
-      { id: 'search', label: '组织寻找', hint: '费人费钱，大概率找回', effect: { labor: -1, money: -300, flag: 'found' } },
+      { id: 'search', label: '组织寻找', hint: '花费现金与人手，本次不再损失牲畜', effect: { labor: -1, money: -300, flag: 'found' } },
       { id: 'give-up', label: '放弃', hint: '止损', effect: { loseAnimals: 1 } },
     ],
   },
 ];
+
+// Every event remains resolvable when cash, hay or herd are exhausted.
+for (const card of EVENTS) {
+  card.choices.push({
+    id: 'defer', label: '资源不足，暂缓应对',
+    hint: '仅在常规方案都不可执行时开放；体况 -0.2，草场退化 +0.02',
+    effect: { bcsDelta: -0.2, degradationDelta: 0.02 },
+  });
+}
 
 export function eligibleCards(season: Season, used: string[]): EventCard[] {
   const usedSet = new Set(used);

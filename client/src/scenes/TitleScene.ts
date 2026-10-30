@@ -1,5 +1,5 @@
 import Phaser from 'phaser';
-import { GAME_HEIGHT, GAME_WIDTH } from '../config';
+import { GAME_HEIGHT, GAME_WIDTH, RENDER_SCALE } from '../config';
 import { gameState } from '../core/GameState';
 import { saveSystem } from '../systems/SaveSystem';
 import { audio } from '../systems/AudioManager';
@@ -8,27 +8,76 @@ import { ui } from '../ui/instance';
 export class TitleScene extends Phaser.Scene {
   constructor() { super('TitleScene'); }
 
+  preload(): void {
+    if (!this.textures.exists('plateau-title')) {
+      this.load.image('plateau-title', 'assets/art/plateau-title.webp');
+    }
+  }
+
   create(): void {
+    this.cameras.main.setZoom(RENDER_SCALE).centerOn(GAME_WIDTH / 2, GAME_HEIGHT / 2);
     this.drawBackdrop();
     this.createMotes();
-    ui.showTitle(saveSystem.exists());
+    saveSystem.setMode('year');
+    const save = saveSystem.load('year');
+    if (save) gameState.setSettings(save.settings);
+    ui.showTitle(Boolean(save));
+    const winter = saveSystem.load('winter-challenge-v1');
+    const winterContinue = document.getElementById('btn-continue-winter') as HTMLButtonElement | null;
+    if (winterContinue) winterContinue.disabled = !winter;
     audio.setSettings(gameState.settings);
 
     ui.onNewGame = () => {
       audio.unlock();
+      const settings = { ...gameState.settings };
       gameState.newGame();
-      saveSystem.clear();
+      gameState.setSettings(settings);
+      saveSystem.setMode('year');
+      saveSystem.clear('year');
       this.startRanch();
     };
     ui.onContinue = () => {
-      const save = saveSystem.load();
+      const save = saveSystem.load('year');
       if (!save) {
         ui.toast('没有找到存档，先开始新的一局吧', 'bad');
         return;
       }
       audio.unlock();
+      saveSystem.setMode('year');
       gameState.load(save);
       this.startRanch();
+    };
+    ui.onWinterChallenge = () => {
+      const begin = (): void => {
+        audio.unlock();
+        const settings = { ...gameState.settings };
+        gameState.newGame(undefined, 'winter-challenge-v1');
+        gameState.setSettings(settings);
+        saveSystem.setMode('winter-challenge-v1');
+        saveSystem.save(gameState.toData());
+        ui.closeModal();
+        this.startRanch();
+      };
+      const el = ui.openModal({ title: '四周越冬挑战', subtitle: '固定初始条件，试出自己的经营方案。', body: `
+        <p>从第 10 周开始，照料 12 头牦牛与 18 只羊，走过四次周结算。</p>
+        <dl class="overview-ledger"><div><dt>可用现金</dt><dd>¥6,000</dd></div><div><dt>干草</dt><dd>2,200 kg</dd></div><div><dt>预设设备</dt><dd>草场监测 + 10 个项圈</dd></div><div><dt>每周行动</dt><dd>3 点</dd></div></dl>
+        <p class="modal-note">设备已安装，现金不再扣购置费；每周收取人工与设备维护。挑战使用独立存档。${winter ? '开始将替换已有挑战进度，可关闭并选择继续挑战。' : ''}</p>
+        <div class="modal-actions"><button class="pixel-btn primary" id="challenge-start">开始越冬</button></div>` });
+      el.querySelector('#challenge-start')?.addEventListener('click', begin);
+    };
+    ui.onContinueWinter = () => {
+      const saved = saveSystem.load('winter-challenge-v1');
+      if (!saved) { ui.toast('没有找到挑战存档，可以开始一次越冬挑战。', 'bad'); return; }
+      audio.unlock();
+      saveSystem.setMode('winter-challenge-v1');
+      gameState.load(saved);
+      this.startRanch();
+    };
+    ui.onReturnTitle = () => {
+      ui.closeModal(true);
+      ui.hideHud();
+      this.scene.get('RanchScene').scene.stop();
+      this.scene.start('TitleScene');
     };
   }
 
@@ -39,6 +88,14 @@ export class TitleScene extends Phaser.Scene {
 
   /** A cold-altitude dawn: banded sky, snow line, yurt, fence and herd silhouettes. */
   private drawBackdrop(): void {
+    if (this.textures.exists('plateau-title')) {
+      const art = this.add.image(GAME_WIDTH / 2, GAME_HEIGHT / 2, 'plateau-title');
+      const scale = Math.max(GAME_WIDTH / art.width, GAME_HEIGHT / art.height);
+      art.setScale(scale);
+      return;
+    }
+
+    // A network or asset failure still leaves a playable title screen.
     const g = this.add.graphics();
     const bands = ['#0d1526', '#142138', '#1d3150', '#2e5c8a', '#4f86ad', '#8fb4c4', '#c9bfa0', '#e0b978'];
     const bandH = Math.ceil(GAME_HEIGHT / bands.length);
@@ -103,9 +160,10 @@ export class TitleScene extends Phaser.Scene {
   }
 
   private createMotes(): void {
-    for (let i = 0; i < 16; i++) {
-      const x = Phaser.Math.Between(40, 460);
-      const y = Phaser.Math.Between(40, 240);
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    for (let i = 0; i < 7; i++) {
+      const x = Phaser.Math.Between(220, 460);
+      const y = Phaser.Math.Between(120, 240);
       const rect = this.add.rectangle(x, y, 2, 2, 0xf2d7a0, Phaser.Math.FloatBetween(0.12, 0.5));
       this.tweens.add({
         targets: rect,

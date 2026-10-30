@@ -1,0 +1,16 @@
+.scene-label-layer { position: absolute; inset: 0; z-index: 5; overflow: clip; pointer-events: none; }
+.scene-label-layer[hidden] { display: none; }
+.scene-label { position: absolute; transform: translate(-50%, -100%); visibility: hidden; pointer-events: none; min-height: 32px; padding: 5px 12px; border: 1px solid #8fa47a; border-radius: 2px; background: #244335; color: #f0edcf; box-shadow: 0 3px 10px rgb(13 30 18 / 28%); font: 600 14px/1.4 'Microsoft YaHei', 'PingFang SC', system-ui, sans-serif; white-space: nowrap; text-shadow: none; }
+.scene-label.is-visible { visibility: visible; pointer-events: auto; }
+.scene-label:hover { background: #35563d; border-color: #dec285; }
+.scene-label:active { background: #1a3529; }
+.scene-label-name, .scene-label-detail { display: block; }
+.scene-label-name { color: #f5edd5; text-align: left; }
+.scene-label-name > span { color: #c3d8b6; font-size: 12px; }
+.scene-label-detail { margin-top: 1px; color: #e0e3ca; font-size: 12px; font-weight: 500; font-variant-numeric: tabular-nums; }
+.scene-label-detail > span { color: #bccab6; }
+.scene-label[data-use='grazed'] { border-color: #c9a56c; background: #3d4533; }
+.scene-label[data-use='cut'] { border-color: #b6a371; background: #3a4335; }
+.scene-label[data-use='grazed'] .scene-label-name > span, .scene-label[data-use='cut'] .scene-label-name > span { color: #ead1a2; }
+@media (max-width: 900px), (max-height: 560px) { .scene-label { min-height: 30px; padding: 4px 9px; font-size: 13px; } }
+@media (orientation: portrait) and (max-width: 900px) { .scene-label-layer { display: none; } }
