@@ -4,7 +4,7 @@ import { registerPlayerAnims } from '../entities/Player';
 import { registerAnimalAnims } from '../entities/Animal';
 
 /** Bump when art files change so browsers never serve a stale sheet. */
-const V = '?v=4';
+const V = '?v=5';
 
 export class PreloadScene extends Phaser.Scene {
   constructor() { super('PreloadScene'); }
@@ -20,6 +20,10 @@ export class PreloadScene extends Phaser.Scene {
     this.load.spritesheet('sheep', `assets/sprites/sheep.png${V}`, { frameWidth: 32, frameHeight: 32 });
     this.load.image('barn', `assets/structures/barn.png${V}`);
     this.load.image('sign', `assets/structures/sign.png${V}`);
+    this.load.image('well', `assets/structures/well.png${V}`);
+    this.load.image('woodpile', `assets/structures/woodpile.png${V}`);
+    this.load.image('cart', `assets/structures/cart.png${V}`);
+    this.load.image('laundry', `assets/structures/laundry.png${V}`);
     for (let i = 0; i < 3; i++) this.load.image(`tree_${i}`, `assets/trees/tree_${i}.png${V}`);
 
     this.load.on('progress', (value: number) => {

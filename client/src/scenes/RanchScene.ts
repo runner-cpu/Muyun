@@ -274,6 +274,17 @@ export class RanchScene extends Phaser.Scene {
     this.physics.add.collider(this.player.sprite, blocker);
 
     this.add.image(300, 116, 'sign').setOrigin(0.5, 1).setDepth(10 + 116 / 10000);
+
+    const yard: Array<[string, number, number]> = [
+      ['well', 318, 152],
+      ['woodpile', 224, 134],
+      ['cart', 206, 174],
+      ['laundry', 332, 108],
+    ];
+    for (const [key, x, y] of yard) {
+      if (!this.textures.exists(key)) continue;
+      this.add.image(x, y, key).setOrigin(0.5, 1).setDepth(10 + y / 10000);
+    }
   }
 
   /** Soft vignette: gives a flat top-down field some depth. */

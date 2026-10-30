@@ -12,6 +12,7 @@
 | `client/public/assets/sprites/player.png` | 96×128，牧人 4 方向 × 4 帧，单帧 24×32 | `tools/gen-sprites.mjs` |
 | `client/public/assets/trees/tree_*.png` | 3 种 32×44 树精灵，含阴影 | `tools/gen-trees.mjs` |
 | `client/public/assets/structures/barn.png` | 48×56 谷仓，3/4 视角，屋顶 55%，含门/窗/阁楼/接地阴影 | `tools/gen-structures.mjs` |
+| `client/public/assets/structures/{well,woodpile,cart,laundry}.png` | 24×24 水井、24×16 柴堆、32×24 推车、24×24 晾衣绳 | `tools/gen-structures.mjs` |
 | `client/public/assets/structures/sign.png` | 16×16 木牌 | `tools/gen-structures.mjs` |
 
 生成器共用 `tools/lib/pixel.mjs`（PNG 编码器 + Canvas 原语 + mulberry32）与
