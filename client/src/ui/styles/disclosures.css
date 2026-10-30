@@ -1,0 +1,45 @@
+.panel-disclosure {
+  margin: 0;
+  padding: 0;
+  border-top: 1px solid var(--line);
+}
+.panel-disclosure > summary {
+  min-height: 44px;
+  padding: 11px 0;
+  cursor: pointer;
+  color: var(--cream);
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1.65;
+  overflow-wrap: anywhere;
+}
+.panel-disclosure > summary::marker { color: var(--muted); }
+.panel-disclosure > summary:hover { color: var(--green); }
+.panel-disclosure > summary:focus-visible {
+  outline: 3px solid var(--focus);
+  outline-offset: 3px;
+}
+.panel-disclosure[open] { padding-bottom: 12px; }
+.panel-disclosure > p { max-width: 70ch; color: var(--muted); }
+.panel-disclosure .overview-ledger { margin-top: 8px; margin-bottom: 12px; }
+.overview-core-ledger { margin-bottom: 20px; }
+.panel-reference-row { display: flex; align-items: center; gap: 18px; justify-content: space-between; padding: 12px 0; }
+.panel-reference-row + .panel-reference-row { border-top: 1px solid var(--line); }
+.panel-reference-row h3 { margin: 0 0 5px; font-size: 14px; }
+.panel-reference-row p { margin: 0; max-width: 64ch; font-size: 13px; color: var(--muted); }
+.panel-reference-row .pixel-btn { flex: 0 0 auto; }
+.tech-disclosure { margin-top: 14px; }
+.tech-disclosure > p { font-size: 13px; }
+.tech-disclosure .decision-table-wrap { margin-top: 14px; margin-bottom: 4px; }
+.guide-quickstart { padding-left: 22px; margin: 0 0 20px; }
+.guide-quickstart li { padding-left: 4px; }
+.guide-quickstart li + li { margin-top: 12px; }
+.guide-quickstart h3 { margin: 0 0 3px; font-size: 15px; }
+.guide-quickstart p { margin: 0; color: var(--muted); font-size: 13px; }
+.guide-replay { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin: 18px 0 22px; }
+.guide-replay p { margin: 0; color: var(--muted); font-size: 13px; }
+.guide-replay .pixel-btn { flex: 0 0 auto; }
+@media (max-width: 700px) {
+  .panel-reference-row, .guide-replay { align-items: flex-start; flex-direction: column; gap: 10px; }
+  .panel-disclosure .guide-controls { grid-template-columns: 1fr; gap: 12px; }
+}

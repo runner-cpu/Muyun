@@ -1,0 +1,61 @@
+/* Quiet field view; the map remains the primary surface. */
+#hud { --hud-left: max(22px, env(safe-area-inset-left)); --hud-right: max(22px, env(safe-area-inset-right)); --hud-top: max(18px, env(safe-area-inset-top)); --hud-bottom: max(22px, env(safe-area-inset-bottom)); }
+.hud-fold { position: absolute; width: max-content; max-width: calc(100vw - 44px); background: var(--panel); box-shadow: var(--shadow); border-radius: 2px; }
+.hud-fold[open] { z-index: 3; }
+.hud-fold > summary { display: flex; align-items: center; gap: 14px; min-height: 44px; padding: 10px 14px; list-style: none; color: var(--cream); cursor: pointer; user-select: none; font-size: 13px; }
+.hud-fold > summary::-webkit-details-marker { display: none; }
+.hud-fold > summary:hover { background: var(--panel-2); }
+.hud-fold > summary:focus-visible { outline: 3px solid var(--focus); outline-offset: 3px; }
+.hud-fold[open] > summary { background: var(--panel-2); }
+.hud-fold-title { display: flex; align-items: center; gap: 12px; font-weight: 700; white-space: nowrap; }
+.hud-fold-caption, .hud-fold [data-fold-state] { color: var(--muted); font-size: 11px; font-weight: 400; }
+.hud-fold [data-fold-state] { margin-left: auto; }
+.compact-wordmark { font: 24px/1 var(--display); color: var(--yellow); }
+.fold-chevron { flex: 0 0 14px; width: 14px; height: 14px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; color: var(--muted); }
+.hud-fold[open] .fold-chevron { transform: rotate(180deg); }
+.hud-fold-body { padding: 2px 16px 16px; max-height: min(400px, calc(100dvh - 230px)); overflow-y: auto; overscroll-behavior: contain; }
+#hud-status { top: var(--hud-top); left: var(--hud-left); }
+#hud-status[open] { width: min(920px, calc(100vw - 180px)); }
+#hud .hud-status > .hud-bar { position: static; min-height: 0; padding: 14px 16px; flex-wrap: wrap; gap: 14px; box-shadow: none; }
+#hud .hud-status .ranch-identity { padding-right: 14px; gap: 10px; }
+#hud .hud-status .ranch-wordmark { display: none; }
+#hud .hud-status .calendar-chip { min-width: 106px; min-height: 44px; }
+#hud .hud-status .hud-resources { gap: 24px; }
+#hud .hud-status .resource-reputation { display: grid; }
+#hud .hud-status .hud-settings { min-height: 44px; padding-left: 14px; }
+#hud .week-note { display: block; top: calc(var(--hud-top) + 56px); left: var(--hud-left); width: max-content; padding: 0; }
+#hud .week-note[open] { width: 300px; }
+#hud-status[open] ~ .week-note { visibility: hidden; }
+#hud .week-note #hint-text { margin: 12px 0; }
+#hud .week-note .pixel-btn { margin-top: 14px; width: 100%; }
+#hud-note[data-tone='bad'] > summary .hud-fold-caption { color: var(--red); font-weight: 700; }
+#hud .hud-tools { bottom: var(--hud-bottom); left: var(--hud-left); }
+#hud .hud-tools > .ranch-nav { position: static; transform: none; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); box-shadow: none; }
+#hud .hud-tools .nav-item { min-width: 118px; min-height: 64px; padding: 10px; }
+#hud .hud-turn { bottom: var(--hud-bottom); right: var(--hud-right); }
+#hud .hud-turn > .week-advance { position: static; min-height: 0; padding: 12px 14px; gap: 16px; box-shadow: none; }
+#hud .hud-turn .action-points > span { display: block; }
+#hud .hud-turn .pixel-btn { min-height: 44px; }
+#hud .hud-help { top: var(--hud-top); right: var(--hud-right); }
+#hud .hud-help[open] { width: 272px; }
+#hud .hud-help > #controls-hint { position: static; display: grid; gap: 3px; padding: 12px; color: var(--cream); font-size: 12px; text-shadow: none; max-height: calc(100dvh - 140px); overflow-y: auto; overscroll-behavior: contain; }
+#hud .hud-help .text-btn { min-height: 44px; font-size: 12px; text-align: left; padding: 8px 10px; }
+#hud .hud-help p { margin: 10px 0 0; color: var(--muted); font-size: 11px; line-height: 1.8; }
+#hud #prompt { bottom: calc(var(--hud-bottom) + 68px); }
+@media (max-width: 900px), (max-height: 560px) {
+  #hud { --hud-left: max(12px, env(safe-area-inset-left)); --hud-right: max(12px, env(safe-area-inset-right)); --hud-top: max(10px, env(safe-area-inset-top)); --hud-bottom: max(12px, env(safe-area-inset-bottom)); }
+  .hud-fold { max-width: calc(100vw - 24px); }
+  .hud-fold > summary { gap: 10px; padding: 10px 12px; }
+  #hud-status[open] { width: min(660px, calc(100vw - 148px)); }
+  #hud .hud-status > .hud-bar { gap: 10px; padding: 10px 12px; }
+  #hud .hud-status .hud-resources { gap: 20px; }
+  #hud .hud-status .ranch-identity > div { display: grid; }
+  #hud .hud-tools { left: max(110px, calc(env(safe-area-inset-left) + 98px)); }
+  #hud .hud-tools > .ranch-nav { width: 268px; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  #hud .hud-tools .nav-item { min-width: 0; min-height: 52px; }
+  #hud .hud-tools .nav-item:nth-child(2) { border-right: 0; }
+  #hud .hud-tools .nav-item small { display: block; }
+  #hud .hud-tools .nav-art { display: block; }
+  #hud .hud-turn > .week-advance { gap: 12px; padding: 10px 12px; }
+  #hud .hud-turn .pixel-btn { font-size: 12px; }
+}

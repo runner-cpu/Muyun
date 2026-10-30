@@ -59,6 +59,7 @@ export class SceneLabels {
     this.observer = new ResizeObserver(this.invalidateGeometry);
     this.observer.observe(this.root.parentElement!);
     this.observer.observe(scene.game.canvas);
+    document.querySelectorAll('.hud-fold').forEach(element => this.observer.observe(element));
     scene.scale.on('resize', this.invalidateGeometry);
     // Camera follow and zoom have been applied by the time this event fires.
     scene.events.on('render', this.render);
@@ -105,8 +106,9 @@ export class SceneLabels {
     const canvas = this.scene.game.canvas.getBoundingClientRect();
     this.canvasBounds = { x: canvas.left - app.left, y: canvas.top - app.top, width: canvas.width, height: canvas.height };
     this.obstructions = [];
-    document.querySelectorAll<HTMLElement>('.hud-bar, .week-note, .ranch-nav, .week-advance, .joystick, .interact-btn, .hud-risk')
+    document.querySelectorAll<HTMLElement>('.hud-fold, .joystick, .interact-btn')
       .forEach((element) => {
+        if (getComputedStyle(element).visibility === 'hidden') return;
         const rect = element.getBoundingClientRect();
         if (rect.width && rect.height) this.obstructions.push({ x: rect.left - app.left, y: rect.top - app.top, width: rect.width, height: rect.height });
       });

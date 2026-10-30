@@ -39,7 +39,9 @@
         <footer class="title-footer"><span>一座牧场，十三周四季。</span><span>键鼠游玩 / 触屏横屏</span></footer>
       </section>
       <div id="hud" class="hidden">
-        <header class="hud-bar">
+        <details id="hud-status" class="hud-fold hud-status" data-hud-section="status" name="hud-panels">
+          <summary><span class="hud-fold-title"><span class="compact-wordmark">牧云</span><span id="hud-week-compact">第 1 周</span></span><span data-fold-state>展开</span><svg class="fold-chevron" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6" /></svg></summary>
+          <header class="hud-bar">
           <div class="ranch-identity"><span class="ranch-wordmark">牧云</span><div><span id="hud-season">春季</span><span id="hud-weather">晴朗</span></div></div>
           <button id="btn-overview-top" class="calendar-chip" aria-label="查看本周概览"><b id="hud-week">第 1 周</b><span>/ 13 周</span><div id="week-track" class="week-track" aria-hidden="true"></div></button>
           <div class="hud-resources" aria-label="牧场资源">
@@ -49,24 +51,36 @@
             <div class="resource resource-reputation"><span>口碑</span><b><span id="hud-reputation">50</span> <small>/ 100</small></b></div>
           </div>
           <button id="btn-settings" class="text-btn hud-settings">设置</button>
-        </header>
-        <button id="btn-overview-risk" class="hud-risk" data-tone="info" aria-label="查看本周风险与安排"><span id="hud-risk-text">查看本周安排</span><span aria-hidden="true">详情 ›</span></button>
-        <aside class="week-note">
-          <div class="note-heading"><h2>这一周的牧场</h2><button id="btn-overview" class="text-btn">查看详情</button></div>
+          </header>
+        </details>
+        <details id="hud-note" class="week-note hud-fold" data-hud-section="note" name="hud-panels">
+          <summary><span class="hud-fold-title">本周安排 <span id="hud-alert-compact" class="hud-fold-caption">查看风险</span></span><span data-fold-state>展开</span><svg class="fold-chevron" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6" /></svg></summary>
+          <div class="hud-fold-body">
           <p id="hint-text">先看看畜群，再决定这一周怎么安排。</p>
           <div class="feed-summary"><span>预计需补干草</span><b><span id="hud-feed-need">0</span> <small>kg</small></b><span id="hud-feed-status" class="feed-status">储备充足</span></div>
           <p id="hud-objective" class="note-foot">先安排放牧，再补足饲草。</p>
-        </aside>
-        <nav class="ranch-nav" aria-label="牧场经营">
+          <button id="btn-overview" class="pixel-btn">查看本周详情</button>
+          </div>
+        </details>
+        <details id="hud-tools" class="hud-fold hud-tools" data-hud-section="tools" name="hud-panels">
+          <summary><span class="hud-fold-title">经营工具 <span class="hud-fold-caption">1–4</span></span><span data-fold-state>展开</span><svg class="fold-chevron" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6" /></svg></summary>
+          <nav class="ranch-nav" aria-label="牧场经营">
           <button data-panel="herd" class="nav-item"><span class="nav-art art-herd" aria-hidden="true"></span><span>畜群<small>照料与繁育</small></span><kbd>1</kbd></button>
           <button data-panel="pasture" class="nav-item"><span class="nav-art art-pasture" aria-hidden="true"></span><span>草场<small>放牧与收草</small></span><kbd>2</kbd></button>
           <button data-panel="market" class="nav-item"><span class="nav-art art-market" aria-hidden="true"></span><span>集市<small>交易与补给</small></span><kbd>3</kbd></button>
           <button data-panel="tech" class="nav-item"><span class="nav-art art-tech" aria-hidden="true"></span><span>科技<small>牧场服务</small></span><kbd>4</kbd></button>
-        </nav>
-        <div class="week-advance"><div class="action-points"><span>本周行动</span><b><span id="hud-actions">3</span><small> / <span id="hud-action-limit">3</span></small></b></div><button id="btn-end-week" class="pixel-btn primary">结束本周</button></div>
+          </nav>
+        </details>
+        <details id="hud-turn" class="hud-fold hud-turn" data-hud-section="turn" name="hud-panels">
+          <summary><span class="hud-fold-title">周结算 <span id="hud-actions-compact" class="hud-fold-caption">行动 3/3</span></span><span data-fold-state>展开</span><svg class="fold-chevron" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6" /></svg></summary>
+          <div class="week-advance"><div class="action-points"><span>本周行动</span><b><span id="hud-actions">3</span><small> / <span id="hud-action-limit">3</span></small></b></div><button id="btn-end-week" class="pixel-btn primary">结束本周</button></div>
+        </details>
         <div id="prompt" class="hidden"><kbd>E</kbd><span id="prompt-text"></span></div>
         <div id="joystick" class="joystick" aria-label="移动摇杆"><div id="joystick-knob"></div></div><button id="btn-interact" class="interact-btn">互动</button>
-        <div id="controls-hint"><span><kbd>WASD</kbd> 移动</span><span><kbd>E</kbd> 互动</span><button id="btn-fieldnotes" class="text-btn">高原手记</button><button id="btn-ranch-guide" class="text-btn">玩法说明</button></div>
+        <details id="hud-help" class="hud-fold hud-help" data-hud-section="help" name="hud-panels">
+          <summary><span class="hud-fold-title">帮助</span><span data-fold-state>展开</span><svg class="fold-chevron" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6" /></svg></summary>
+          <div id="controls-hint"><button id="btn-onboarding" class="pixel-btn">重看简易引导</button><button id="btn-ranch-guide" class="text-btn">玩法说明与操作</button><button id="btn-fieldnotes" class="text-btn">高原手记</button><button id="btn-hud-settings" class="text-btn">设置</button><p><kbd>WASD</kbd> / 方向键移动，<kbd>E</kbd> 互动，<kbd>1</kbd>–<kbd>4</kbd> 打开经营面板。</p><p>点击任意栏标题展开或收起，一次只展开一栏。</p></div>
+        </details>
       </div>
       <div id="dialogue" class="hidden"><div class="dialogue-card"><div id="dialogue-speaker">牧民</div><p id="dialogue-text"></p><div id="dialogue-choices"></div><div class="dialogue-next">点击或按 E 继续</div></div></div>
       <div id="modal-root" class="hidden"><div class="modal-backdrop"></div><div class="modal-card" id="modal-card" role="dialog" aria-modal="true" aria-labelledby="modal-title" tabindex="-1"></div></div>

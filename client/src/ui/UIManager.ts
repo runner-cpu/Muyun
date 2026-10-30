@@ -3,6 +3,7 @@ import { DialogueBox } from './dialoguebox';
 import { renderHud, setText } from './HudView';
 import { openSettingsPanel, restoreTheme } from './settings';
 import { openGuidePanel } from './panels/guide';
+import { closeHudSection } from './HudLayout';
 
 interface ModalOptions {
   title: string;
@@ -44,7 +45,7 @@ export class UIManager {
     document.getElementById('btn-continue-winter')?.addEventListener('click', () => this.onContinueWinter?.());
     document.getElementById('btn-title-settings')?.addEventListener('click', () => this.openSettings());
     document.getElementById('btn-settings')?.addEventListener('click', () => this.openSettings());
-    document.getElementById('btn-end-week')?.addEventListener('click', () => { if (!this.isBlocking()) this.onEndWeek?.(); });
+    document.getElementById('btn-end-week')?.addEventListener('click', () => { if (!this.isBlocking()) { closeHudSection('turn'); this.onEndWeek?.(); } });
     document.getElementById('btn-guide')?.addEventListener('click', () => { if (!this.isBlocking()) openGuidePanel(); });
     this.modalRoot.querySelector('.modal-backdrop')?.addEventListener('click', () => this.closeModal());
     this.modalCard.addEventListener('keydown', this.onModalKeyDown);

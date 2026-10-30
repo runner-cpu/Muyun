@@ -44,28 +44,28 @@ export function openOverviewPanel(): void {
         ? risks.map((risk) => `<li>${escapeHtml(risk)}</li>`).join('')
         : '<li>当前饲草充足，也没有患病牲畜。继续留意草场恢复和后续储备。</li>'}</ul>
       <h3 class="decision-heading">本周饲草与费用</h3>
-      <dl class="overview-ledger">
-        <div><dt>本周总需草</dt><dd>${kg(view.feedNeedKg)}</dd></div>
-        <div><dt>已通过放牧采食</dt><dd>${kg(view.grazedKg)}</dd></div>
+      <dl class="overview-ledger overview-core-ledger">
         <div><dt>还需消耗干草</dt><dd>${kg(view.feedRequiredHayKg)}</dd></div>
         <div><dt>干草库存</dt><dd>${kg(run.hayKg)}</dd></div>
-        <div><dt>${view.feedGapKg > 0 ? '预计缺口' : '喂养后干草余量'}</dt><dd class="${view.feedGapKg > 0 ? 'danger-text' : ''}">${kg(view.feedGapKg > 0 ? view.feedGapKg : view.hayAfterFeedingKg)}</dd></div>
         <div><dt>本周人工与维护费</dt><dd>${yuan(view.weeklyCost)}</dd></div>
-        <div><dt>剩余行动点 / 本周上限</dt><dd>${run.actionsLeft} / ${actionLimit(run)}</dd></div>
         <div><dt>可用现金</dt><dd>${yuan(run.money)}</dd></div>
       </dl>
-      <p class="modal-note">需草量已计入 10% 损耗。预估按当前畜群与草料计算，未计入结算时的随机天气与事件。</p>
-      <div class="decision-context-action decision-context-compact"><div><h3>把储备看远三周</h3><p>${escapeHtml(reserveSummary(run))} 同时核对现金、持续费用与存栏保留目标。</p></div><button type="button" class="pixel-btn" id="overview-reserves">查看三周储备账</button></div>
-      <div class="decision-context-action decision-context-compact">
-        <div><h3>高原手记 · ${escapeHtml(fieldnote.title)}</h3><p>${escapeHtml(fieldnote.observation)}</p></div>
-        <button type="button" class="pixel-btn" id="overview-fieldnotes">读懂草畜关系</button>
-      </div>
       ${objectiveMarkup(run, true)}
-      <div class="decision-context-action">
-        <div><h3>${run.tech.scanned ? '比较本周的行动方案' : '开通监测后，可比较行动方案'}</h3><p>${run.tech.scanned ? '比较均衡、草场、资产三种偏好与不行动基线；查看行动依据，并导出可复算的本周实验单。' : '草场监测消耗 1 行动点、¥800，每周维护 ¥30；提供轮牧预测，并解锁策略试算。'}</p></div>
-        <button type="button" class="pixel-btn" id="overview-strategy">${run.tech.scanned ? '打开策略试算' : '查看监测与费用'}</button>
-      </div>
-      <details class="decision-method"><summary>四季进程与最近记录</summary>
+      <details class="panel-disclosure" id="overview-feed-detail"><summary>饲喂计算与行动点</summary>
+        <dl class="overview-ledger">
+          <div><dt>本周总需草</dt><dd>${kg(view.feedNeedKg)}</dd></div>
+          <div><dt>已通过放牧采食</dt><dd>${kg(view.grazedKg)}</dd></div>
+          <div><dt>${view.feedGapKg > 0 ? '预计缺口' : '喂养后干草余量'}</dt><dd class="${view.feedGapKg > 0 ? 'danger-text' : ''}">${kg(view.feedGapKg > 0 ? view.feedGapKg : view.hayAfterFeedingKg)}</dd></div>
+          <div><dt>剩余行动点 / 本周上限</dt><dd>${run.actionsLeft} / ${actionLimit(run)}</dd></div>
+        </dl>
+        <p class="modal-note">需草量已计入 10% 损耗。预估按当前畜群与草料计算，未计入结算时的随机天气与事件。</p>
+      </details>
+      <details class="panel-disclosure" id="overview-reference"><summary>三周储备、策略试算与高原手记</summary>
+        <div class="panel-reference-row"><div><h3>把储备看远三周</h3><p>${escapeHtml(reserveSummary(run))} 同时核对现金、持续费用与存栏保留目标。</p></div><button type="button" class="pixel-btn" id="overview-reserves">查看三周储备账</button></div>
+        <div class="panel-reference-row"><div><h3>${run.tech.scanned ? '比较本周的行动方案' : '开通监测后，可比较行动方案'}</h3><p>${run.tech.scanned ? '比较均衡、草场、资产三种偏好与不行动基线；查看行动依据，并导出可复算的本周实验单。' : '草场监测消耗 1 行动点、¥800，每周维护 ¥30；提供轮牧预测，并解锁策略试算。'}</p></div><button type="button" class="pixel-btn" id="overview-strategy">${run.tech.scanned ? '打开策略试算' : '查看监测与费用'}</button></div>
+        <div class="panel-reference-row"><div><h3>高原手记 · ${escapeHtml(fieldnote.title)}</h3><p>${escapeHtml(fieldnote.observation)}</p></div><button type="button" class="pixel-btn" id="overview-fieldnotes">读懂草畜关系</button></div>
+      </details>
+      <details class="panel-disclosure" id="overview-history"><summary>四季进程与最近记录</summary>
       <ol class="season-track" aria-label="十三周季节进程">${seasons.map(([season, label, weeks]) => `
         <li ${season === run.season ? 'aria-current="step"' : ''}><b>${label}</b><span>${weeks}</span></li>`).join('')}</ol>
       <h3>最近记录</h3>

@@ -75,7 +75,7 @@ export class InputManager {
 
   private onKeyDown = (event: KeyboardEvent): void => {
     if (!this.enabled) return;
-    if ((event.target as HTMLElement)?.closest('button, input, select, textarea, [role="dialog"]')) return;
+    if ((event.target as HTMLElement)?.closest('button, summary, a[href], input, select, textarea, [contenteditable="true"], [role="dialog"]')) return;
     if (event.code === 'KeyE' || event.code === 'Space') {
       if (event.code === 'Space') event.preventDefault();
       this.queueInteract();
