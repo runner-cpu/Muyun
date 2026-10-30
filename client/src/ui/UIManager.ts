@@ -68,6 +68,7 @@ export class UIManager {
     const season = seasonForWeek(gameState.week);
     setText('hud-week', weekLabel(gameState.week));
     setText('hud-season', seasonLabel(season));
+    document.getElementById('hud-season')?.setAttribute('data-season', season);
     setText('hud-money', gameState.money.toLocaleString('zh-CN'));
     setText('hud-hay', String(gameState.hayKg));
     setText('hud-labor', String(gameState.labor));
