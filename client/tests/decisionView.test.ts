@@ -1,11 +1,37 @@
 import { describe, expect, it } from 'vitest';
 import { assessRun } from '../src/sim/assessment';
 import { ensureTracking, recordWeek } from '../src/sim/history';
-import { createRun } from '../src/sim/run';
+import { applyAction, createRun, endWeek } from '../src/sim/run';
 import { createWinterChallenge } from '../src/sim/scenarios';
-import { actionDescription, assessmentMarkup, baselineDescription, objectiveMarkup, weekHistoryMarkup } from '../src/ui/panels/reviewView';
+import { actionDescription, assessmentMarkup, baselineDescription, currentWeekMarkup, objectiveMarkup, weekHistoryMarkup } from '../src/ui/panels/reviewView';
 
 describe('决策复盘视图', () => {
+  it('current-week disclosure reads real actions, clears after settlement and never fabricates tasks', () => {
+    let state = createRun(105);
+    expect(currentWeekMarkup(state)).toContain('本周已记录 0 次经营');
+    expect(currentWeekMarkup(state)).toContain('查看面板或运行试算都不算实际行动');
+    state = applyAction(state, { kind: 'graze', cellId: 'P1' });
+    state = applyAction(state, { kind: 'buy-hay', kg: 100 });
+    const before = JSON.stringify(state);
+    const html = currentWeekMarkup(state);
+    expect(html).toContain('本周已记录 2 次经营 · 剩余 1 行动');
+    expect(html.indexOf('P1 区放牧')).toBeLessThan(html.indexOf('购买 100 kg'));
+    expect(html).toContain('P2、P3、P4 尚未利用');
+    expect(html).not.toContain('id="overview-current-actions" open');
+    expect(JSON.stringify(state)).toBe(before);
+    expect(currentWeekMarkup(endWeek(state))).toContain('本周已记录 0 次经营');
+  });
+
+  it('current records escape imported text and explain continuation boundaries', () => {
+    const state = ensureTracking({ ...createRun(55), tracking: undefined }, 'continued');
+    state.animals[0].tag = '<img src=x>';
+    state.tracking!.pending = [{ kind: 'action', action: { kind: 'sell', animalIds: [state.animals[0].id] } }];
+    const html = currentWeekMarkup(state);
+    expect(html).toContain('&lt;img src=x&gt;');
+    expect(html).not.toContain('<img');
+    expect(html).toContain('不补造此前选择');
+  });
+
   it('展示真实三维指标，并区分游戏评分和持续经营条件', () => {
     const state = createWinterChallenge();
     const result = assessRun(state);

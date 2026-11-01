@@ -1,5 +1,7 @@
 import { gameState } from '../../core/GameState';
-import { comparePolicies } from '../../sim/policies';
+import type { PolicyComparison } from '../../sim/policies';
+import { startSimulationJob } from '../../systems/SimulationJob';
+import type { SimulationJob } from '../../systems/SimulationJob';
 import { exportRun } from '../../sim/replay';
 import type { RunState, ScenarioId } from '../../sim/types';
 import { saveSystem } from '../../systems/SaveSystem';
@@ -16,8 +18,7 @@ const ENDINGS: Record<string, [string, string]> = {
   cooperative: ['均衡经营', '经营、生态、动物健康与保留存栏均达到本游戏最高成果条件。'],
 };
 
-function comparisonMarkup(state: RunState): string {
-  const comparison = comparePolicies(state);
+function comparisonMarkup(state: RunState, comparison: PolicyComparison): string {
   if (!comparison.available) return `<p class="decision-notice">${escapeHtml(comparison.reason ?? '完成本局后可运行同条件对照。')}</p>`;
   const score = (value: number): string => value.toFixed(0);
   return `<h3 id="comparison-title" tabindex="-1">同条件策略对照</h3>
@@ -41,6 +42,7 @@ function restartRun(seed: number | undefined, scenario: ScenarioId): void {
 }
 
 export function openResultPanel(): void {
+  let job: SimulationJob<PolicyComparison> | undefined;
   const state = gameState.toData().run;
   const scenario = state.scenario ?? 'year';
   const challenge = scenario === 'winter-challenge-v1';
@@ -52,6 +54,7 @@ export function openResultPanel(): void {
     title: `${state.ended ? '结局' : '经营复盘'} · ${title}`,
     subtitle: `${challenge ? '四周越冬挑战' : '十三周完整经营'} · seed ${state.seed} · 第 ${state.week} 周`,
     closable: !state.ended,
+    onClose: () => job?.cancel(),
     body: `
       <p class="decision-ending-copy">${text}</p>
       ${assessmentMarkup(state)}
@@ -79,15 +82,18 @@ export function openResultPanel(): void {
     button.disabled = true;
     button.textContent = '正在重跑两种策略…';
     output.setAttribute('aria-busy', 'true');
-    output.innerHTML = '<p class="decision-loading" role="status">正在从同一记录起点重跑模拟，请稍候…</p>';
-    await new Promise(resolve => window.setTimeout(resolve, 40));
-    if (!root.isConnected) return;
+    output.innerHTML = '<p class="decision-loading" role="status">正在后台从同一记录起点重跑模拟，可继续查看复盘或取消。</p><button type="button" class="pixel-btn" id="comparison-cancel">取消计算</button>';
+    job = startSimulationJob('policies', state);
+    output.querySelector('#comparison-cancel')?.addEventListener('click', () => job?.cancel());
     try {
-      output.innerHTML = comparisonMarkup(state);
+      const comparison = await job.result;
+      if (!root.isConnected) return;
+      output.innerHTML = comparisonMarkup(state, comparison);
       output.querySelector<HTMLElement>('#comparison-title')?.focus({ preventScroll: true });
       button.textContent = '对照已完成';
-    } catch {
-      output.innerHTML = '<p class="danger-text" role="alert">本次对照未完成，可以重试。实际经营记录仍可导出。</p>';
+    } catch (error) {
+      if (!root.isConnected) return;
+      output.innerHTML = `<p class="modal-note" role="status">${escapeHtml(error instanceof Error ? error.message : '本次对照未完成。')} 实际经营记录仍可导出。</p>`;
       button.disabled = false;
       button.textContent = '重新运行对照';
     } finally {

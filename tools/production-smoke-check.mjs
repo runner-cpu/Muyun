@@ -1,0 +1,60 @@
+// Read-only smoke check in an isolated browser context against a built deployment.
+import assert from 'node:assert/strict';
+import { mkdir, writeFile } from 'node:fs/promises';
+import { resolve } from 'node:path';
+import { pathToFileURL } from 'node:url';
+
+const { chromium } = await import(process.env.PLAYWRIGHT_MODULE
+  ? pathToFileURL(process.env.PLAYWRIGHT_MODULE).href : 'playwright');
+const url = process.argv[2] ?? 'http://localhost:5189/';
+const label = process.argv[3] ?? 'preview';
+assert.match(label, /^[a-z0-9-]+$/);
+const out = resolve(process.env.MUYUN_CHECK_OUTPUT ?? 'output/review/2026-11-01-browser');
+await mkdir(out, { recursive: true });
+const browser = await chromium.launch({ headless: true });
+const page = await browser.newPage({ viewport: { width: 1280, height: 720 } });
+page.setDefaultTimeout(20000);
+const errors = [], failedResources = [], workers = [], checks = [];
+page.on('pageerror', e => errors.push(e.message));
+page.on('response', r => { if (r.status() >= 400) failedResources.push({ url: r.url(), status: r.status() }); });
+page.on('worker', worker => workers.push(worker.url()));
+await page.addInitScript(() => localStorage.setItem('muyun-onboarding-v1', '1'));
+try {
+  await page.goto(url);
+  await page.locator('#btn-winter').click();
+  await page.locator('#challenge-start').click();
+  await page.waitForSelector('#app[data-playing="true"]');
+  if (await page.locator('.modal-close').isVisible()) await page.locator('.modal-close').click();
+  checks.push('title, assets and fixed winter challenge load');
+  await page.locator('#hud-tools > summary').click();
+  await page.locator('[data-panel="tech"]').click();
+  await page.locator('#tech-strategy').click();
+  const before = await page.evaluate(() => JSON.stringify(window.__MUYUN_STATE__.run));
+  await page.locator('#strategy-run').click();
+  await page.waitForSelector('#strategy-result-title');
+  assert.equal(await page.evaluate(() => JSON.stringify(window.__MUYUN_STATE__.run)), before);
+  assert(workers.some(worker => /compute\.worker-.*\.js/.test(worker)), 'built Worker file must be requested');
+  checks.push('built Worker completes without changing actual state');
+  await page.locator('input[value="ecology"]').check();
+  const detail = await page.locator('#strategy-plan').innerText();
+  await page.locator('#strategy-reserves').click();
+  await page.locator('#reserve-back').click();
+  assert.equal(await page.locator('#strategy-plan').innerText(), detail);
+  assert.equal(await page.locator('input[value="ecology"]').isChecked(), true);
+  checks.push('same-state reserve round trip restores result and preference');
+  await page.screenshot({ path: `${out}/${label}-strategy.png` });
+  await page.locator('.modal-close').click();
+  await page.locator('#hud-tools > summary').click();
+  await page.locator('[data-panel="market"]').click();
+  await page.locator('#custom-hay-kg').fill('317');
+  await page.locator('#market-reserves').click();
+  await page.locator('#reserve-back').click();
+  assert.equal(await page.locator('#custom-hay-kg').inputValue(), '317');
+  checks.push('market retains custom quantity');
+  assert.deepEqual(errors, []);
+  assert.deepEqual(failedResources, []);
+  checks.push('no page errors or HTTP asset errors');
+  const record = { checkedAt: new Date().toISOString(), url, browser: browser.version(), checks, workers, errors, failedResources };
+  await writeFile(`${out}/${label}-results.json`, JSON.stringify(record, null, 2));
+  console.log(JSON.stringify(record, null, 2));
+} finally { await browser.close(); }

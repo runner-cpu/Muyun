@@ -21,10 +21,6 @@
   .hud-settings { padding: 4px 0 4px 12px; }
   .resource-reputation { display: none; }
   .week-note { display: none; }
-  .hud-risk { position: absolute; display: flex; align-items: center; justify-content: space-between; gap: 18px; top: max(76px, calc(env(safe-area-inset-top) + 66px)); left: max(12px, env(safe-area-inset-left)); max-width: calc(100vw - 24px); min-height: 36px; padding: 6px 12px; border: 1px solid var(--line); color: var(--cream); background: var(--panel); font-size: 12px; text-align: left; }
-  .hud-risk > span:last-child { color: var(--muted); white-space: nowrap; }
-  .hud-risk[data-tone='bad'] { border-left: 3px solid var(--red); }
-  .hud-risk[data-tone='bad'] > span:first-child { color: var(--red); }
   .ranch-nav { bottom: max(14px, env(safe-area-inset-bottom)); left: 50%; transform: translateX(-50%); }
   .nav-item { min-width: 78px; min-height: 58px; padding: 6px 10px; gap: 5px; font-size: 12px; }
   .nav-art { flex-basis: 26px; width: 26px; height: 30px; }
@@ -77,7 +73,7 @@
   .title-topbar { top: 8px; }
   .title-footer { bottom: 10px; font-size: 9px; }
   .title-actions .pixel-btn { min-height: 38px; padding: 7px 18px; }
-  .save-status { display: none; }
+  .save-status:not(.save-warning) { display: none; }
 }
 @media (orientation: portrait) and (max-width: 900px) {
   #app[data-playing='true'] #rotate-hint { display: flex; }

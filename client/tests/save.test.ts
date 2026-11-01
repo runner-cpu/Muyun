@@ -46,13 +46,38 @@ describe('save migration', () => {
     expect(migrated?.data.run.reputation).toBe(100);
   });
 
-  it('falls back to a fresh run when the run payload is unusable', () => {
+  it('rejects a damaged current run instead of silently replacing its progress', () => {
     const migrated = migrateSave({ version: SAVE_VERSION, data: { run: { week: 'x' } } });
-    expect(migrated?.data.run.animals).toHaveLength(50);
-    expect(migrated?.data.run.week).toBe(1);
+    expect(migrated).toBeNull();
   });
 
   it('refuses a future save version', () => {
     expect(migrateSave({ version: SAVE_VERSION + 1, data: {} })).toBeNull();
+  });
+
+  it('rejects duplicate identities, incomplete pasture and unsafe animal state', () => {
+    const invalid = [
+      (s: ReturnType<typeof createDefaultState>) => { s.run.animals[1].id = s.run.animals[0].id; },
+      (s: ReturnType<typeof createDefaultState>) => { s.run.pasture.pop(); },
+      (s: ReturnType<typeof createDefaultState>) => { s.run.pasture[1].id = 'P1'; },
+      (s: ReturnType<typeof createDefaultState>) => { s.run.animals[0].health = 'unknown' as never; },
+      (s: ReturnType<typeof createDefaultState>) => { s.run.animals[0].weightKg = -5; },
+      (s: ReturnType<typeof createDefaultState>) => { s.run.animals[0].bcs = 9; },
+      (s: ReturnType<typeof createDefaultState>) => { s.run.scenario = 'winter-challenge-v1'; },
+    ];
+    for (const mutate of invalid) {
+      const source = createDefaultState(42);
+      mutate(source);
+      expect(migrateSave({ version: SAVE_VERSION, data: source })).toBeNull();
+    }
+  });
+
+  it('discards malformed display logs without changing actual progress or valid escaped content', () => {
+    const source = createDefaultState(42);
+    source.run.log = [null, { week: 1, text: {}, tone: 'info' }, { week: 1, text: '<b>牧云</b>', tone: 'info' }] as never;
+    const loaded = migrateSave({ version: SAVE_VERSION, data: source })!.data;
+    expect(loaded.run.seed).toBe(42);
+    expect(loaded.run.log).toEqual([{ week: 1, text: '<b>牧云</b>', tone: 'info' }]);
+    expect(source.run.log).toHaveLength(3);
   });
 });

@@ -3,7 +3,7 @@ import { actionLimit } from '../../sim/rules';
 import { seasonLabel } from '../../systems/Calendar';
 import { ui } from '../instance';
 import { escapeHtml, ranchSnapshot } from '../ranchView';
-import { objectiveMarkup } from './reviewView';
+import { currentWeekMarkup, objectiveMarkup } from './reviewView';
 import { openStrategyPanel } from './strategy';
 import { openTechPanel } from './tech';
 import { yuan } from './shared';
@@ -51,6 +51,7 @@ export function openOverviewPanel(): void {
         <div><dt>可用现金</dt><dd>${yuan(run.money)}</dd></div>
       </dl>
       ${objectiveMarkup(run, true)}
+      ${currentWeekMarkup(run)}
       <details class="panel-disclosure" id="overview-feed-detail"><summary>饲喂计算与行动点</summary>
         <dl class="overview-ledger">
           <div><dt>本周总需草</dt><dd>${kg(view.feedNeedKg)}</dd></div>
@@ -71,11 +72,13 @@ export function openOverviewPanel(): void {
       <h3>最近记录</h3>
       <div class="overview-log">${logs.length
         ? logs.map((entry) => `<p class="log-${entry.tone === 'bad' ? 'bad' : entry.tone === 'good' ? 'good' : 'info'}"><span>第 ${entry.week} 周</span>${escapeHtml(entry.text)}</p>`).join('')
-        : '<p class="empty-state">还没有经营记录，安排第一个行动后会出现在这里。</p>'}</div></details>`,
+        : '<p class="empty-state">还没有经营记录，安排第一个行动后会出现在这里。</p>'}</div></details>
+      ${run.ended ? '' : '<div class="modal-actions"><button type="button" class="pixel-btn" id="overview-settle">核对并结束本周</button></div>'}`,
   });
   root.querySelector('#overview-pasture')?.addEventListener('click', () => openPasturePanel());
   root.querySelector('#overview-herd')?.addEventListener('click', () => openHerdPanel());
   root.querySelector('#overview-market')?.addEventListener('click', () => openMarketPanel());
+  root.querySelector('#overview-settle')?.addEventListener('click', () => { ui.closeModal(); ui.onEndWeek?.(); });
   root.querySelector('#overview-fieldnotes')?.addEventListener('click', () => openFieldNotes(ui));
   root.querySelector('#overview-reserves')?.addEventListener('click', () => openReservePanel(openOverviewPanel));
   root.querySelector('#overview-strategy')?.addEventListener('click', () => {

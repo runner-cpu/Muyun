@@ -20,7 +20,7 @@
 #hud .hud-status .ranch-identity { padding-right: 14px; gap: 10px; }
 #hud .hud-status .ranch-wordmark { display: none; }
 #hud .hud-status .calendar-chip { min-width: 106px; min-height: 44px; }
-#hud .hud-status .hud-resources { gap: 24px; }
+#hud .hud-status .hud-resources { gap: 12px 24px; flex-wrap: wrap; min-width: 0; }
 #hud .hud-status .resource-reputation { display: grid; }
 #hud .hud-status .hud-settings { min-height: 44px; padding-left: 14px; }
 #hud .week-note { display: block; top: calc(var(--hud-top) + 56px); left: var(--hud-left); width: max-content; padding: 0; }
@@ -58,4 +58,6 @@
   #hud .hud-tools .nav-art { display: block; }
   #hud .hud-turn > .week-advance { gap: 12px; padding: 10px 12px; }
   #hud .hud-turn .pixel-btn { font-size: 12px; }
+  #hud .hud-status > .hud-bar { max-height: calc(100dvh - 160px); overflow-y: auto; overscroll-behavior: contain; }
+  #hud .hud-help > #controls-hint { max-height: max(110px, calc(100dvh - 220px)); }
 }

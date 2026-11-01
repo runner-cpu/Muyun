@@ -18,6 +18,7 @@
 .title-actions .pixel-btn:not(.primary) { background: #243f31; border-color: #778c6e; color: #e4edda; }
 .title-actions .pixel-btn:not(.primary):hover:not(:disabled) { background: #37523d; }
 .save-status { margin: 14px 0 0; font-size: 11px; color: #c0cfb7; }
+.save-status.save-warning { font-size: 12px; line-height: 1.6; color: #ffd5a8; }
 .title-footer { position: absolute; bottom: 26px; left: 40px; right: 40px; display: flex; justify-content: space-between; color: #dae4cd; font-size: 11px; }
 #hud { position: absolute; inset: 0; z-index: var(--layer-hud); pointer-events: none; color: var(--hud-text); --panel: var(--hud-surface); --panel-2: var(--hud-raised); --cream: var(--hud-text); --muted: var(--hud-muted); --line: var(--hud-line); --field: #3b5239; --green: #d3dfa5; --red: #ffc0a5; --focus: #dec285; }
 #hud > * { pointer-events: auto; }
@@ -40,7 +41,6 @@
 .resource small { color: var(--muted); font-size: 10px; }
 .hud-settings { border-left: 1px solid var(--line); padding-left: 22px; color: var(--muted); }
 .week-note { position: absolute; top: 116px; left: 22px; width: 278px; padding: 16px 19px 14px; background: var(--panel); box-shadow: var(--shadow); }
-.hud-risk { display: none; }
 .note-heading { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
 .note-heading h2 { font: 650 16px/1.4 'Microsoft YaHei', 'PingFang SC', system-ui, sans-serif; margin: 0; }
 .note-heading .text-btn { min-height: 30px; padding: 0; font-size: 12px; color: var(--muted); }

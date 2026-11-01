@@ -51,4 +51,31 @@ describe('原生互动按钮', () => {
     expect(input.consumeInteract()).toBe(true);
     input.destroy();
   });
+
+  it('控件获得焦点时方向键不推动角色，回到场景后可以移动', () => {
+    let activeElement: { closest: () => unknown } | null = { closest: () => ({}) };
+    vi.stubGlobal('document', { getElementById: () => null, get activeElement() { return activeElement; } });
+    vi.stubGlobal('window', new EventTarget());
+    const keys = { RIGHT: { isDown: true, reset: vi.fn() } };
+    const input = new InputManager({ input: { keyboard: { addKeys: () => keys } } } as unknown as Phaser.Scene);
+    expect(input.getVector()).toEqual({ x: 0, y: 0 });
+    activeElement = null;
+    expect(input.getVector()).toEqual({ x: 1, y: 0 });
+    input.destroy();
+  });
+
+  it('长按和浏览器组合键不重复排入互动', () => {
+    const keyboard = new EventTarget();
+    vi.stubGlobal('document', { getElementById: () => null });
+    vi.stubGlobal('window', keyboard);
+    const input = new InputManager({ input: {} } as Phaser.Scene);
+    for (const property of ['repeat', 'ctrlKey', 'altKey', 'metaKey']) {
+      const event = new Event('keydown', { cancelable: true });
+      Object.defineProperties(event, { code: { value: 'KeyE' }, [property]: { value: true }, target: { value: { closest: () => null } } });
+      keyboard.dispatchEvent(event);
+      expect(input.consumeInteract()).toBe(false);
+      expect(event.defaultPrevented).toBe(false);
+    }
+    input.destroy();
+  });
 });

@@ -19,7 +19,11 @@ export function openMarketPanel(): void {
   let filter: AnimalFilter = 'all';
   let page = 0;
   let hayInput = '100';
-  const root = ui.openModal({ title: '集市', subtitle: '补充草料、安排人手，或出售牲畜回笼现金。', body: '' });
+  let root: HTMLElement;
+  const mount = (): void => {
+    root = ui.openModal({ title: '集市', subtitle: '补充草料、安排人手，或出售牲畜回笼现金。', body: '' });
+    render();
+  };
 
   const render = (): void => {
     const state = gameState.run;
@@ -76,7 +80,10 @@ export function openMarketPanel(): void {
     root.querySelector('#buy-200')?.addEventListener('click', () => actFromPanel({ kind: 'buy-hay', kg: 200 }, ui, render));
     root.querySelector('#buy-500')?.addEventListener('click', () => actFromPanel({ kind: 'buy-hay', kg: 500 }, ui, render));
     root.querySelector('#hire')?.addEventListener('click', () => actFromPanel({ kind: 'hire' }, ui, render));
-    root.querySelector('#market-reserves')?.addEventListener('click', () => openReservePanel(openMarketPanel));
+    root.querySelector('#market-reserves')?.addEventListener('click', () => openReservePanel(() => {
+      mount();
+      root.querySelector<HTMLButtonElement>('#market-reserves')?.focus({ preventScroll: true });
+    }));
     const customInput = root.querySelector<HTMLInputElement>('#custom-hay-kg')!;
     const customButton = root.querySelector<HTMLButtonElement>('#buy-custom-hay')!;
     const updateQuote = () => {
@@ -99,5 +106,5 @@ export function openMarketPanel(): void {
       if (completed && restoreInputFocus) root.querySelector<HTMLInputElement>('#custom-hay-kg')?.focus({ preventScroll: true });
     });
   };
-  render();
+  mount();
 }

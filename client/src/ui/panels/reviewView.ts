@@ -1,6 +1,7 @@
 import { assessRun } from '../../sim/assessment';
 import { findCard } from '../../sim/events';
 import { seasonObjectives } from '../../sim/objectives';
+import { pastureUse } from '../../sim/rules';
 import type { Action, Decision, RunMetrics, RunState, Season } from '../../sim/types';
 import { escapeHtml, percent, yuan } from './shared';
 
@@ -69,6 +70,18 @@ function decisionDescription(state: RunState, decision: Decision): string {
   const card = findCard(decision.cardId);
   const choice = card?.choices.find(item => item.id === decision.choiceId);
   return `事件：${card?.title ?? decision.cardId} · ${choice?.label ?? decision.choiceId}`;
+}
+
+/** Read the actual current-week ledger; visiting a panel never completes a task. */
+export function currentWeekMarkup(state: RunState): string {
+  const pending = state.tracking?.pending ?? [];
+  const actions = pending.filter(item => item.kind === 'action');
+  const resting = state.pasture.filter(cell => pastureUse(state, cell) === 'resting').map(cell => cell.id);
+  return `<details class="panel-disclosure" id="overview-current-actions"><summary>本周已记录 ${actions.length} 次经营 · 剩余 ${state.actionsLeft} 行动</summary>
+    ${pending.length ? `<ol class="decision-record-actions">${pending.map(item => `<li>${escapeHtml(decisionDescription(state, item))}</li>`).join('')}</ol>` : '<p>当前记录区间内，本周还没有执行经营行动。查看面板或运行试算都不算实际行动。</p>'}
+    <p>${resting.length ? `${escapeHtml(resting.join('、'))} 尚未利用；本周继续不放牧、不割草，就会在结算时休牧恢复。` : '四块草场本周都已利用，下周才能再次安排。'}</p>
+    <p class="modal-note">${state.tracking?.provenance === 'continued' ? '从本次续玩记录起点显示，不补造此前选择。' : ''}不用花完行动点；先核对缺草、患病和现金，再决定是否结算。剩余行动点不会结转。</p>
+  </details>`;
 }
 
 export function weekHistoryMarkup(state: RunState): string {

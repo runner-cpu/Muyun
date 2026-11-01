@@ -65,8 +65,7 @@
 .decision-loading { padding: 16px 18px; background: var(--field); color: var(--muted); }
 [aria-busy='true'] { cursor: progress; }
 .choice-card .choice-effect { display: block; margin-top: 8px; padding-top: 8px; border-top: 1px solid var(--line); color: var(--cream); font-variant-numeric: tabular-nums; }
-.pasture-weekly { display: flex; align-items: center; justify-content: space-between; gap: 24px; padding: 16px 18px; margin-bottom: 12px; border-left: 3px solid var(--green); background: var(--field); }
-.pasture-weekly.bad { border-left-color: var(--red); }
+.pasture-weekly { display: flex; align-items: center; justify-content: space-between; gap: 24px; padding: 16px 18px; margin-bottom: 12px; background: var(--field); }
 .pasture-weekly > div > span, .overview-eyebrow { display: block; color: var(--muted); font-size: 11px; margin-bottom: 4px; }
 .pasture-weekly h3 { margin: 0; font-size: 17px; }
 .pasture-weekly.bad h3 { color: var(--red); }

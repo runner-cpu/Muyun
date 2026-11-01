@@ -39,6 +39,7 @@ export class UIManager {
 
   constructor() {
     restoreTheme();
+    document.getElementById('loading-retry')?.addEventListener('click', () => window.location.reload());
     document.getElementById('btn-new')?.addEventListener('click', () => this.onNewGame?.());
     document.getElementById('btn-continue')?.addEventListener('click', () => this.onContinue?.());
     document.getElementById('btn-winter')?.addEventListener('click', () => this.onWinterChallenge?.());
@@ -63,11 +64,19 @@ export class UIManager {
   }
   hideLoading(): void { this.loading.classList.add('hidden'); }
 
+  showLoadingFailure(count: number): void {
+    this.loading.classList.remove('hidden');
+    this.loadingText.textContent = `${count} 项牧场资源未能加载。请检查网络后重试，已有存档会保留。`;
+    document.getElementById('loading-retry')?.classList.remove('hidden');
+    this.loadingFill.parentElement?.setAttribute('aria-label', '牧场资源加载未完成');
+  }
+
   showTitle(hasSave: boolean): void {
     this.hideLoading();
     this.title.classList.remove('hidden');
     const continueBtn = document.getElementById('btn-continue') as HTMLButtonElement | null;
     if (continueBtn) continueBtn.disabled = !hasSave;
+    document.getElementById('save-status')?.classList.remove('save-warning');
     setText('save-status', hasSave ? '上次的牧场还在等你，继续照料吧。' : '还没有存档，从这个春天开始吧。');
     document.getElementById('app')!.dataset.playing = 'false';
   }

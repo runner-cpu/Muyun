@@ -23,17 +23,32 @@ export class TitleScene extends Phaser.Scene {
     if (save) gameState.setSettings(save.settings);
     ui.showTitle(Boolean(save));
     const winter = saveSystem.load('winter-challenge-v1');
+    const unreadable = [!save && saveSystem.exists('year') ? '完整经营' : '', !winter && saveSystem.exists('winter-challenge-v1') ? '越冬挑战' : ''].filter(Boolean);
+    if (unreadable.length) {
+      const status = document.getElementById('save-status');
+      if (status) {
+        status.classList.add('save-warning');
+        status.textContent = `${unreadable.join('、')}存档无法读取，原始数据仍保留。请勿直接重开覆盖，可先保留浏览器数据再排查。`;
+      }
+    }
     const winterContinue = document.getElementById('btn-continue-winter') as HTMLButtonElement | null;
     if (winterContinue) winterContinue.disabled = !winter;
     audio.setSettings(gameState.settings);
 
     ui.onNewGame = () => {
+      if (saveSystem.exists('year')) {
+        const root = ui.openModal({ title: '重新开始完整经营？', body: '<p>开始新局会替换当前浏览器的完整经营存档。越冬挑战进度会保留。</p><div class="modal-actions"><button type="button" class="pixel-btn" id="new-cancel">保留进度</button><button type="button" class="pixel-btn primary" id="new-confirm">开始新局</button></div>' });
+        root.querySelector('#new-cancel')?.addEventListener('click', () => ui.closeModal());
+        root.querySelector('#new-confirm')?.addEventListener('click', () => { ui.closeModal(); beginYear(); }, { once: true });
+      } else beginYear();
+    };
+    const beginYear = () => {
       audio.unlock();
       const settings = { ...gameState.settings };
       gameState.newGame();
       gameState.setSettings(settings);
       saveSystem.setMode('year');
-      saveSystem.clear('year');
+      if (!saveSystem.save(gameState.toData())) ui.toast('新局已开始，但浏览器未能保存，请保持页面打开。', 'bad', 4500);
       this.startRanch();
     };
     ui.onContinue = () => {
@@ -54,14 +69,14 @@ export class TitleScene extends Phaser.Scene {
         gameState.newGame(undefined, 'winter-challenge-v1');
         gameState.setSettings(settings);
         saveSystem.setMode('winter-challenge-v1');
-        saveSystem.save(gameState.toData());
+        if (!saveSystem.save(gameState.toData())) ui.toast('挑战已开始，但浏览器未能保存，请保持页面打开。', 'bad', 4500);
         ui.closeModal();
         this.startRanch();
       };
       const el = ui.openModal({ title: '四周越冬挑战', subtitle: '固定初始条件，试出自己的经营方案。', body: `
         <p>从第 10 周开始，照料 12 头牦牛与 18 只羊，走过四次周结算。</p>
         <dl class="overview-ledger"><div><dt>可用现金</dt><dd>¥6,000</dd></div><div><dt>干草</dt><dd>2,200 kg</dd></div><div><dt>预设设备</dt><dd>草场监测 + 10 个项圈</dd></div><div><dt>每周行动</dt><dd>3 点</dd></div></dl>
-        <p class="modal-note">设备已安装，现金不再扣购置费；每周收取人工与设备维护。挑战使用独立存档。${winter ? '开始将替换已有挑战进度，可关闭并选择继续挑战。' : ''}</p>
+        <p class="modal-note">设备已安装，现金不再扣购置费；每周收取人工与设备维护。挑战使用独立存档。${saveSystem.exists('winter-challenge-v1') ? '开始将替换已有挑战存档（包括暂时无法读取的数据），可关闭以保留。' : ''}</p>
         <div class="modal-actions"><button class="pixel-btn primary" id="challenge-start">开始越冬</button></div>` });
       el.querySelector('#challenge-start')?.addEventListener('click', begin);
     };

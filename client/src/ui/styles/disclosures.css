@@ -21,6 +21,7 @@
 }
 .panel-disclosure[open] { padding-bottom: 12px; }
 .panel-disclosure > p { max-width: 70ch; color: var(--muted); }
+.panel-disclosure .decision-record-actions { padding-left: 24px; line-height: 1.9; }
 .panel-disclosure .overview-ledger { margin-top: 8px; margin-bottom: 12px; }
 .overview-core-ledger { margin-bottom: 20px; }
 .panel-reference-row { display: flex; align-items: center; gap: 18px; justify-content: space-between; padding: 12px 0; }

@@ -1,0 +1,21 @@
+{
+  "browser": "156.0.8078.4",
+  "base": "http://localhost:5188/",
+  "passed": [
+    "market preserves custom amount, species, page and return focus",
+    "week Worker completes without changing the actual run",
+    "strategy restores the same experiment and selected preference after reserves",
+    "changing actual state invalidates the cached experiment",
+    "week calculation cancels, can retry, and cannot render into another modal",
+    "overview shows the actual action and opens confirmation without settling",
+    "result comparison cancels and retries in a real Worker",
+    "closing results during work leaves the next panel intact",
+    "HUD and modal fit 1280x720 light",
+    "HUD and modal fit 1280x720 dark",
+    "HUD and modal fit 844x390 light",
+    "HUD and modal fit 844x390 dark",
+    "required-asset failure keeps save bytes and retry restores the title"
+  ],
+  "errors": [],
+  "limitations": "Headless Chromium with emulated viewport sizes; not mobile hardware, Safari, screen reader or teaching-effect validation."
+}

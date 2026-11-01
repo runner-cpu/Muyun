@@ -8,6 +8,7 @@ import { captureMetrics } from '../src/sim/history';
 import { SIM_VERSION } from '../src/sim/types';
 import { actionStatus } from '../src/sim/rules';
 import { comparePolicies } from '../src/sim/policies';
+import { SAVE_KEY } from '../src/config';
 
 describe('decision recording and isolated saves', () => {
   beforeEach(() => {
@@ -151,5 +152,18 @@ describe('decision recording and isolated saves', () => {
     expect(loaded.week).toBe(5);
     expect(loaded.tracking?.provenance).toBe('continued');
     expect(loaded.tracking?.pending).toEqual([]);
+  });
+
+  it('does not accept a year run in the winter slot or overwrite damaged bytes when loading', () => {
+    const year = createDefaultState(123);
+    const raw = JSON.stringify({ version: 2, data: year });
+    localStorage.setItem(`${SAVE_KEY}-winter`, raw);
+    expect(saveSystem.load('winter-challenge-v1')).toBeNull();
+    expect(localStorage.getItem(`${SAVE_KEY}-winter`)).toBe(raw);
+    const damaged = '{"version":2,"data":{"run":{"week":"x"}}}';
+    localStorage.setItem(SAVE_KEY, damaged);
+    expect(saveSystem.load('year')).toBeNull();
+    expect(saveSystem.exists('year')).toBe(true);
+    expect(localStorage.getItem(SAVE_KEY)).toBe(damaged);
   });
 });

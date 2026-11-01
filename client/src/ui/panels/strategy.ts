@@ -1,5 +1,9 @@
 import { gameState } from '../../core/GameState';
-import { compareWeekPlans, exportWeekExperiment } from '../../sim/experiment';
+import { exportWeekExperiment } from '../../sim/experiment';
+import type { WeekExperiment } from '../../sim/experiment';
+import type { PlanningProfile } from '../../sim/planner';
+import { startSimulationJob } from '../../systems/SimulationJob';
+import type { SimulationJob } from '../../systems/SimulationJob';
 import { MAX_CANDIDATES, PLAN_PROFILES, SEARCH_DEPTH, SEARCH_WIDTH } from '../../sim/planner';
 import { ui } from '../instance';
 import { escapeHtml } from './shared';
@@ -7,12 +11,18 @@ import { experimentMarkup, experimentPlanMarkup, isPlanningProfile } from './str
 import { openTechPanel } from './tech';
 import { openReservePanel } from './reserves';
 
-export function openStrategyPanel(onBack?: () => void): void {
+interface StrategyDraft { input: string; experiment: WeekExperiment; profile: PlanningProfile }
+
+export function openStrategyPanel(onBack?: () => void, draft?: StrategyDraft): void {
   const state = gameState.toData().run;
+  const input = JSON.stringify(state);
+  let cached = draft?.input === input ? draft : undefined;
+  let job: SimulationJob<WeekExperiment> | undefined;
   const locked = !state.tech.scanned;
   const root = ui.openModal({
     title: '本周策略试算',
     subtitle: `第 ${state.week} 周 · 同一起点比较偏好，再由你亲自执行。`,
+    onClose: () => job?.cancel(),
     body: `
       <div id="strategy-intro"><p class="panel-intro">均衡、护草、保资产，该怎样取舍？对照“不再行动”的结果，查看三种偏好在饲草、退化、体况与资产上的变化。</p>
       <p class="modal-note">免费试算，不改变存档。预估复用游戏的饲喂、生长、休牧与费用规则，不含未来随机天气、事件和疫病结果。</p></div>
@@ -28,7 +38,48 @@ export function openStrategyPanel(onBack?: () => void): void {
   });
   root.querySelector('#strategy-tech')?.addEventListener('click', openTechPanel);
   root.querySelector('#strategy-back')?.addEventListener('click', () => onBack?.());
-  root.querySelector('#strategy-reserves')?.addEventListener('click', () => openReservePanel(() => openStrategyPanel(onBack)));
+  root.querySelector('#strategy-reserves')?.addEventListener('click', () => openReservePanel(() => openStrategyPanel(onBack, cached)));
+  const renderResult = (experiment: WeekExperiment, profile: PlanningProfile = 'balanced'): void => {
+    const output = root.querySelector<HTMLElement>('#strategy-output')!;
+    const status = root.querySelector<HTMLElement>('#strategy-run-status')!;
+    cached = { input, experiment, profile };
+    output.innerHTML = experimentMarkup(state, experiment);
+    root.dataset.experimentReady = String(!experiment.lockedReason && Boolean(experiment.baseline));
+    const selectPlan = (selected: PlanningProfile): void => {
+      const plan = experiment.plans.find(item => item.profile === selected);
+      const detail = output.querySelector<HTMLElement>('#strategy-plan');
+      if (plan && detail) {
+        detail.innerHTML = experimentPlanMarkup(state, plan);
+        cached!.profile = selected;
+        const radio = output.querySelector<HTMLInputElement>(`input[value="${selected}"]`);
+        if (radio) radio.checked = true;
+      }
+    };
+    selectPlan(profile);
+    status.textContent = experiment.lockedReason ?? '对照已完成。先比较原始指标，再选择方案查看行动与依据。';
+    output.querySelector('fieldset')?.addEventListener('change', event => {
+      const selected = (event.target as HTMLInputElement).value;
+      if (isPlanningProfile(selected)) selectPlan(selected);
+    });
+    output.querySelector('#strategy-repeat')?.addEventListener('click', () => root.querySelector<HTMLButtonElement>('#strategy-run')?.click());
+    output.querySelector('#strategy-export')?.addEventListener('click', () => {
+      const exportStatus = output.querySelector<HTMLElement>('#strategy-export-status')!;
+      try {
+        const serialized = exportWeekExperiment(gameState.toData().run, experiment);
+        const url = URL.createObjectURL(new Blob([serialized], { type: 'application/json;charset=utf-8' }));
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = `muyun-week-${state.seed}-w${state.week}.json`;
+        document.body.appendChild(link);
+        link.click();
+        link.remove();
+        window.setTimeout(() => URL.revokeObjectURL(url), 1000);
+        exportStatus.textContent = '已发起本周实验单下载。请检查浏览器保存结果；文件为假设预测，实际经营记录仍在局末单独导出。';
+      } catch {
+        exportStatus.textContent = '未能生成实验单。请确认当前状态未改变，重新试算后再导出，并检查下载权限。';
+      }
+    });
+  };
   root.querySelector<HTMLButtonElement>('#strategy-run')?.addEventListener('click', async event => {
     const button = event.currentTarget as HTMLButtonElement;
     const output = root.querySelector<HTMLElement>('#strategy-output')!;
@@ -37,43 +88,19 @@ export function openStrategyPanel(onBack?: () => void): void {
     button.disabled = true;
     button.textContent = '正在比较三种偏好…';
     output.setAttribute('aria-busy', 'true');
-    output.innerHTML = '';
+    cached = undefined;
+    output.innerHTML = '<button type="button" class="pixel-btn" id="strategy-cancel">取消计算</button>';
     status.textContent = '正在从同一配置计算不行动基线和三组合法方案…';
-    await new Promise(resolve => window.setTimeout(resolve, 40));
-    if (!root.isConnected) return;
+    job = startSimulationJob('week', state);
+    output.querySelector('#strategy-cancel')?.addEventListener('click', () => job?.cancel());
     try {
-      const experiment = compareWeekPlans(state);
-      output.innerHTML = experimentMarkup(state, experiment);
-      root.dataset.experimentReady = String(!experiment.lockedReason && Boolean(experiment.baseline));
+      const experiment = await job.result;
+      if (!root.isConnected) return;
+      renderResult(experiment);
       output.querySelector<HTMLElement>('#strategy-result-title')?.focus();
-      status.textContent = experiment.lockedReason ?? '对照已完成。先比较原始指标，再选择方案查看行动与依据。';
-      output.querySelector('fieldset')?.addEventListener('change', event => {
-        const input = event.target as HTMLInputElement;
-        if (!isPlanningProfile(input.value)) return;
-        const plan = experiment.plans.find(item => item.profile === input.value);
-        const detail = output.querySelector<HTMLElement>('#strategy-plan');
-        if (plan && detail) detail.innerHTML = experimentPlanMarkup(state, plan);
-      });
-      output.querySelector('#strategy-repeat')?.addEventListener('click', () => button.click());
-      output.querySelector('#strategy-export')?.addEventListener('click', () => {
-        const exportStatus = output.querySelector<HTMLElement>('#strategy-export-status')!;
-        try {
-          const serialized = exportWeekExperiment(gameState.toData().run, experiment);
-          const url = URL.createObjectURL(new Blob([serialized], { type: 'application/json;charset=utf-8' }));
-          const link = document.createElement('a');
-          link.href = url;
-          link.download = `muyun-week-${state.seed}-w${state.week}.json`;
-          document.body.appendChild(link);
-          link.click();
-          link.remove();
-          window.setTimeout(() => URL.revokeObjectURL(url), 1000);
-          exportStatus.textContent = '已发起本周实验单下载。请检查浏览器保存结果；文件为假设预测，实际经营记录仍在局末单独导出。';
-        } catch {
-          exportStatus.textContent = '未能生成实验单。请确认当前状态未改变，重新试算后再导出，并检查下载权限。';
-        }
-      });
-    } catch {
-      output.innerHTML = '<p class="danger-text" role="alert">本次试算未完成。可以重新运行，或返回经营面板继续安排。</p>';
+    } catch (error) {
+      if (!root.isConnected) return;
+      output.innerHTML = `<p class="modal-note" role="status">${escapeHtml(error instanceof Error ? error.message : '本次试算未完成。')} 可以重新运行，或返回经营面板继续安排。</p>`;
       status.textContent = '';
     } finally {
       output.setAttribute('aria-busy', 'false');
@@ -81,4 +108,5 @@ export function openStrategyPanel(onBack?: () => void): void {
       button.disabled = false;
     }
   });
+  if (cached) renderResult(cached.experiment, cached.profile);
 }

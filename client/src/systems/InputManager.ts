@@ -36,10 +36,13 @@ export class InputManager {
     if (!this.enabled) return { x: 0, y: 0 };
     let x = 0;
     let y = 0;
-    if (this.keys.A?.isDown || this.keys.LEFT?.isDown) x -= 1;
-    if (this.keys.D?.isDown || this.keys.RIGHT?.isDown) x += 1;
-    if (this.keys.W?.isDown || this.keys.UP?.isDown) y -= 1;
-    if (this.keys.S?.isDown || this.keys.DOWN?.isDown) y += 1;
+    const editing = document.activeElement?.closest('button, summary, a[href], input, select, textarea, [contenteditable="true"], [role="dialog"]');
+    if (!editing) {
+      if (this.keys.A?.isDown || this.keys.LEFT?.isDown) x -= 1;
+      if (this.keys.D?.isDown || this.keys.RIGHT?.isDown) x += 1;
+      if (this.keys.W?.isDown || this.keys.UP?.isDown) y -= 1;
+      if (this.keys.S?.isDown || this.keys.DOWN?.isDown) y += 1;
+    }
     if (this.joystick) {
       const v = this.joystick.getVector();
       x += v.x;
@@ -74,7 +77,7 @@ export class InputManager {
   };
 
   private onKeyDown = (event: KeyboardEvent): void => {
-    if (!this.enabled) return;
+    if (!this.enabled || event.repeat || event.ctrlKey || event.metaKey || event.altKey) return;
     if ((event.target as HTMLElement)?.closest('button, summary, a[href], input, select, textarea, [contenteditable="true"], [role="dialog"]')) return;
     if (event.code === 'KeyE' || event.code === 'Space') {
       if (event.code === 'Space') event.preventDefault();

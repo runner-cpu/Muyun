@@ -30,10 +30,18 @@ function sanitizeRun(raw: unknown, includeTracking = true): RunState | null {
   const week = clampWeek(Math.round(source.week));
 
   const labor = Math.round(numberOr(source.labor, base.labor, 0, 20));
-  const animals = (source.animals as Animal[]).slice(0, 1000);
+  if (source.animals.length > 1000 || source.pasture.length !== 4) return null;
+  const animals = (source.animals as Animal[]).map(animal => ({ ...animal }));
   if (!animals.every(a => a && typeof a.id === 'string' && typeof a.tag === 'string' && ['yak', 'sheep'].includes(a.species) && ['male', 'female'].includes(a.sex) && [a.bcs, a.weightKg, a.ageWeeks].every(Number.isFinite) && typeof a.alive === 'boolean')) return null;
+  if (new Set(animals.map(a => a.id)).size !== animals.length || !animals.every(a =>
+    a.id.length > 0 && a.id.length <= 80 && a.tag.length <= 80 && a.weightKg >= 0 && a.ageWeeks >= 0
+    && a.bcs >= 1 && a.bcs <= 5 && ['healthy', 'subclinical', 'sick'].includes(a.health)
+    && [a.pregnant, a.lactating, a.collar].every(value => typeof value === 'boolean'))) return null;
   const rawPasture = (source.pasture as PastureCell[]).slice(0, 4);
   if (!rawPasture.length || !rawPasture.every(p => p && typeof p.id === 'string' && [p.areaHa, p.biomassKgPerHa, p.degradation, p.restedWeeks].every(Number.isFinite))) return null;
+  if (new Set(rawPasture.map(p => p.id)).size !== 4 || rawPasture.some(p => !['P1', 'P2', 'P3', 'P4'].includes(p.id))) return null;
+  if (source.scenario !== undefined && source.scenario !== 'year' && source.scenario !== 'winter-challenge-v1') return null;
+  if (source.scenario === 'winter-challenge-v1' && week < 10) return null;
   const pasture: PastureCell[] = rawPasture.map(cell => ({
     id: cell.id, areaHa: Math.max(0.01, cell.areaHa), biomassKgPerHa: Math.max(0, cell.biomassKgPerHa),
     degradation: Math.max(0, Math.min(1, cell.degradation)), restedWeeks: Math.max(0, Math.floor(cell.restedWeeks)),
@@ -58,7 +66,10 @@ function sanitizeRun(raw: unknown, includeTracking = true): RunState | null {
     usedEvents: stringArray(source.usedEvents),
     flags: source.flags && typeof source.flags === 'object'
       ? Object.fromEntries(Object.entries(source.flags).filter(([key, value]) => key.length < 160 && typeof value === 'boolean').slice(0, 200)) : {},
-    log: Array.isArray(source.log) ? (source.log as RunState['log']).slice(-80) : [],
+    log: Array.isArray(source.log) ? source.log.slice(-80).flatMap(entry =>
+      entry && typeof entry === 'object' && Number.isInteger(entry.week) && entry.week >= 1 && entry.week <= 13
+      && typeof entry.text === 'string' && ['good', 'bad', 'info'].includes(entry.tone)
+        ? [{ week: entry.week, text: entry.text.slice(0, 2000), tone: entry.tone }] : []) : [],
     ended: Boolean(source.ended),
     ending: ['bankrupt', 'collapse', 'subsistence', 'well-off', 'cooperative'].includes(String(source.ending)) ? source.ending as RunState['ending'] : null,
   };
@@ -102,6 +113,8 @@ export function migrateSave(raw: unknown): SaveFile | null {
     : {};
 
   const run = version >= SAVE_VERSION ? sanitizeRun(candidate.run) : null;
+  // A damaged current save is not a new game: keep the original slot untouched.
+  if (version >= SAVE_VERSION && !run) return null;
   const data: GameStateData = {
     run: run ?? defaults.run,
     settings: {
@@ -138,7 +151,8 @@ export class SaveSystem {
     try {
       const raw = localStorage.getItem(this.key(scenario));
       if (!raw) return null;
-      return migrateSave(JSON.parse(raw))?.data ?? null;
+      const data = migrateSave(JSON.parse(raw))?.data;
+      return data && (data.run.scenario ?? 'year') === (scenario ?? this.active) ? data : null;
     } catch {
       return null;
     }

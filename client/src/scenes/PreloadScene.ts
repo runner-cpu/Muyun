@@ -7,9 +7,11 @@ import { registerAnimalAnims } from '../entities/Animal';
 const V = '?v=6';
 
 export class PreloadScene extends Phaser.Scene {
+  private failed = new Set<string>();
   constructor() { super('PreloadScene'); }
 
   preload(): void {
+    this.failed.clear();
     ui.showLoading();
     ui.setLoading(0, '正在加载牧场...');
     for (const season of ['spring', 'summer', 'autumn', 'winter']) {
@@ -27,15 +29,17 @@ export class PreloadScene extends Phaser.Scene {
     for (let i = 0; i < 3; i++) this.load.image(`tree_${i}`, `assets/trees/tree_${i}.png${V}`);
 
     this.load.on('progress', (value: number) => {
+      if (this.failed.size) return;
       ui.setLoading(value, value < 1 ? '正在加载牧场...' : '赶牛出圈...');
     });
     this.load.on('loaderror', (file: Phaser.Loader.File) => {
-      console.error('load error', file.src);
-      ui.setLoading(1, `资源加载失败：${file.src}`);
+      this.failed.add(file.key);
+      ui.showLoadingFailure(this.failed.size);
     });
   }
 
   create(): void {
+    if (this.failed.size) { ui.showLoadingFailure(this.failed.size); return; }
     registerPlayerAnims(this);
     registerAnimalAnims(this);
     this.time.delayedCall(180, () => this.scene.start('TitleScene'));
