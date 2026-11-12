@@ -1,0 +1,17 @@
+{
+  "checkedAt": "2026-11-12T02:17:01.603Z",
+  "url": "http://127.0.0.1:5189/",
+  "browser": "156.0.8078.4",
+  "checks": [
+    "title, assets and fixed winter challenge load",
+    "built Worker completes without changing actual state",
+    "same-state reserve round trip restores result and preference",
+    "market retains custom quantity",
+    "no page errors or HTTP asset errors"
+  ],
+  "workers": [
+    "http://127.0.0.1:5189/assets/compute.worker-GWiKE93D.js"
+  ],
+  "errors": [],
+  "failedResources": []
+}

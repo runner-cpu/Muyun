@@ -6,6 +6,7 @@ import { openResultPanel } from '../ui/panels/result';
 import { escapeHtml, pendingEventFlag, pendingEventForRun, ranchSnapshot } from '../ui/ranchView';
 import { statRow, yuan } from '../ui/panels/shared';
 import { actionLimit } from '../sim/rules';
+import { INCOMPLETE_WEEK_ATTRIBUTION, recordedWeekAttributions } from '../ui/attribution';
 
 /** Confirm the forecast first; a second deliberate click performs the week step. */
 export function endWeekFlow(): void {
@@ -58,13 +59,15 @@ function settleWeek(): void {
   const logs = after.log.slice(before.log.length);
   const delta = (value: number): string => `${value > 0 ? '+' : ''}${value.toLocaleString('zh-CN')}`;
   const bcsDelta = view.averageBcs - previousView.averageBcs;
+  const attribution = recordedWeekAttributions(after).get(before.week) ?? [INCOMPLETE_WEEK_ATTRIBUTION];
 
   const body = ui.openModal({
     title: `第 ${before.week} 周经营回顾`,
     subtitle: after.ended ? '冬季结束，这一局即将结算。' : `第 ${after.week} 周已开始，行动点恢复为 ${actionLimit(after)} 点。`,
     closable: false,
     body: `
-      <p class="panel-intro">本次周结算带来的实际变化</p>
+      <p class="panel-intro week-attribution" data-attribution-week="${before.week}">${attribution.map(escapeHtml).join(' ')}</p>
+      <p class="modal-note">以下数值为确认结算时到结算后的变化；上方复盘包含本周已记录行动。</p>
       <div class="settlement-delta">${statRow([
         [`${delta(after.money - before.money)} 元`, '现金变化'],
         [`${delta(after.hayKg - before.hayKg)} kg`, '干草变化'],

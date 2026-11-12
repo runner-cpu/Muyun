@@ -4,6 +4,7 @@ import { seasonObjectives } from '../../sim/objectives';
 import { pastureUse } from '../../sim/rules';
 import type { Action, Decision, RunMetrics, RunState, Season } from '../../sim/types';
 import { escapeHtml, percent, yuan } from './shared';
+import { INCOMPLETE_WEEK_ATTRIBUTION, recordedWeekAttributions } from '../attribution';
 
 const SEASONS: Record<Season, string> = { spring: '春季', summer: '夏季', autumn: '秋季', winter: '冬季' };
 const OBJECTIVE_STATUS = { active: '进行中', complete: '已达成', missed: '未达成', unrecorded: '未记录' };
@@ -85,14 +86,24 @@ export function currentWeekMarkup(state: RunState): string {
 }
 
 export function weekHistoryMarkup(state: RunState): string {
-  const weeks = state.tracking?.weeks ?? [];
+  const weeks = Array.isArray(state.tracking?.weeks) ? state.tracking.weeks : [];
   if (!weeks.length) return '<p class="empty-state">尚无已结算周记录。旧档未记录的周次不会补造。</p>';
+  const attributions = recordedWeekAttributions(state);
   const cells = (metrics: RunMetrics): string => `<td>${yuan(metrics.money)}</td><td>${formatKg(metrics.hayKg)}</td><td>${yuan(metrics.netAssets)}</td><td>${metrics.aliveCount}</td><td>${metrics.averageBcs.toFixed(2)}</td><td>${formatKg(metrics.grassKg)}</td><td>${percent(metrics.averageDegradation)}</td>`;
   return `<p class="modal-note">以下为真实周结算记录；点击每周的选择可查看行动与事件。表格可横向滚动。</p>
     <div class="decision-table-wrap" role="region" aria-label="逐周经营记录，可横向滚动" tabindex="0"><table class="data-table decision-history-table">
     <caption>第 ${weeks[0].week}–${weeks.at(-1)!.week} 周已结算轨迹</caption>
     <thead><tr><th scope="col">周次</th><th scope="col">现金</th><th scope="col">干草</th><th scope="col">净资产</th><th scope="col">存栏</th><th scope="col">BCS</th><th scope="col">草量</th><th scope="col">退化</th><th scope="col">本周选择</th></tr></thead>
-    <tbody>${weeks.map(week => `<tr><th scope="row">${week.week} · ${SEASONS[week.season]}</th>${cells(week.metrics)}<td>${week.decisions.length ? `<details><summary>${week.decisions.length} 项选择</summary><ol class="decision-record-actions">${week.decisions.map(decision => `<li>${escapeHtml(decisionDescription(state, decision))}</li>`).join('')}</ol></details>` : '休整，无已记录选择'}</td></tr>`).join('')}</tbody></table></div>`;
+    <tbody>${weeks.map(week => {
+      const recorded = Array.isArray(week.decisions);
+      const decisions = recorded ? week.decisions : [];
+      const summary = !recorded ? '选择未完整记录' : decisions.length ? `${decisions.length} 项选择` : '休整，无已记录选择';
+      const attribution = attributions.get(week.week) ?? [INCOMPLETE_WEEK_ATTRIBUTION];
+      return `<tr><th scope="row">${week.week} · ${SEASONS[week.season]}</th>${cells(week.metrics)}<td><details><summary>${summary}</summary>
+        <p class="modal-note week-attribution" data-attribution-week="${week.week}">${attribution.map(escapeHtml).join(' ')}</p>
+        ${decisions.length ? `<ol class="decision-record-actions">${decisions.map(decision => `<li>${escapeHtml(decisionDescription(state, decision))}</li>`).join('')}</ol>` : ''}
+      </details></td></tr>`;
+    }).join('')}</tbody></table></div>`;
 }
 
 export function comparisonMetricsMarkup(metrics: RunMetrics): string {

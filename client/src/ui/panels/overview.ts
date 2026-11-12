@@ -13,10 +13,13 @@ import { openMarketPanel } from './market';
 import { buildFieldNotes } from '../../sim/fieldnotes';
 import { openFieldNotes } from './fieldnotes';
 import { openReservePanel, reserveSummary } from './reserves';
+import { mountPressureFlow } from '../pressureFlow';
+import { openHistoryPanel } from './history';
 
 const kg = (value: number): string => `${Math.ceil(value).toLocaleString('zh-CN')} kg`;
 
 export function openOverviewPanel(): void {
+  let unmountPressureFlow = (): void => undefined;
   const run = gameState.run;
   const view = ranchSnapshot(run);
   const fieldnote = buildFieldNotes(run).notes[0];
@@ -35,6 +38,7 @@ export function openOverviewPanel(): void {
   const root = ui.openModal({
     title: '本周概览',
     subtitle: `第 ${run.week} / 13 周 · ${seasonLabel(run.season)} · ${view.weatherLabel}`,
+    onClose: () => unmountPressureFlow(),
     body: `
       <div class="overview-feed ${view.feedTone}">
         <h3>${escapeHtml(view.headline)}</h3><p>${escapeHtml(view.hint)}</p>
@@ -43,6 +47,7 @@ export function openOverviewPanel(): void {
       <ul class="overview-risk">${risks.length
         ? risks.map((risk) => `<li>${escapeHtml(risk)}</li>`).join('')
         : '<li>当前饲草充足，也没有患病牲畜。继续留意草场恢复和后续储备。</li>'}</ul>
+      <div id="overview-pressure-flow"></div>
       <h3 class="decision-heading">本周饲草与费用</h3>
       <dl class="overview-ledger overview-core-ledger">
         <div><dt>还需消耗干草</dt><dd>${kg(view.feedRequiredHayKg)}</dd></div>
@@ -67,6 +72,7 @@ export function openOverviewPanel(): void {
         <div class="panel-reference-row"><div><h3>高原手记 · ${escapeHtml(fieldnote.title)}</h3><p>${escapeHtml(fieldnote.observation)}</p></div><button type="button" class="pixel-btn" id="overview-fieldnotes">读懂草畜关系</button></div>
       </details>
       <details class="panel-disclosure" id="overview-history"><summary>四季进程与最近记录</summary>
+      <button type="button" class="pixel-btn" id="overview-review">查看逐周复盘</button>
       <ol class="season-track" aria-label="十三周季节进程">${seasons.map(([season, label, weeks]) => `
         <li ${season === run.season ? 'aria-current="step"' : ''}><b>${label}</b><span>${weeks}</span></li>`).join('')}</ol>
       <h3>最近记录</h3>
@@ -75,7 +81,10 @@ export function openOverviewPanel(): void {
         : '<p class="empty-state">还没有经营记录，安排第一个行动后会出现在这里。</p>'}</div></details>
       ${run.ended ? '' : '<div class="modal-actions"><button type="button" class="pixel-btn" id="overview-settle">核对并结束本周</button></div>'}`,
   });
+  const pressureHost = root.querySelector<HTMLElement>('#overview-pressure-flow');
+  if (pressureHost) unmountPressureFlow = mountPressureFlow(pressureHost, () => openReservePanel(openOverviewPanel));
   root.querySelector('#overview-pasture')?.addEventListener('click', () => openPasturePanel());
+  root.querySelector('#overview-review')?.addEventListener('click', () => openHistoryPanel(openOverviewPanel));
   root.querySelector('#overview-herd')?.addEventListener('click', () => openHerdPanel());
   root.querySelector('#overview-market')?.addEventListener('click', () => openMarketPanel());
   root.querySelector('#overview-settle')?.addEventListener('click', () => { ui.closeModal(); ui.onEndWeek?.(); });

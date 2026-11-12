@@ -13,6 +13,8 @@ import { endWeekFlow, resumePendingWeek } from '../systems/WeekFlow';
 import { bindRanchNavigation } from '../ui/RanchNavigation';
 import { bindHudLayout } from '../ui/HudLayout';
 import { maybeShowOnboarding } from '../ui/onboarding';
+import { mountTutorialInvitation } from '../ui/tutorialEntry';
+import { tutorialPreferences } from '../ui/tutorialPreferences';
 import { SceneLabels } from '../ui/SceneLabels';
 import { RanchWorld } from '../world/RanchWorld';
 import { sampleSceneAnimals } from '../world/sceneState';
@@ -102,7 +104,8 @@ export class RanchScene extends Phaser.Scene {
 
     this.events.once(Phaser.Scenes.Events.SHUTDOWN, () => this.teardown());
     resumePendingWeek();
-    maybeShowOnboarding();
+    this.unsubscribes.push(mountTutorialInvitation());
+    if (!tutorialPreferences().offered && !tutorialPreferences().completed) maybeShowOnboarding();
   }
 
   update(): void {

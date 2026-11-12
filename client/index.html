@@ -29,7 +29,7 @@
         </div>
       </section>
       <section id="title-screen" class="screen hidden" aria-label="牧云主菜单">
-        <header class="title-topbar"><span class="title-wordmark">牧云 <small>MUYUN</small></span><div><button id="btn-guide" class="text-btn">玩法说明</button><button id="btn-title-settings" class="text-btn">设置</button></div></header>
+        <header class="title-topbar"><span class="title-wordmark">牧云 <small>MUYUN</small></span><div><button id="btn-tutorial" class="text-btn">教学周 · 饲草练习</button><button id="btn-guide" class="text-btn">玩法说明</button><button id="btn-title-settings" class="text-btn">设置</button></div></header>
         <div class="title-card">
           <h1>牧云</h1><p class="title-tagline">山野有时，放牧有度。</p>
           <p class="title-copy">在高原安顿一座牧场。<br />照料牛羊，养护草地，走过十三周四季。</p>
@@ -40,6 +40,10 @@
         <footer class="title-footer"><span>一座牧场，十三周四季。</span><span>键鼠游玩 / 触屏横屏</span></footer>
       </section>
       <div id="hud" class="hidden">
+        <aside id="tutorial-invitation" class="tutorial-invitation hidden" aria-label="教学周邀请">
+          <p>先花 3 分钟学一下？<span>照料 8 头牦牛，练习放牧与补草。</span></p>
+          <div><button type="button" class="pixel-btn primary" id="tutorial-invitation-start">试试教学周</button><button type="button" class="text-btn" id="tutorial-invitation-skip">跳过</button></div>
+        </aside>
         <details id="hud-status" class="hud-fold hud-status" data-hud-section="status" name="hud-panels">
           <summary><span class="hud-fold-title"><span class="compact-wordmark">牧云</span><span id="hud-week-compact">第 1 周</span></span><span data-fold-state>展开</span><svg class="fold-chevron" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6" /></svg></summary>
           <header class="hud-bar">

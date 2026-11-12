@@ -1,0 +1,33 @@
+.pressure-flow { margin: 18px 0 22px; padding: 14px 16px 10px; border: 1px solid var(--line); }
+.pressure-flow-heading { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 4px 12px; }
+.pressure-flow-heading h3 { margin: 0; font-size: 15px; line-height: 1.5; }
+.pressure-flow-heading > span { color: var(--muted); font-size: 11px; }
+.pressure-flow .pressure-flow-method, .pressure-flow .pressure-flow-empty { margin: 5px 0 8px; color: var(--muted); font-size: 12px; line-height: 1.6; }
+.pressure-flow-legend { display: flex; flex-wrap: wrap; gap: 4px 14px; padding: 0 0 8px; color: var(--muted); font-size: 10px; }
+.pressure-flow-legend > span { display: inline-flex; align-items: center; gap: 5px; }
+.pressure-flow-legend i { width: 10px; height: 6px; }
+.pressure-flow-stock { background: var(--muted); }
+.pressure-flow-gap { background: var(--red); }
+.pressure-flow-fixed { background: var(--yellow); }
+.pressure-flow-row { appearance: none; display: grid; grid-template-columns: 60px minmax(0, 1fr) 36px; align-items: center; gap: 12px; width: 100%; min-height: 72px; margin: 0; padding: 10px 0; border: 0; border-top: 1px solid var(--line); border-radius: 0; background: transparent; color: var(--cream); text-align: left; }
+.pressure-flow-row:hover { background: var(--field); }
+.pressure-flow-row:focus-visible { outline-offset: 2px; }
+.pressure-flow-week { align-self: start; font-size: 12px; font-weight: 600; white-space: nowrap; }
+.pressure-flow-week small { display: block; margin-top: 2px; color: var(--muted); font-size: 10px; font-weight: 400; }
+.pressure-flow-lanes { display: flex; flex-direction: column; min-width: 0; gap: 4px; }
+.pressure-flow-hay-bar { display: flex; width: 100%; height: 9px; overflow: hidden; background: var(--field); }
+.pressure-flow-hay-bar i, .pressure-flow-cost-bar i { display: block; min-width: 0; height: 100%; }
+.pressure-flow-hay-bar .pressure-flow-gap { background-image: repeating-linear-gradient(135deg, transparent, transparent 4px, rgb(255 255 255 / 17%) 4px, rgb(255 255 255 / 17%) 6px); }
+.pressure-flow-hay-label, .pressure-flow-cost-label { color: var(--muted); font-size: 10px; line-height: 1.5; font-variant-numeric: tabular-nums; overflow-wrap: anywhere; }
+.pressure-flow-lanes .danger-text { color: var(--red); }
+.pressure-flow-cost-bar { display: block; width: 100%; height: 4px; overflow: hidden; background: var(--field); }
+.pressure-flow-status { align-self: start; font-size: 12px; font-weight: 600; white-space: nowrap; }
+.pressure-flow-status[data-pressure-status='缺口'] { color: var(--red); }
+.pressure-flow-status[data-pressure-status='偏紧'] { color: var(--focus); }
+.pressure-flow .pressure-flow-footnote { margin: 2px 0 0; color: var(--muted); font-size: 10px; line-height: 1.6; }
+@media (max-width: 700px), (max-height: 560px) {
+  .pressure-flow { margin: 14px 0 18px; padding: 10px 12px 8px; }
+  .pressure-flow-row { grid-template-columns: 52px minmax(0, 1fr) 30px; gap: 9px; padding: 8px 0; }
+  .pressure-flow-heading h3 { font-size: 14px; }
+  .pressure-flow-method, .pressure-flow-week, .pressure-flow-status { font-size: 11px; }
+}

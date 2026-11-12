@@ -4,6 +4,7 @@ import { gameState } from '../core/GameState';
 import { saveSystem } from '../systems/SaveSystem';
 import { audio } from '../systems/AudioManager';
 import { ui } from '../ui/instance';
+import { launchTutorial } from '../ui/tutorialEntry';
 
 export class TitleScene extends Phaser.Scene {
   constructor() { super('TitleScene'); }
@@ -34,6 +35,7 @@ export class TitleScene extends Phaser.Scene {
     const winterContinue = document.getElementById('btn-continue-winter') as HTMLButtonElement | null;
     if (winterContinue) winterContinue.disabled = !winter;
     audio.setSettings(gameState.settings);
+    ui.onTutorial = launchTutorial;
 
     ui.onNewGame = () => {
       if (saveSystem.exists('year')) {

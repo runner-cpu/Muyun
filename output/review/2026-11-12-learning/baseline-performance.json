@@ -1,0 +1,96 @@
+{
+  "checkedAt": "2026-11-12T02:06:39.694Z",
+  "url": "http://127.0.0.1:5190/",
+  "browser": "156.0.8078.4",
+  "method": "Five fresh isolated Chromium contexts, HTTP cache disabled, 1280×720, no CPU/network throttling; titleObservedMs includes Playwright visibility observation latency. Transferred and decoded script sizes are recorded separately; server compression may differ between preview and Pages. This is a timing record, not a low-end device or Lighthouse claim.",
+  "median": {
+    "titleObservedMs": 508,
+    "domContentLoadedMs": 137.9,
+    "loadEventMs": 158.2,
+    "scriptTransferBytes": 397631,
+    "scriptDecodedBytes": 1389809,
+    "resourceTransferBytes": 1679958
+  },
+  "samples": [
+    {
+      "titleObservedMs": 564.3999999999069,
+      "domContentLoadedMs": 180.39999999990687,
+      "loadEventMs": 220,
+      "scriptTransferBytes": 397631,
+      "scriptDecodedBytes": 1389809,
+      "resourceTransferBytes": 1679958,
+      "scriptFiles": [
+        {
+          "file": "index-x0qB4Ei0.js",
+          "decodedBytes": 1389809,
+          "transferBytes": 397631
+        }
+      ],
+      "workersBeforeUserCalculation": 0
+    },
+    {
+      "titleObservedMs": 477.20000000018626,
+      "domContentLoadedMs": 127.10000000009313,
+      "loadEventMs": 148.60000000009313,
+      "scriptTransferBytes": 397631,
+      "scriptDecodedBytes": 1389809,
+      "resourceTransferBytes": 1679958,
+      "scriptFiles": [
+        {
+          "file": "index-x0qB4Ei0.js",
+          "decodedBytes": 1389809,
+          "transferBytes": 397631
+        }
+      ],
+      "workersBeforeUserCalculation": 0
+    },
+    {
+      "titleObservedMs": 545.1000000000931,
+      "domContentLoadedMs": 196,
+      "loadEventMs": 215.20000000018626,
+      "scriptTransferBytes": 397631,
+      "scriptDecodedBytes": 1389809,
+      "resourceTransferBytes": 1679958,
+      "scriptFiles": [
+        {
+          "file": "index-x0qB4Ei0.js",
+          "decodedBytes": 1389809,
+          "transferBytes": 397631
+        }
+      ],
+      "workersBeforeUserCalculation": 0
+    },
+    {
+      "titleObservedMs": 508,
+      "domContentLoadedMs": 137.89999999990687,
+      "loadEventMs": 158.20000000018626,
+      "scriptTransferBytes": 397631,
+      "scriptDecodedBytes": 1389809,
+      "resourceTransferBytes": 1679958,
+      "scriptFiles": [
+        {
+          "file": "index-x0qB4Ei0.js",
+          "decodedBytes": 1389809,
+          "transferBytes": 397631
+        }
+      ],
+      "workersBeforeUserCalculation": 0
+    },
+    {
+      "titleObservedMs": 495.79999999981374,
+      "domContentLoadedMs": 132,
+      "loadEventMs": 154.89999999990687,
+      "scriptTransferBytes": 397631,
+      "scriptDecodedBytes": 1389809,
+      "resourceTransferBytes": 1679958,
+      "scriptFiles": [
+        {
+          "file": "index-x0qB4Ei0.js",
+          "decodedBytes": 1389809,
+          "transferBytes": 397631
+        }
+      ],
+      "workersBeforeUserCalculation": 0
+    }
+  ]
+}

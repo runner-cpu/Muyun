@@ -1,0 +1,26 @@
+.modal-card.tutorial-modal { width: min(680px, 94vw); }
+.tutorial-figures { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; margin: 0 0 20px; padding: 14px 0 18px; border-bottom: 1px solid var(--line); }
+.tutorial-figures dt { color: var(--muted); font-size: 12px; }
+.tutorial-figures dd { margin: 4px 0 0; font-size: clamp(21px, 3vw, 30px); font-weight: 700; font-variant-numeric: tabular-nums; }
+.tutorial-hint { color: var(--cream); font-size: 14px; line-height: 1.8; }
+.tutorial-actions { display: grid; grid-template-columns: 1fr 1.35fr; gap: 24px; margin: 22px 0; }
+.tutorial-actions > div { display: flex; flex-wrap: wrap; align-content: start; align-items: center; gap: 8px; }
+.tutorial-buy-label { width: 100%; font-size: 12px; color: var(--muted); }
+.tutorial-actions select { max-width: 100%; min-height: 44px; border: 1px solid var(--line); padding: 6px; background: var(--field); color: var(--cream); }
+.tutorial-action-note { width: 100%; color: var(--muted); font-size: 11px; }
+.tutorial-scope { color: var(--muted); font-size: 11px; line-height: 1.7; }
+.tutorial-review-title { font-size: 18px; margin: 0 0 12px; }
+.tutorial-invitation { position: absolute; top: max(78px, env(safe-area-inset-top)); left: 50%; transform: translateX(-50%); width: min(450px, calc(100% - 48px)); padding: 14px 18px; background: var(--panel-solid); color: var(--cream); box-shadow: var(--shadow); pointer-events: auto; }
+.tutorial-invitation p { margin: 0 0 10px; font-size: 14px; font-weight: 700; }
+.tutorial-invitation p span { display: block; margin-top: 2px; color: var(--muted); font-size: 12px; font-weight: 400; }
+.tutorial-invitation > div { display: flex; gap: 8px; }
+.week-attribution { font-weight: 600; color: var(--cream); line-height: 1.7; }
+@media (max-height: 480px) {
+  .tutorial-modal .modal-head { margin-bottom: 10px; }
+  .tutorial-figures { margin-bottom: 10px; padding-block: 6px 10px; }
+  .tutorial-actions { margin: 12px 0; gap: 14px; }
+  .tutorial-hint { font-size: 13px; }
+  .tutorial-modal .modal-actions { margin-top: 14px; }
+  .title-topbar > div { gap: 2px; }
+  .title-topbar .text-btn { font-size: 11px; padding-inline: 8px; }
+}

@@ -1,0 +1,15 @@
+
+> muyun-client@0.1.0 build
+> tsc --noEmit && vite build
+
+vite v7.3.7 building client environment for production...
+transforming...
+✓ 93 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/index.html                            10.03 kB │ gzip:   3.45 kB
+dist/assets/compute.worker-GWiKE93D.js     32.50 kB
+dist/assets/index-DIsOn6D3.css             56.60 kB │ gzip:  11.82 kB
+dist/assets/tutorial-DFtsnLsr.js            6.10 kB │ gzip:   2.75 kB
+dist/assets/index-CxMRa_Qk.js           1,410.07 kB │ gzip: 404.70 kB
+✓ built in 3.37s

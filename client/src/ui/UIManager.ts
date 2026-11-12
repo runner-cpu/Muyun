@@ -16,6 +16,7 @@ interface ModalOptions {
 export class UIManager {
   readonly dialogue = new DialogueBox();
   onNewGame: (() => void) | null = null;
+  onTutorial: (() => void) | null = null;
   onContinue: (() => void) | null = null;
   onWinterChallenge: (() => void) | null = null;
   onContinueWinter: (() => void) | null = null;
@@ -30,6 +31,7 @@ export class UIManager {
   private prompt = document.getElementById('prompt')!;
   private promptText = document.getElementById('prompt-text')!;
   private toastRoot = document.getElementById('toast-root')!;
+  private toastHome = this.toastRoot.parentElement!;
   private modalRoot = document.getElementById('modal-root')!;
   private modalCard = document.getElementById('modal-card')!;
   private fadeEl = document.getElementById('fade')!;
@@ -41,6 +43,7 @@ export class UIManager {
     restoreTheme();
     document.getElementById('loading-retry')?.addEventListener('click', () => window.location.reload());
     document.getElementById('btn-new')?.addEventListener('click', () => this.onNewGame?.());
+    document.getElementById('btn-tutorial')?.addEventListener('click', () => this.onTutorial?.());
     document.getElementById('btn-continue')?.addEventListener('click', () => this.onContinue?.());
     document.getElementById('btn-winter')?.addEventListener('click', () => this.onWinterChallenge?.());
     document.getElementById('btn-continue-winter')?.addEventListener('click', () => this.onContinueWinter?.());
@@ -109,6 +112,10 @@ export class UIManager {
   isBlocking(): boolean { return this.isModalOpen() || this.dialogue.isOpen(); }
 
   openModal(options: ModalOptions): HTMLElement {
+    const previousTitle = this.modalCard.querySelector('h2')?.textContent;
+    if (previousTitle !== options.title) {
+      this.toastRoot.querySelectorAll('.toast:not(.bad)').forEach(toast => toast.remove());
+    }
     if (!this.isModalOpen()) this.previousFocus = document.activeElement as HTMLElement;
     if (this.isModalOpen()) this.closeModal(true);
     this.modalClosable = options.closable ?? true;
@@ -118,7 +125,9 @@ export class UIManager {
         <div><h2 id="modal-title">${options.title}</h2>${options.subtitle ? `<p>${options.subtitle}</p>` : ''}</div>
         ${this.modalClosable ? '<button class="modal-close" aria-label="关闭">×</button>' : ''}
       </div>
+      <div class="modal-feedback"></div>
       <div class="modal-body">${options.body}</div>`;
+    this.modalCard.querySelector('.modal-feedback')?.appendChild(this.toastRoot);
     this.modalRoot.classList.remove('hidden');
     this.hud.inert = true;
     this.title.inert = true;
@@ -134,6 +143,7 @@ export class UIManager {
     this.modalRoot.classList.add('hidden');
     this.hud.inert = false;
     this.title.inert = false;
+    this.toastHome.appendChild(this.toastRoot);
     this.modalCard.innerHTML = '';
     const callback = this.modalOnClose;
     this.modalOnClose = null;

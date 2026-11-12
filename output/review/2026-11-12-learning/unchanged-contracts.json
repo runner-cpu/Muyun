@@ -1,0 +1,16 @@
+{
+  "gitDiffExitCode": 0,
+  "note": "UI-derived data uses existing simulation APIs; original tests retained. No new files under sim.",
+  "checkedAt": "2026-11-12T02:26:12.9958929Z",
+  "baseline": "94fa00a0dfc034ebe6ce64111d92083d53bf210d",
+  "unchangedPaths": [
+    "client/src/sim",
+    "client/src/core/defaultState.ts",
+    "client/src/config.ts",
+    "client/src/systems/SaveSystem.ts",
+    "client/src/systems/SimulationJob.ts",
+    "client/scripts",
+    "docs/SIMULATION.md",
+    "docs/DEMO.md"
+  ]
+}

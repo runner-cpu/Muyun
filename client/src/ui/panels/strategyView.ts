@@ -1,7 +1,9 @@
 import type { ExperimentPlan, ExperimentProjection, WeekExperiment } from '../../sim/experiment';
+import { captureMetrics } from '../../sim/history';
 import { PLAN_PROFILES } from '../../sim/planner';
 import type { PlanWeights, PlanningProfile } from '../../sim/planner';
 import type { RunState } from '../../sim/types';
+import { strategyProfilesMarkup, strategyVisualSummaryMarkup } from '../strategyVisuals';
 import { actionDescription, formatKg } from './reviewView';
 import { escapeHtml, percent, yuan } from './shared';
 
@@ -40,6 +42,8 @@ export function experimentMarkup(state: RunState, experiment: WeekExperiment): s
   return `<section class="experiment-comparison" aria-labelledby="strategy-result-title">
     <h3 id="strategy-result-title" tabindex="-1">同一起点，比较三种经营取舍</h3>
     <p class="modal-note">均使用第 ${state.week} 周的当前配置。“不再行动”表示直接进入确定性结算；下方小字为各方案相对这条基线的变化。缺口与退化越低越好。</p>
+    ${strategyProfilesMarkup(experiment.plans)}
+    ${strategyVisualSummaryMarkup(experiment, captureMetrics(state).netAssets)}
     ${metricsTable(experiment, ROWS, '同一确定性阶段的预估 · 不含未来随机结果')}
     ${same.length ? `<p class="experiment-same">${same.map(plan => `${escapeHtml(PLAN_PROFILES[plan.profile].label)}与${escapeHtml(PLAN_PROFILES[plan.sameActionsAs!].label)}得到相同行动序列。`).join('')}当前条件下，偏好不同也可能选择相同。</p>` : ''}
     <details class="experiment-more"><summary>查看草量、存栏与行动预算</summary>${metricsTable(experiment, [
@@ -47,7 +51,6 @@ export function experimentMarkup(state: RunState, experiment: WeekExperiment): s
       { label: '结算后存栏', value: p => `${p.metrics.aliveCount} 头`, delta: p => signed(p.metrics.aliveCount - experiment.baseline!.metrics.aliveCount, ' 头', 0) },
       { label: '存栏羊单位', value: p => number(p.metrics.sheepUnits), delta: p => signed(p.delta.sheepUnits) },
     ], '同起点的补充指标')}<p class="modal-note">行动预算 ${state.actionsLeft} 点；${experiment.plans.map(plan => `${escapeHtml(PLAN_PROFILES[plan.profile].label)}使用 ${plan.actions.length} 点`).join('，')}。未使用的行动点不会带到下一周。</p></details>
-    <fieldset class="experiment-profiles"><legend>选择一个方案，查看行动与依据</legend>${experiment.plans.map(plan => `<label><input type="radio" name="strategy-profile" value="${plan.profile}" ${plan.profile === 'balanced' ? 'checked' : ''} /><span><strong>${escapeHtml(PLAN_PROFILES[plan.profile].label)}</strong><small>${plan.safe ? '足草且结算现金为正' : '仍有饲草或现金风险'}</small></span></label>`).join('')}</fieldset>
     <div id="strategy-plan">${experimentPlanMarkup(state, experiment.plans.find(plan => plan.profile === 'balanced')!)}</div>
     <div class="experiment-export"><div><h3>保存这次周实验</h3><p>包含起点、三种权重、共同基线、行动与预测，可用本项目命令行复算。</p></div><button type="button" class="pixel-btn" id="strategy-export">导出本周实验单</button></div>
     <p id="strategy-export-status" class="modal-note" aria-live="polite"></p>
