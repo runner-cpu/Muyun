@@ -1,0 +1,29 @@
+{
+  "checkedAt": "2026-11-12T02:32:42.063Z",
+  "url": "https://runner-cpu.github.io/Muyun/",
+  "browser": "156.0.8078.4",
+  "passed": [
+    "first full run has a nonblocking one-time invitation; tutorial replacement cancels without changing save bytes",
+    "first full run has a nonblocking one-time invitation; tutorial replacement confirms and restarts an operable ranch",
+    "1280x720 cold title → tutorial → full run preserves isolated saves",
+    "1280x720 overview pressure and reserve round trip",
+    "1280x720 touch action → settle → matching historical attribution → return",
+    "1280x720 three persona cards, keyboard semantics and Worker result do not mutate the run",
+    "1280x720 modal blocks background movement and long scroll retains fixed title",
+    "844x390 cold title → tutorial → full run preserves isolated saves",
+    "844x390 overview pressure and reserve round trip",
+    "844x390 touch action → settle → matching historical attribution → return",
+    "844x390 three persona cards, keyboard semantics and Worker result do not mutate the run",
+    "844x390 modal blocks background movement and long scroll retains fixed title",
+    "667x375 cold title → tutorial → full run preserves isolated saves",
+    "667x375 overview pressure and reserve round trip",
+    "667x375 touch action → settle → matching historical attribution → return",
+    "667x375 three persona cards, keyboard semantics and Worker result do not mutate the run",
+    "667x375 modal blocks background movement and long scroll retains fixed title"
+  ],
+  "errors": [],
+  "failedResources": [],
+  "consoleWarnings": [],
+  "browserGraphicsWarnings": [],
+  "limitations": "Chromium desktop and emulated landscape touch contexts. Not verified on physical iOS/Android, Safari/WebKit, screen readers, low-end hardware, browser chrome resize or real notched screens. No claim about teaching effectiveness."
+}

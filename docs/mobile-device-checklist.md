@@ -4,6 +4,8 @@
 
 2026 年 11 月 12 日，本地生产预览在 Chromium 156.0.8078.4 下通过 17 组学习层检查；原生产冒烟脚本另通过 5 项越冬挑战、Worker、面板往返与资源检查。截图及机器记录位于 `output/review/2026-11-12-learning/`，以 `preview-results.json` 和 `preview-legacy-results.json` 为准。844×390 的长面板需纵向滚动，检查涵盖真实模拟触摸滑动、标题固定与关闭按钮可触达。
 
+同日 Pages 发布后，线上同样通过 17 组学习层与 5 项生产冒烟，证据为该目录的 `pages-results.json` 和 `pages-legacy-results.json`。这仍是 Chromium 模拟验证，不替代下表真机检查。
+
 ## 自动化覆盖
 
 - 冷启动 → 标题 → 独立教学周 → 实际放牧与补草 → 教学复盘 → 完整经营。

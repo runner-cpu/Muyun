@@ -74,4 +74,6 @@ node tools/learning-layer-check.mjs https://runner-cpu.github.io/Muyun/ pages ui
 
 ## 发布记录
 
-本地最终验证完成后推送至 `runner-cpu/Muyun` 的 `main`，由现有 Pages 工作流执行测试、构建、部署。工作流结果与线上“冷启动 → 教学周 → 完整经营”证据在发布后补入本节。
+功能提交 `0f99a292325778b1581a97847e36eb9ea29fa53e` 已推送至 `runner-cpu/Muyun` 的 `main`，现有 [Pages 工作流 43141763061](https://github.com/runner-cpu/Muyun/actions/runs/43141763061) 的测试、构建与部署成功，状态记录为 [pages-deployment.json](../output/review/2026-11-12-learning/pages-deployment.json)。后续文档与验收证据提交不改变应用代码。
+
+2026 年 11 月 12 日，直接在 [发布地址](https://runner-cpu.github.io/Muyun/) 的全新隔离浏览器上下文通过 **17 组学习层检查 + 5 项原生产冒烟**，覆盖桌面与两档触屏横屏、“冷启动 → 教学未补足/重试 → 补草复盘 → 完整经营”、已有存档确认、真实结算归因与局中历史、越冬挑战、生产 Worker 和缓存往返。应用警告、页面异常和 HTTP 失败均为零，证据为 [pages-results.json](../output/review/2026-11-12-learning/pages-results.json)、[pages-legacy-results.json](../output/review/2026-11-12-learning/pages-legacy-results.json) 与同目录 `pages-*.png`。
